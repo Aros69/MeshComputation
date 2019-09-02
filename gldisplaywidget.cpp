@@ -34,7 +34,7 @@ void GLDisplayWidget::initThetrahedron(){
     vertexTab[2].setFaceIndex(3);
     vertexTab[3].setFaceIndex(0);
 
-    faceTab[0].setNeibFace([])
+    //faceTab[0].setNeibFace([])
 
     _mesh.setMesh(vertexTab,faceTab);
 }

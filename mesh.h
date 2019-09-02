@@ -48,7 +48,7 @@ class Face{
         }
 
         void setNeibFace(int neib1, int neib2, int neib3){
-            neibFace = {neib1,neib2,neib3};
+            //neibFace = {neib1,neib2,neib3};
         }
         int& operator[] (int x) {
           return verticesIndex[x];
