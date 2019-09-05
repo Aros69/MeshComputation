@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <QTimer>
 #include "mesh.h"
+#include <iostream>
 
 class GLDisplayWidget : public QGLWidget
 {
@@ -33,6 +34,12 @@ private:
 
     void initThetrahedron();
     void initQueenMesh();
+    void initPyramid();
+    void init2DBBox();
+
+public slots:
+    void onWireframe();
+
 };
 
 #endif // GLDISPLAYWIDGET_H
