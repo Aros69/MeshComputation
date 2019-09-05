@@ -37,6 +37,12 @@ void GLDisplayWidget::initThetrahedron(){
     //faceTab[0].setNeibFace([])
 
     _mesh.setMesh(vertexTab,faceTab);
+    _mesh.defineNeighbourFaces();
+}
+
+void GLDisplayWidget::initQueenMesh(){
+    _mesh.meshWithFile("../meshcomputation/data/queen.off");
+    //_mesh.meshWithFile("data/queen.off");
 }
 
 void GLDisplayWidget::initializeGL()
@@ -53,6 +59,7 @@ void GLDisplayWidget::initializeGL()
     // To add....
 
     initThetrahedron();
+    //initQueenMesh();
 }
 
 void GLDisplayWidget::paintGL(){

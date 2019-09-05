@@ -3,21 +3,25 @@
 
 #include <QGLWidget>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+
+
 // TO MODIFY
 // Advice => You should create a new file for each module but not necessarily for each class
 class Point
 {
-    double _x;
-    double _y;
-    double _z;
+    float _x;
+    float _y;
+    float _z;
 
 public:
     Point():_x(),_y(),_z() {}
     Point(float x_, float y_, float z_):_x(x_),_y(y_),_z(z_) {}
     // get
-    double x() const { return _x; }
-    double y() const { return _y; }
-    double z() const { return _z; }
+    float x() const { return _x; }
+    float y() const { return _y; }
+    float z() const { return _z; }
 };
 
 class Vertex
@@ -27,12 +31,11 @@ class Vertex
     public:
         Vertex():point(){}
         Vertex(float x_, float y_, float z_):point(x_,y_,z_){}
-        double x() const { return point.x(); }
-        double y() const { return point.y(); }
-        double z() const { return point.z(); }
-        void setFaceIndex(int i){
-            faceIndex = i;
-        }
+        float x() const { return point.x(); }
+        float y() const { return point.y(); }
+        float z() const { return point.z(); }
+        void setFaceIndex(int i){faceIndex = i;}
+        int getFaceIndex(){return faceIndex;}
 };
 
 class Face{
@@ -40,16 +43,26 @@ class Face{
     int verticesIndex[3];
     int neibFace[3];
     public:
-        Face(){}
+        Face() : Face(0,0,0){}
         Face(int a, int b, int c){
             verticesIndex[0] = a;
             verticesIndex[1] = b;
             verticesIndex[2] = c;
+            neibFace[0] = -1;
+            neibFace[1] = -1;
+            neibFace[2] = -1;
         }
 
         void setNeibFace(int neib1, int neib2, int neib3){
             //neibFace = {neib1,neib2,neib3};
         }
+
+        void setNeibFace(int neib, int index){
+            neibFace[index] = neib;
+        }
+
+        int getNeibFace(int index){return neibFace[index];}
+
         int& operator[] (int x) {
           return verticesIndex[x];
         }
@@ -59,6 +72,7 @@ class Face{
 //** TO MODIFY
 class Mesh
 {
+private:
     QVector<Vertex> vertexTab;
     QVector<Face> faceTab;
     
@@ -67,6 +81,19 @@ public:
     void setMesh(QVector<Vertex>,QVector<Face>);
     void drawMesh();
     void drawMeshWireFrame();
+
+    void meshWithFile(std::string filePath);
+    void defineNeighbourFaces();
+
+    class segmentMemory{
+    public:
+        int vertexIndex1;
+        int vertexIndex2;
+        int faceIndex;
+        int vertexInFaceIndex;
+        segmentMemory(int vI1, int vI2, int fI, int vIFI) : vertexIndex1(vI1),
+            vertexIndex2(vI2), faceIndex(fI), vertexInFaceIndex(vIFI){}
+    };
 };
 
 #endif // MESH_H
