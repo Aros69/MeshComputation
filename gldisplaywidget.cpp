@@ -11,6 +11,7 @@ GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
 {
     // Update the scene
     connect( &_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
+    // connect(pushButton,SIGNAL(released()),this, SLOT(onWireframe()));
     _timer.start(16);
 }
 
@@ -34,7 +35,64 @@ void GLDisplayWidget::initThetrahedron(){
     vertexTab[2].setFaceIndex(3);
     vertexTab[3].setFaceIndex(0);
 
-    //faceTab[0].setNeibFace([])
+    faceTab[0].setNeibFace(1,2,3);
+    faceTab[1].setNeibFace(0,2,3);
+    faceTab[2].setNeibFace(0,1,3);
+    faceTab[3].setNeibFace(0,1,2);
+
+    _mesh.setMesh(vertexTab,faceTab);
+}
+
+void GLDisplayWidget::initPyramid(){
+
+    QVector<Vertex> vertexTab;
+    QVector<Face> faceTab;
+
+    vertexTab.push_back(Vertex(-0.5,0.0,-0.5)); //0
+    vertexTab.push_back(Vertex(0.5,0.0,-0.5)); // 1
+    vertexTab.push_back(Vertex(0.5,0.0,0.5)); // 2
+    vertexTab.push_back(Vertex(-0.5,0.0,0.5)); // 3
+    vertexTab.push_back(Vertex(0.,2.0,0.)); // 4
+
+    faceTab.push_back(Face(0,1,2));
+    faceTab.push_back(Face(0,3,2));
+    faceTab.push_back(Face(0,4,1));
+    faceTab.push_back(Face(1,4,2));
+    faceTab.push_back(Face(2,4,3));
+    faceTab.push_back(Face(0,4,3));
+    vertexTab[0].setFaceIndex(1);
+    vertexTab[1].setFaceIndex(2);
+    vertexTab[2].setFaceIndex(3);
+    vertexTab[3].setFaceIndex(0);
+
+    faceTab[0].setNeibFace(1,2,3);
+    faceTab[1].setNeibFace(0,2,3);
+    faceTab[2].setNeibFace(0,1,3);
+    faceTab[3].setNeibFace(0,1,2);
+
+    _mesh.setMesh(vertexTab,faceTab);
+}
+
+void GLDisplayWidget::init2DBBox(){
+
+    QVector<Vertex> vertexTab;
+    QVector<Face> faceTab;
+
+    vertexTab.push_back(Vertex(-0.5,-0.5,-0.5)); //0
+    vertexTab.push_back(Vertex(0.5,-0.5,-0.5)); // 1
+    vertexTab.push_back(Vertex(0,0.5,-0.5)); // 2
+    vertexTab.push_back(Vertex(0,-0.5,0.5)); // 3
+
+    faceTab.push_back(Face(0,1,2));
+    faceTab.push_back(Face(1,3,2));
+    faceTab.push_back(Face(3,0,2));
+    faceTab.push_back(Face(0,1,3));
+
+    vertexTab[0].setFaceIndex(1);
+    vertexTab[1].setFaceIndex(2);
+    vertexTab[2].setFaceIndex(3);
+    vertexTab[3].setFaceIndex(0);
+
 
     _mesh.setMesh(vertexTab,faceTab);
 }
@@ -52,7 +110,7 @@ void GLDisplayWidget::initializeGL()
     // Construction of the mesh before it is displayed
     // To add....
 
-    initThetrahedron();
+    initPyramid();
 }
 
 void GLDisplayWidget::paintGL(){
@@ -118,4 +176,8 @@ void GLDisplayWidget::wheelEvent(QWheelEvent *event) {
     {
       _Z = (numDegrees.x() > 0 || numDegrees.y() > 0) ? _Z + stepZoom : _Z - stepZoom;
     }
+}
+
+void GLDisplayWidget::onWireframe(){
+    std::cout<<"HELLO \n";
 }

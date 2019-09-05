@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <QTimer>
 #include "mesh.h"
+#include <iostream>
 
 class GLDisplayWidget : public QGLWidget
 {
@@ -32,6 +33,12 @@ private:
     Mesh _mesh; // The object to be displayed, may be replaced by a scene if there are several objects....
 
     void initThetrahedron();
+    void initPyramid();
+    void init2DBBox();
+
+public slots:
+    void onWireframe();
+    
 };
 
 #endif // GLDISPLAYWIDGET_H

@@ -19,9 +19,9 @@ void glVertexDraw(const Vertex & p) {
 
 //Example with a tetraedra
 void Mesh::drawMesh() {
-    std::cout<<vertexTab.size() << "\n";
+    // std::cout<<vertexTab.size() << "\n";
     for(int i = 0; i < faceTab.size(); i++) {
-
+        
         if (i < 1) glColor3d(1,0,0);
         else if (i < 2) glColor3d(0,1,0);
         else if (i < 3) glColor3d(0,0,1);
