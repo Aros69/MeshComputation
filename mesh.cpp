@@ -150,3 +150,8 @@ void Mesh::defineNeighbourFaces(){
         if(!segment3){memory.push_back(Mesh::SegmentMemory(faceTab[i][0], faceTab[i][2], i, 1));} else {memory.erase(m3);}
     }
 }
+
+Iterator_on_faces Mesh::f_begin() { return Iterator_on_faces(0, this); }
+Iterator_on_faces Mesh::f_pend() { return Iterator_on_faces(faceTab.size(), this); }
+Iterator_on_vertices Mesh::v_begin() { return Iterator_on_vertices(0, this); }
+Iterator_on_vertices Mesh::v_pend() { return Iterator_on_vertices(vertexTab.size(), this); }

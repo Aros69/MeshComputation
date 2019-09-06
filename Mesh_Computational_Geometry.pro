@@ -25,4 +25,5 @@ FORMS    += mainwindow.ui
 
 #---- Comment the following line on MacOS
 LIBS = -lGLU
+CONFIG += c++11
 
