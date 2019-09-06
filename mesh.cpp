@@ -1,15 +1,7 @@
 #include "mesh.h"
 
 Mesh::Mesh()
-{
-    
-    // int faces[12]={
-    //     0,1,2, // 1
-    //     1,3,2, // 2
-    //     3,0,2, // 3
-    //     0,1,3  // 4
-    // }; // To be replaced by a vector of faces
-}
+{}
 
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
 // Draw a vertex
@@ -91,59 +83,109 @@ void Mesh::meshWithFile(std::string filePath){
     std::cout<<"End of creating a mesh with .off file\n";
 }
 
+
+void printSegementMemory(Mesh::segmentMemory t){
+    std::cout<<"Mémoire : vertexIndex : "<<t.vertexIndex1
+            << " "<< t.vertexIndex2<<" Index de la Face "
+            <<t.faceIndex<<" Index dans la face "<<t.vertexInFaceIndex<<"\n";
+}
+void printAllSegmentMemory(const std::list<Mesh::segmentMemory> & m){
+    for(auto ma : m){printSegementMemory(ma);}
+    std::cout<<"\n";
+}
+
+void printFacesNeib(const QVector<Face> & f){
+    for(int j=0;j<f.size();++j){
+        std::cout<<"Face : "<<j<<" : "<<f[j].getNeibFace(0)<<" "<<f[j].getNeibFace(1)
+                <<" "<<f[j].getNeibFace(2)<<"\n";
+    }
+}
+
 void Mesh::defineNeighbourFaces(){
     // TODO Use a hashMap instead of a list
     std::list<Mesh::segmentMemory> memory;
     std::list<Mesh::segmentMemory>::iterator m, m1, m2, m3;
-    //Mesh::segmentMemory* m;
     bool segment1, segment2, segment3;
-    int i = 0;
-    for(auto face : faceTab){
+    //int i = 0;
+    for(int i=0;i<faceTab.size();++i){
+    //for(auto face : faceTab){
         segment1 = false;
         segment2 = false;
         segment3 = false;
         m = memory.begin();
+        m1 = memory.end();
+        m2 = memory.end();
+        m3 = memory.end();
+
         do{
-            if(face.getNeibFace(2) == -1
-                    && ((m->vertexIndex1 == face[0] && m->vertexIndex2 == face[1])
-                    || (m->vertexIndex1 == face[1] && m->vertexIndex2 == face[0]))) {
-                face.setNeibFace(m->faceIndex,2);
+
+            if((m->vertexIndex1 == faceTab[i][0] && m->vertexIndex2 == faceTab[i][1])
+                    || (m->vertexIndex1 == faceTab[i][1] && m->vertexIndex2 == faceTab[i][0])) {
+                faceTab[i].setNeibFace(m->faceIndex,2);
                 faceTab[m->faceIndex].setNeibFace(i,m->vertexInFaceIndex);
                 segment1=true;
                 m1=m;
             }
 
-            if((m->vertexIndex1 == face[1] && m->vertexIndex2 == face[2])
-                    || (m->vertexIndex1 == face[2] && m->vertexIndex2 == face[1])) {
-                face.setNeibFace(m->faceIndex,0);
+            if((m->vertexIndex1 == faceTab[i][1] && m->vertexIndex2 == faceTab[i][2])
+                    || (m->vertexIndex1 == faceTab[i][2] && m->vertexIndex2 == faceTab[i][1])) {
+                faceTab[i].setNeibFace(m->faceIndex,0);
                 faceTab[m->faceIndex].setNeibFace(i,m->vertexInFaceIndex);
                 segment2=true;
                 m2=m;
             }
 
-            if((m->vertexIndex1 == face[0] && m->vertexIndex2 == face[2])
-                    || (m->vertexIndex1 == face[2] && m->vertexIndex2 == face[0])) {
-                face.setNeibFace(m->faceIndex,1);
-                //std::cout<<faceTab[m->faceIndex].getNeibFace(m->vertexInFaceIndex)<<"\n";
+            if((m->vertexIndex1 == faceTab[i][0] && m->vertexIndex2 == faceTab[i][2])
+                    || (m->vertexIndex1 == faceTab[i][2] && m->vertexIndex2 == faceTab[i][0])) {
+                faceTab[i].setNeibFace(m->faceIndex,1);
                 faceTab[m->faceIndex].setNeibFace(i,m->vertexInFaceIndex);
-                //std::cout<<faceTab[m->faceIndex].getNeibFace(m->vertexInFaceIndex)<<"\n";
                 segment3=true;
                 m3=m;
             }
             m++;
+        }
         // Tant que tout les segments sont pas ok && que l'on peut avancer dans la memoire
-        }while((!segment1 || !segment2 || !segment3) && m!=memory.end());
-        if(!segment1){memory.push_back(Mesh::segmentMemory(face[0], face[1], i, 2));} //else {memory.erase(m1);}
-        if(!segment2){memory.push_back(Mesh::segmentMemory(face[1], face[2], i, 0));} //else {memory.erase(m2);}
-        if(!segment3){memory.push_back(Mesh::segmentMemory(face[0], face[2], i, 1));} //else {memory.erase(m3);}
-        ++i;
-        std::cout<<i<<" "<<memory.size()<<"\n";
+        while((!segment1 || !segment2 || !segment3) && m!=memory.end());
+
+        /*if(m==memory.end()){
+            std::cout<<"On a atteint la limite de la mémoire\n";
+        }
+        std::cout<<"Segments : "<<segment1<<" "<<segment2<<" "<<segment3<<"\n";*/
+
+        printAllSegmentMemory(memory);
+        printFacesNeib(faceTab);
+
+        if(!segment1){
+            std::cout<<segment1<<" On a PAS trouver l'arrete dans la memoire, on l'a suprime l'ajoute.\n";
+            memory.push_back(Mesh::segmentMemory(faceTab[i][0], faceTab[i][1], i, 2));
+        } else {
+            memory.erase(m1);
+            std::cout<<segment1<<" On a trouver l'arrete dans la memoire, on la suprime.\n";
+        }
+        if(!segment2){
+            std::cout<<segment2<<" On a PAS trouver l'arrete dans la memoire, on l'a suprime l'ajoute.\n";
+            memory.push_back(Mesh::segmentMemory(faceTab[i][1], faceTab[i][2], i, 0));
+        } else {
+            memory.erase(m2);
+            std::cout<<segment2<<" On a trouver l'arrete dans la memoire, on la suprime.\n";
+        }
+        if(!segment3){
+            std::cout<<segment3<<" On a PAS trouver l'arrete dans la memoire, on l'a suprime l'ajoute.\n";
+            memory.push_back(Mesh::segmentMemory(faceTab[i][0], faceTab[i][2], i, 1));
+        } else {
+            memory.erase(m3);
+            std::cout<<segment3<<" On a trouver l'arrete dans la memoire, on la suprime.\n";
+        }
+
+        //++i;
+        //std::cout<<i<<" "<<memory.size()<<"\n";
     }
 
-    i=0;
-    for(auto f : faceTab){
-        std::cout<<f.getNeibFace(0)<<" "<<f.getNeibFace(1)<<" "<<f.getNeibFace(2)<<"\n";
-        if(f.getNeibFace(0)==-1){
+    //i=0;
+    /*for(int j=0;j<faceTab.size();++j){
+        std::cout<<"Face : "<<j<<" : "<<faceTab[j].getNeibFace(0)<<" "<<faceTab[j].getNeibFace(1)
+                <<" "<<faceTab[j].getNeibFace(2)<<"\n";*/
+        /*if(f.getNeibFace(0)==-1){
             ++i;
         }
         if(f.getNeibFace(1)==-1){
@@ -151,7 +193,7 @@ void Mesh::defineNeighbourFaces(){
         }
         if(f.getNeibFace(2)==-1){
             ++i;
-        }
-    }
-    std::cout<<i<<"\n";
+        }*/
+    //}
+    //std::cout<<i<<"\n";
 }

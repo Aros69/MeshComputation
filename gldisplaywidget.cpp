@@ -41,6 +41,7 @@ void GLDisplayWidget::initThetrahedron(){
     faceTab[3].setNeibFace(0,1,2);
 
     _mesh.setMesh(vertexTab,faceTab);
+    _mesh.defineNeighbourFaces();
 }
 
 void GLDisplayWidget::initPyramid(){
@@ -64,13 +65,17 @@ void GLDisplayWidget::initPyramid(){
     vertexTab[1].setFaceIndex(2);
     vertexTab[2].setFaceIndex(3);
     vertexTab[3].setFaceIndex(0);
+    vertexTab[4].setFaceIndex(4);
 
-    faceTab[0].setNeibFace(1,2,3);
+    /*faceTab[0].setNeibFace(1,2,3);
     faceTab[1].setNeibFace(0,2,3);
     faceTab[2].setNeibFace(0,1,3);
     faceTab[3].setNeibFace(0,1,2);
+    faceTab[4].setNeibFace(5,1,3);
+    faceTab[5].setNeibFace(4,1,2);*/
 
     _mesh.setMesh(vertexTab,faceTab);
+    _mesh.defineNeighbourFaces();
 }
 
 void GLDisplayWidget::init2DBBox(){

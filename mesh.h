@@ -55,15 +55,15 @@ class Face{
 
         void setNeibFace(int neib1, int neib2, int neib3){
             neibFace[0] = neib1;
-            neibFace[0] = neib2;
-            neibFace[0] = neib3;
+            neibFace[1] = neib2;
+            neibFace[2] = neib3;
         }
 
         void setNeibFace(int neib, int index){
             neibFace[index] = neib;
         }
 
-        int getNeibFace(int index){return neibFace[index];}
+        int getNeibFace(int index) const {return neibFace[index];}
 
         int& operator[] (int x) {
           return verticesIndex[x];
