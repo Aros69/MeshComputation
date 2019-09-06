@@ -197,3 +197,8 @@ void Mesh::defineNeighbourFaces(){
     //}
     //std::cout<<i<<"\n";
 }
+
+Iterator_on_faces Mesh::f_begin() { return Iterator_on_faces(0, this); }
+Iterator_on_faces Mesh::f_pend() { return Iterator_on_faces(faceTab.size(), this); }
+Iterator_on_vertices Mesh::v_begin() { return Iterator_on_vertices(0, this); }
+Iterator_on_vertices Mesh::v_pend() { return Iterator_on_vertices(vertexTab.size(), this); }

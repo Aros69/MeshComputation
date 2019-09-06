@@ -65,11 +65,24 @@ class Face{
 
         int getNeibFace(int index) const {return neibFace[index];}
 
+        int getLocalIndex(int globalIndex){
+            for(int i = 0; i < 3 ; i++){
+                if(verticesIndex[i] == globalIndex){
+                    return i;
+                }
+            }
+            std::cout << "vertex not part of this triangle\n";
+            return -1;
+        }
         int& operator[] (int x) {
           return verticesIndex[x];
         }
  
 };
+class Iterator_on_vertices;
+class Circulator_on_vertices;
+class Iterator_on_faces;
+class Circulator_on_faces;
 
 //** TO MODIFY
 class Mesh
@@ -87,6 +100,16 @@ public:
     void meshWithFile(std::string filePath);
     void defineNeighbourFaces();
 
+    Vertex *getVertex(int index) { return &vertexTab[index]; }
+    Face *getFace(int index) { return &faceTab[index]; }
+    Iterator_on_faces f_begin();
+    Iterator_on_faces f_pend();
+    Iterator_on_vertices v_begin();
+    Iterator_on_vertices v_pend();
+    //Todo
+    //Circulator_on_faces incident_f(Vertex &v){return Circulator_on_faces();}
+    //Circulator_on_vertices adjacent_v(Vertex &v){return Circulator_on_vertices();}
+
     class segmentMemory{
     public:
         int vertexIndex1;
@@ -98,4 +121,69 @@ public:
     };
 };
 
+class Iterator_on_vertices : public std::iterator<std::input_iterator_tag, Face>
+{
+    int index;
+    Mesh *m;
+
+public:
+    Iterator_on_vertices(int x, Mesh *mesh) : index(x), m(mesh) {}
+    Iterator_on_vertices &operator++()
+    {
+        index++;
+        return *this;
+    }
+    Vertex *operator*() { return m->getVertex(index); }
+};
+
+class Circulator_on_vertices : public std::iterator<std::input_iterator_tag, Face>
+{
+    int currentVIndex;
+    int axisVIndex;
+    Mesh *m;
+
+public:
+    Circulator_on_vertices(int x, Mesh *mesh) : axisVIndex(x), m(mesh) {}
+    //Todo Make the face iteration trigonometric
+    Circulator_on_vertices &operator++()
+    {
+        axisVIndex++;
+        return *this;
+    }
+    Vertex *operator*() { return m->getVertex(axisVIndex); }
+};
+
+class Iterator_on_faces : public std::iterator<std::input_iterator_tag, Face>
+{
+    int index;
+    Mesh *m;
+public:
+    Iterator_on_faces(int x, Mesh* mesh) : index(x), m(mesh) {}
+    //Todo Make the face iteration trigonometric
+    Iterator_on_faces &operator++()
+    {
+        index++;
+        return *this;
+    }
+
+    Face *operator*() { return m->getFace(index); }
+};
+
+class Circulator_on_faces : public std::iterator<std::input_iterator_tag, Face>
+{
+    int currentFaceIndex;
+    int axisVertexIndex;
+    Mesh* m;
+
+public:
+    Circulator_on_faces(int x, Mesh* mesh) : currentFaceIndex(x), m(mesh) {}
+    
+    Circulator_on_faces &operator++()
+    {
+        int axisLocalIndex = m->getFace(currentFaceIndex)->getLocalIndex(axisVertexIndex);
+        currentFaceIndex = m->getFace(currentFaceIndex)->getNeibFace( (axisLocalIndex+1) %3);
+        return *this;
+    }
+    Face *operator*() { return m->getFace(currentFaceIndex); }
+};
 #endif // MESH_H
