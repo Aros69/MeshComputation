@@ -104,8 +104,17 @@ void GLDisplayWidget::init2DBBox(){
 }
 
 void GLDisplayWidget::initQueenMesh(){
+    // If you are in qtCreator
     _mesh.meshWithFile("../meshcomputation/data/queen.off");
+    // If you are at the root of the project
     //_mesh.meshWithFile("data/queen.off");
+}
+
+void GLDisplayWidget::initCubeMesh(){
+    // If you are in qtCreator
+    _mesh.meshWithFile("../meshcomputation/data/cube.off");
+    // If you are at the root of the project
+    //_mesh.meshWithFile("data/cube.off");
 }
 
 void GLDisplayWidget::initializeGL()
@@ -121,8 +130,9 @@ void GLDisplayWidget::initializeGL()
     // Construction of the mesh before it is displayed
     // To add....
 
-    initPyramid();
+    //initPyramid();
     //initQueenMesh();
+    initCubeMesh();
 }
 
 void GLDisplayWidget::paintGL(){

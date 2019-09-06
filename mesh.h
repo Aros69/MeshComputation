@@ -2,6 +2,7 @@
 #define MESH_H
 
 #include <QGLWidget>
+#include <QHash>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -87,13 +88,19 @@ public:
     void meshWithFile(std::string filePath);
     void defineNeighbourFaces();
 
-    class segmentMemory{
+    class SegmentMemory{
+        /*class SegmentMemoryData{
+        public:
+
+        };*/
     public:
+        //QHash<std::pair<int, int>, SegmentMemoryData> hashMap;
         int vertexIndex1;
         int vertexIndex2;
         int faceIndex;
         int vertexInFaceIndex;
-        segmentMemory(int vI1, int vI2, int fI, int vIFI) : vertexIndex1(vI1),
+
+        SegmentMemory(int vI1, int vI2, int fI, int vIFI) : vertexIndex1(vI1),
             vertexIndex2(vI2), faceIndex(fI), vertexInFaceIndex(vIFI){}
     };
 };

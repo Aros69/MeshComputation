@@ -34,6 +34,7 @@ private:
 
     void initThetrahedron();
     void initQueenMesh();
+    void initCubeMesh();
     void initPyramid();
     void init2DBBox();
 
