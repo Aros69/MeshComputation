@@ -154,8 +154,7 @@ void GLDisplayWidget::paintGL(){
     // Color for your mesh
     glColor3f(0, 1 ,0);
 
-    // example with a tetraedre
-    _mesh.drawMesh();
+    drawMesh();
 }
 
 void GLDisplayWidget::resizeGL(int width, int height){
@@ -201,6 +200,18 @@ void GLDisplayWidget::wheelEvent(QWheelEvent *event) {
     }
 }
 
-void GLDisplayWidget::onWireframe(){
-    std::cout<<"HELLO \n";
+void GLDisplayWidget::setDisplayWireframe(){
+    displayMode = 1;
+}
+
+void GLDisplayWidget::setDisplayPlain(){
+    displayMode = 0;
+}
+void GLDisplayWidget::drawMesh(){
+    if(displayMode == 0){
+        _mesh.drawMesh();
+    }
+    else if(displayMode == 1){
+        _mesh.drawMeshWireFrame();
+    }
 }

@@ -18,6 +18,10 @@ public:
 private:
     Ui::MainWindow *ui;
 
+public slots:
+    void onWireframe();
+    void onPlain();
+
 };
 
 #endif // MAINWINDOW_H
