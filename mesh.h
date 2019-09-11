@@ -91,6 +91,58 @@ class Mesh
 private:
     QVector<Vertex> vertexTab;
     QVector<Face> faceTab;
+
+    class SegmentMemory{
+        class SegmentMemoryKey{
+        public:
+            int vertexIndex1;
+            int vertexIndex2;
+            SegmentMemoryKey(int index1, int index2)
+                : vertexIndex1(index1), vertexIndex2(index2){}
+
+            bool operator==(const SegmentMemoryKey& cmp){
+                return ((this->vertexIndex1==cmp.vertexIndex2&&this->vertexIndex2==cmp.vertexIndex1)
+                        ||(this->vertexIndex1==cmp.vertexIndex2&&this->vertexIndex2==cmp.vertexIndex2));
+            }
+
+        };
+
+        class SegmentMemoryData{
+        public:
+            int faceIndex;
+            int vertexInFaceIndex;
+            SegmentMemoryData(int fIndex, int vertexIndex)
+                : faceIndex(fIndex), vertexInFaceIndex(vertexIndex){}
+
+            const SegmentMemoryData operator() (){
+                return SegmentMemoryData(this->faceIndex, this->vertexInFaceIndex);
+            }
+        };
+    public:
+        QHash<SegmentMemoryKey, SegmentMemoryData> hashMap;
+
+        void addSegment(int vI1, int vI2, int fI, int vIFI){
+            hashMap.insert(SegmentMemoryKey(vI1, vI2), SegmentMemoryData(fI, vIFI));
+        }
+
+        void deleteSegment(const int cmp[2]){
+            SegmentMemoryKey toDelete(cmp[0], cmp[1]);
+            QHash<SegmentMemoryKey, SegmentMemoryData>::iterator it = hashMap.find(toDelete);
+            hashMap.erase(it);
+        }
+
+        bool contain(const int cmp[2]){
+            return hashMap.contains(SegmentMemoryKey(cmp[0], cmp[1]));
+        }
+
+        int faceIndex(const int cmp[2]){
+            return hashMap.value(SegmentMemoryKey(cmp[0], cmp[1])).faceIndex;
+        }
+
+        int vertexInFaceIndex(const int cmp[2]){
+            return hashMap.value(SegmentMemoryKey(cmp[0], cmp[1])).vertexInFaceIndex;
+        }
+    };
     
 public:
     Mesh();
@@ -111,21 +163,7 @@ public:
     //Circulator_on_faces incident_f(Vertex &v){return Circulator_on_faces();}
     //Circulator_on_vertices adjacent_v(Vertex &v){return Circulator_on_vertices();}
 
-    class SegmentMemory{
-        /*class SegmentMemoryData{
-        public:
 
-        };*/
-    public:
-        //QHash<std::pair<int, int>, SegmentMemoryData> hashMap;
-        int vertexIndex1;
-        int vertexIndex2;
-        int faceIndex;
-        int vertexInFaceIndex;
-
-        SegmentMemory(int vI1, int vI2, int fI, int vIFI) : vertexIndex1(vI1),
-            vertexIndex2(vI2), faceIndex(fI), vertexInFaceIndex(vIFI){}
-    };
 };
 
 class Iterator_on_vertices : public std::iterator<std::input_iterator_tag, Face>

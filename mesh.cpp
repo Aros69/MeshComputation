@@ -83,7 +83,7 @@ void Mesh::meshWithFile(std::string filePath){
     std::cout<<"End of creating a mesh with .off file\n";
 }
 
-
+/*
 void printSegementMemory(Mesh::SegmentMemory t){
     std::cout<<"Mémoire : vertexIndex : "<<t.vertexIndex1
             << " "<< t.vertexIndex2<<" Index de la Face "
@@ -92,7 +92,7 @@ void printSegementMemory(Mesh::SegmentMemory t){
 void printAllSegmentMemory(const std::list<Mesh::SegmentMemory> & m){
     for(auto ma : m){printSegementMemory(ma);}
     std::cout<<"\n";
-}
+}*/
 
 void printFacesNeib(const QVector<Face> & f){
     for(int j=0;j<f.size();++j){
@@ -102,52 +102,36 @@ void printFacesNeib(const QVector<Face> & f){
 }
 
 void Mesh::defineNeighbourFaces(){
-    // TODO Use a hashMap instead of a list
-    std::list<Mesh::SegmentMemory> memory;
-    std::list<Mesh::SegmentMemory>::iterator m, m1, m2, m3;
-    bool segment1, segment2, segment3;
+    Mesh::SegmentMemory memory;
+
     for(int i=0;i<faceTab.size();++i){
-        segment1 = false;
-        segment2 = false;
-        segment3 = false;
-        m = memory.begin();
-        m1 = memory.end();
-        m2 = memory.end();
-        m3 = memory.end();
-
-        do{
-            if((m->vertexIndex1 == faceTab[i][0] && m->vertexIndex2 == faceTab[i][1])
-                    || (m->vertexIndex1 == faceTab[i][1] && m->vertexIndex2 == faceTab[i][0])) {
-                faceTab[i].setNeibFace(m->faceIndex,2);
-                faceTab[m->faceIndex].setNeibFace(i,m->vertexInFaceIndex);
-                segment1=true;
-                m1=m;
-            }
-            if((m->vertexIndex1 == faceTab[i][1] && m->vertexIndex2 == faceTab[i][2])
-                    || (m->vertexIndex1 == faceTab[i][2] && m->vertexIndex2 == faceTab[i][1])) {
-                faceTab[i].setNeibFace(m->faceIndex,0);
-                faceTab[m->faceIndex].setNeibFace(i,m->vertexInFaceIndex);
-                segment2=true;
-                m2=m;
-            }
-            if((m->vertexIndex1 == faceTab[i][0] && m->vertexIndex2 == faceTab[i][2])
-                    || (m->vertexIndex1 == faceTab[i][2] && m->vertexIndex2 == faceTab[i][0])) {
-                faceTab[i].setNeibFace(m->faceIndex,1);
-                faceTab[m->faceIndex].setNeibFace(i,m->vertexInFaceIndex);
-                segment3=true;
-                m3=m;
-            }
-            m++;
+        int toTest[2] {faceTab[i][0], faceTab[i][1]};
+        if(memory.contain(toTest)){
+            faceTab[i].setNeibFace(memory.faceIndex(toTest),2);
+            faceTab[memory.faceIndex(toTest)]
+                    .setNeibFace(i,memory.vertexInFaceIndex(toTest));
+            memory.deleteSegment(toTest);
+        } else {
+            memory.addSegment(faceTab[i][0], faceTab[i][1], i, 2);
         }
-        // Tant que tout les segments sont pas ok && que l'on peut avancer dans la memoire
-        while((!segment1 || !segment2 || !segment3) && m!=memory.end());
-
-        //printAllSegmentMemory(memory);
-        //printFacesNeib(faceTab);
-
-        if(!segment1){memory.push_back(Mesh::SegmentMemory(faceTab[i][0], faceTab[i][1], i, 2));} else {memory.erase(m1);}
-        if(!segment2){memory.push_back(Mesh::SegmentMemory(faceTab[i][1], faceTab[i][2], i, 0));} else {memory.erase(m2);}
-        if(!segment3){memory.push_back(Mesh::SegmentMemory(faceTab[i][0], faceTab[i][2], i, 1));} else {memory.erase(m3);}
+        toTest[0] = faceTab[i][2];
+        if(memory.contain(toTest)){
+            faceTab[i].setNeibFace(memory.faceIndex(toTest),1);
+            faceTab[memory.faceIndex(toTest)]
+                    .setNeibFace(i,memory.vertexInFaceIndex(toTest));
+            memory.deleteSegment(toTest);
+        } else {
+            memory.addSegment(faceTab[i][1], faceTab[i][2], i, 0);
+        }
+        toTest[1] = faceTab[i][0];
+        if(memory.contain(toTest)){
+            faceTab[i].setNeibFace(memory.faceIndex(toTest),0);
+            faceTab[memory.faceIndex(toTest)]
+                    .setNeibFace(i,memory.vertexInFaceIndex(toTest));
+            memory.deleteSegment(toTest);
+        } else {
+            memory.addSegment(faceTab[i][0], faceTab[i][2], i, 1);
+        }
     }
 }
 
