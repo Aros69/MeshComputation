@@ -83,17 +83,6 @@ void Mesh::meshWithFile(std::string filePath){
     std::cout<<"End of creating a mesh with .off file\n";
 }
 
-/*
-void printSegementMemory(Mesh::SegmentMemory t){
-    std::cout<<"Mémoire : vertexIndex : "<<t.vertexIndex1
-            << " "<< t.vertexIndex2<<" Index de la Face "
-            <<t.faceIndex<<" Index dans la face "<<t.vertexInFaceIndex<<"\n";
-}
-void printAllSegmentMemory(const std::list<Mesh::SegmentMemory> & m){
-    for(auto ma : m){printSegementMemory(ma);}
-    std::cout<<"\n";
-}*/
-
 void printFacesNeib(const QVector<Face> & f){
     for(int j=0;j<f.size();++j){
         std::cout<<"Face : "<<j<<" : "<<f[j].getNeibFace(0)<<" "<<f[j].getNeibFace(1)
@@ -102,7 +91,7 @@ void printFacesNeib(const QVector<Face> & f){
 }
 
 void Mesh::defineNeighbourFaces(){
-    Mesh::SegmentMemory memory;
+    SegmentMemory memory;
 
     for(int i=0;i<faceTab.size();++i){
         int toTest[2] {faceTab[i][0], faceTab[i][1]};
