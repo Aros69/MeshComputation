@@ -55,7 +55,7 @@
     <property name="title">
      <string>Display</string>
     </property>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -101,6 +101,7 @@
    <container>1</container>
    <slots>
     <slot>onWireframe()</slot>
+    <slot>onPlain()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -117,24 +118,40 @@
      <y>472</y>
     </hint>
     <hint type="destinationlabel">
-     <x>80</x>
-     <y>74</y>
+     <x>94</x>
+     <y>268</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>pushButton_3</sender>
+   <sender>pushButton_2</sender>
    <signal>released()</signal>
    <receiver>widget</receiver>
    <slot>onWireframe()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>97</x>
-     <y>74</y>
+     <x>49</x>
+     <y>64</y>
     </hint>
     <hint type="destinationlabel">
-     <x>303</x>
-     <y>261</y>
+     <x>162</x>
+     <y>55</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>widget</receiver>
+   <slot>onPlain()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>109</y>
     </hint>
    </hints>
   </connection>

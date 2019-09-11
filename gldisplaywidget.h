@@ -15,6 +15,9 @@ public:
     void initializeGL(); // The scene may be initialized in this function since the mesh is a data member...
     void paintGL(); // Display the scene Gl
     void resizeGL(int width, int height);
+    void drawMesh();
+    void setDisplayWireframe();
+    void setDisplayPlain();
 
 protected:
     // Mouse Management
@@ -31,6 +34,7 @@ private:
     QPoint _lastPosMouse; // To keep the last position of the mouse
 
     Mesh _mesh; // The object to be displayed, may be replaced by a scene if there are several objects....
+    int displayMode = 0; // 0 : Plain Mode 1 : WireFrame
 
     void initThetrahedron();
     void initQueenMesh();
@@ -38,8 +42,6 @@ private:
     void initPyramid();
     void init2DBBox();
 
-public slots:
-    void onWireframe();
 
 };
 
