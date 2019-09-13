@@ -122,6 +122,7 @@ void Mesh::defineNeighbourFaces(){
             memory.addSegment(faceTab[i][0], faceTab[i][2], i, 1);
         }
     }
+    printFacesNeib(faceTab);
 }
 
 Iterator_on_faces Mesh::f_begin() { return Iterator_on_faces(0, this); }

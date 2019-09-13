@@ -244,16 +244,23 @@ class SegmentMemory{
         int vertexIndex1;
         int vertexIndex2;
         SegmentMemoryKey(int index1, int index2)
-            : vertexIndex1(index1), vertexIndex2(index2){}
+            : vertexIndex1(index1), vertexIndex2(index2){
+            if(index1 < index2){
+                vertexIndex1 = index1;
+                vertexIndex2 = index2;
+            } else {
+                vertexIndex1 = index2;
+                vertexIndex2 = index1;
+            }
+        }
 
         bool operator==(const SegmentMemoryKey& cmp) const{
-            return ((this->vertexIndex1==cmp.vertexIndex2&&this->vertexIndex2==cmp.vertexIndex1)
-                    ||(this->vertexIndex1==cmp.vertexIndex2&&this->vertexIndex2==cmp.vertexIndex2));
+            return (this->vertexIndex1==cmp.vertexIndex2&&this->vertexIndex2==cmp.vertexIndex1);
         }
 
         bool operator<(const SegmentMemoryKey& cmp) const{
-            return ((this->vertexIndex1<cmp.vertexIndex2&&this->vertexIndex2<cmp.vertexIndex1)
-                    ||(this->vertexIndex1<cmp.vertexIndex2&&this->vertexIndex2<cmp.vertexIndex2));
+            return ((this->vertexIndex1<cmp.vertexIndex1)
+                    ||(this->vertexIndex1==cmp.vertexIndex1&&this->vertexIndex2<cmp.vertexIndex2));
         }
 
     };
