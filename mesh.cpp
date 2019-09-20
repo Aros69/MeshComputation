@@ -85,8 +85,10 @@ void Mesh::meshWithFile(std::string filePath){
 
 void printFacesNeib(const QVector<Face> & f){
     for(int j=0;j<f.size();++j){
-        std::cout<<"Face : "<<j<<" : "<<f[j].getNeibFace(0)<<" "<<f[j].getNeibFace(1)
-                <<" "<<f[j].getNeibFace(2)<<"\n";
+        std::cout<<"Face : "<<j<<" : ("<<f[j].getVertex(0)<<", "
+                <<f[j].getNeibFace(0)<<") (" <<f[j].getVertex(1)
+                <<", "<<f[j].getNeibFace(1) <<") ("
+                <<f[j].getVertex(2)<<", "<<f[j].getNeibFace(2)<<")\n";
     }
 }
 
@@ -103,26 +105,27 @@ void Mesh::defineNeighbourFaces(){
         } else {
             memory.addSegment(faceTab[i][0], faceTab[i][1], i, 2);
         }
-        toTest[0] = faceTab[i][2];
-        if(memory.contain(toTest)){
-            faceTab[i].setNeibFace(memory.faceIndex(toTest),1);
-            faceTab[memory.faceIndex(toTest)]
-                    .setNeibFace(i,memory.vertexInFaceIndex(toTest));
-            memory.deleteSegment(toTest);
+        int toTest2[2] {faceTab[i][1], faceTab[i][2]};
+        if(memory.contain(toTest2)){
+            faceTab[i].setNeibFace(memory.faceIndex(toTest2),0);
+            faceTab[memory.faceIndex(toTest2)]
+                    .setNeibFace(i,memory.vertexInFaceIndex(toTest2));
+            memory.deleteSegment(toTest2);
         } else {
             memory.addSegment(faceTab[i][1], faceTab[i][2], i, 0);
         }
-        toTest[1] = faceTab[i][0];
-        if(memory.contain(toTest)){
-            faceTab[i].setNeibFace(memory.faceIndex(toTest),0);
-            faceTab[memory.faceIndex(toTest)]
-                    .setNeibFace(i,memory.vertexInFaceIndex(toTest));
-            memory.deleteSegment(toTest);
+        int toTest3[2] {faceTab[i][0], faceTab[i][2]};
+        if(memory.contain(toTest3)){
+            faceTab[i].setNeibFace(memory.faceIndex(toTest3),1);
+            faceTab[memory.faceIndex(toTest3)]
+                    .setNeibFace(i,memory.vertexInFaceIndex(toTest3));
+            memory.deleteSegment(toTest3);
         } else {
             memory.addSegment(faceTab[i][0], faceTab[i][2], i, 1);
         }
     }
-    printFacesNeib(faceTab);
+    //printFacesNeib(faceTab);
+    //memory.print();
 }
 
 Iterator_on_faces Mesh::f_begin() { return Iterator_on_faces(0, this); }

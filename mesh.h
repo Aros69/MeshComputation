@@ -93,8 +93,7 @@ public:
         std::cout << " Provided was " << globalIndex << "\n";
         return -1;
     }
-
-    int getVertex(int index)
+    int getVertex(int index) const
     {
         return verticesIndex[index];
     }
