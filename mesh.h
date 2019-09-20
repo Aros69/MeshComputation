@@ -91,7 +91,7 @@ public:
         std::cout << "vertex not part of this triangle\n";
         return -1;
     }
-    int getVertex(int index)
+    int getVertex(int index) const
     {
         return verticesIndex[index];
     }

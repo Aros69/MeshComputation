@@ -1,10 +1,12 @@
+#include <iostream>
+#include <QMap>
+
 class SegmentMemory{
     class SegmentMemoryKey{
     public:
         int vertexIndex1;
         int vertexIndex2;
-        SegmentMemoryKey(int index1, int index2)
-            : vertexIndex1(index1), vertexIndex2(index2){
+        SegmentMemoryKey(int index1, int index2) {
             if(index1 < index2){
                 vertexIndex1 = index1;
                 vertexIndex2 = index2;
@@ -55,6 +57,15 @@ public:
 
     int vertexInFaceIndex(const int cmp[2]){
         return (hashMap.find(SegmentMemoryKey(cmp[0], cmp[1]))).value().vertexInFaceIndex;
+    }
+
+    void print(){
+        auto it = hashMap.keyBegin();
+        for(auto h : hashMap){
+            std::cout<<"("<<it->vertexIndex1<<", "<<it->vertexIndex2<<") ("
+                    <<h.faceIndex<<", " << ")\n";
+            it++;
+        }
     }
 };
 
