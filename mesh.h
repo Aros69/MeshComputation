@@ -89,13 +89,21 @@ public:
             }
         }
         std::cout << "vertex not part of this triangle\n";
+        std::cout << "indexes are ["<< verticesIndex [0] <<"] ["<< verticesIndex[1] <<"] and ["<< verticesIndex[2]<<"\n";
+        std::cout << " Provided was " << globalIndex << "\n";
         return -1;
     }
+
     int getVertex(int index)
     {
         return verticesIndex[index];
     }
 
+    void print(){
+        std::cout << "indexes of vertices are 1 : ["<< verticesIndex [0] <<"]\t 2 : ["<< verticesIndex[1]
+                  <<"]\t 3 :["<< verticesIndex[2]<<"]\n";
+    }
+    
     int &operator[](int x)
     {
         return verticesIndex[x];
@@ -123,8 +131,8 @@ public:
     void meshWithFile(std::string filePath);
     void defineNeighbourFaces();
 
-    Vertex *getVertex(int index) { return &vertexTab[index]; }
-    Face *getFace(int index) { return &faceTab[index]; }
+    Vertex& getVertex(int index) { return vertexTab[index]; }
+    Face& getFace(int index) { return faceTab[index]; }
 
     int getVertexID(const Vertex &m)
     {
@@ -139,7 +147,6 @@ public:
         std::cout << "Invalid ID";
         return -1;
     }
-
     Iterator_on_faces f_begin();
     Iterator_on_faces f_pend();
     Iterator_on_vertices v_begin();
@@ -148,6 +155,7 @@ public:
     Circulator_on_faces incident_f(Vertex &v);
     Circulator_on_vertices adjacent_v(Vertex &v);
 
+    void printFaces();
 
 };
 
