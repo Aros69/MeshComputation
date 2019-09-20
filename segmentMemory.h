@@ -59,13 +59,13 @@ public:
         return (hashMap.find(SegmentMemoryKey(cmp[0], cmp[1]))).value().vertexInFaceIndex;
     }
 
-    void print(){
+    /*void print(){
         auto it = hashMap.keyBegin();
         for(auto h : hashMap){
             std::cout<<"("<<it->vertexIndex1<<", "<<it->vertexIndex2<<") ("
                     <<h.faceIndex<<", " << ")\n";
             it++;
         }
-    }
+    }*/
 };
 
