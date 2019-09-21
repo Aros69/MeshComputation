@@ -1,3 +1,5 @@
+#include<mesh.h>
+
 // VERTEX ITERATOR ==========================================================================================
 class Iterator_on_vertices : public std::iterator<std::input_iterator_tag, Face>
 {
@@ -139,3 +141,4 @@ inline bool operator!=(Circulator_on_faces v1,Circulator_on_faces v2 )
     return (v1.currentFaceIndex != v2.currentFaceIndex)
             | (v1.axisVertexIndex != v2.axisVertexIndex);
 }
+
