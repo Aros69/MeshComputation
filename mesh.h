@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
 // TO MODIFY
 // Advice => You should create a new file for each module but not necessarily for each class
@@ -23,19 +24,6 @@ public:
     float y() const { return _y; }
     float z() const { return _z; }
 };
-
-struct Vector
-{
-    float x;
-    float y;
-    float z;
-    Vector(): x(), y(), z() {}
-    Vector(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
-};
-
-float dot(const Vector& v1,const Vector& v2);
-
-Vector cross(const Vector& v1,const Vector& v2);
 
 class Vertex
 {
@@ -59,6 +47,24 @@ public:
         return false;
     }
 };
+
+struct Vector
+{
+    float x;
+    float y;
+    float z;
+    Vector(): x(), y(), z() {}
+    Vector(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
+
+    //Init a vector going FROM p1 TO p2
+    Vector(const Point& p1,const Point& p2) : x(p2.x() - p1.x()), y(p2.y() - p1.y()), z(p2.z() - p1.z()){}
+    //Init a vector going FROM v1 TO v2
+    Vector(const Vertex& v1,const Vertex& v2) : x(v2.x() - v1.x()), y(v2.y() - v1.y()), z(v2.z() - v1.z()){}
+};
+
+float dot(const Vector& v1,const Vector& v2);
+Vector cross(const Vector& v1,const Vector& v2);
+float norm(const Vector& v);
 
 class Face
 {
@@ -109,9 +115,6 @@ public:
     int getVertex(int index) const
     {
         return verticesIndex[index];
-    }
-    float getArea() const{
-
     }
 
     void print(int ID){
@@ -165,6 +168,8 @@ public:
         std::cout << "Invalid ID";
         return -1;
     }
+
+    void computeLaplacian();
     Iterator_on_faces f_begin();
     Iterator_on_faces f_pend();
     Iterator_on_vertices v_begin();

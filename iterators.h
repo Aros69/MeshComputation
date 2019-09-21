@@ -124,8 +124,9 @@ public:
     {
         int axisLocalIndex = m->getFace(currentFaceIndex).global2localIndex(axisVertexIndex);
         std::cout << "\n\nAxis's Local ID : " << axisLocalIndex << "\t Axis's Global ID : "<< m->getFace(currentFaceIndex).getVertex(axisLocalIndex)<<"\n";
-        std::cout << "Getting the face opposite to " << ((axisLocalIndex + 1) % 3) << "\n";
+        std::cout << "Getting the face opposite to [" << ((axisLocalIndex + 1) % 3) << "]\n";
         currentFaceIndex = m->getFace(currentFaceIndex).getNeibFace((axisLocalIndex + 1) % 3);
+        m->getFace(currentFaceIndex).print(currentFaceIndex);
         print();
         return *this;
     }
@@ -141,4 +142,3 @@ inline bool operator!=(Circulator_on_faces v1,Circulator_on_faces v2 )
     return (v1.currentFaceIndex != v2.currentFaceIndex)
             | (v1.axisVertexIndex != v2.axisVertexIndex);
 }
-

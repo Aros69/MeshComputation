@@ -146,6 +146,9 @@ Vector cross(const Vector& v1,const Vector& v2)
       (v1.z * v2.x) - (v1.x * v2.z),
       (v1.x * v2.y) - (v1.y * v2.x) );
 }
+float norm(const Vector& v){
+  return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+}
 void Mesh::printFaces(){
         Iterator_on_faces itf;
         int i = 0;
@@ -153,4 +156,9 @@ void Mesh::printFaces(){
             (*itf).print(i);
             i++;
         }
+}
+
+//TODO
+void Mesh::computeLaplacian(){
+
 }

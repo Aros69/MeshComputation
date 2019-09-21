@@ -122,6 +122,25 @@ void GLDisplayWidget::initCubeMesh()
     //_mesh.meshWithFile("data/cube.off");
 }
 
+//Test the circulator with a mesh
+void testMesh(){
+  Mesh titi;
+  titi.meshWithFile("../meshcomputation/data/queen.off");
+  //titi.printFaces();
+  Iterator_on_vertices its;
+  Circulator_on_faces cf;
+  for (its = titi.v_begin(); its != titi.v_pend(); ++its)
+  {
+      std::cout << "Getting new incident face \n";
+      Circulator_on_faces cfbegin = titi.incident_f(*its);
+      int cmpt = 0;
+      for (cf = cfbegin, ++cf; cf != cfbegin; cf++){
+          cmpt++;
+          //std::cout << cmpt << "\n";
+      }
+      std::cout << "valence of the vertex "<< cmpt << std::endl;
+  }
+}
 void GLDisplayWidget::initializeGL()
 {
     // background color
@@ -134,25 +153,8 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
-    //initPyramid();
-    //initQueenMesh();
     initCubeMesh();
-    Mesh titi;
-    titi.meshWithFile("../meshcomputation/data/cube.off");
-    titi.printFaces();
-    Iterator_on_vertices its;
-    Circulator_on_faces cf;
-    for (its = titi.v_begin(); its != titi.v_pend(); ++its)
-    {
-        std::cout << "Getting new incident face \n";
-        Circulator_on_faces cfbegin = titi.incident_f(*its);
-        int cmpt = 0;
-        for (cf = cfbegin, ++cf; cf != cfbegin; cf++){
-            cmpt++;
-            //std::cout << cmpt << "\n";
-        }
-        std::cout << "valence of the vertex "<< cmpt << std::endl;
-    }
+    //testMesh();
 }
 
 void GLDisplayWidget::paintGL()
