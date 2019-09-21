@@ -24,6 +24,19 @@ public:
     float z() const { return _z; }
 };
 
+struct Vector
+{
+    float x;
+    float y;
+    float z;
+    Vector(): x(), y(), z() {}
+    Vector(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
+};
+
+float dot(const Vector& v1,const Vector& v2);
+
+Vector cross(const Vector& v1,const Vector& v2);
+
 class Vertex
 {
     Point point;
@@ -96,6 +109,9 @@ public:
     int getVertex(int index) const
     {
         return verticesIndex[index];
+    }
+    float getArea() const{
+
     }
 
     void print(int ID){

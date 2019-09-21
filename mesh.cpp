@@ -135,6 +135,17 @@ Iterator_on_vertices Mesh::v_pend() { return Iterator_on_vertices(vertexTab.size
 Circulator_on_faces Mesh::incident_f(Vertex &v){return Circulator_on_faces(this->getVertexID(v),this);}
 Circulator_on_vertices Mesh::adjacent_v(Vertex &v){return Circulator_on_vertices(getVertexID(v),this);}
 
+float dot(const Vector& v1,const Vector& v2)
+{
+  return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+
+Vector cross(const Vector& v1,const Vector& v2)
+{
+  return Vector( (v1.y * v2.z) - (v1.z * v2.y),
+      (v1.z * v2.x) - (v1.x * v2.z),
+      (v1.x * v2.y) - (v1.y * v2.x) );
+}
 void Mesh::printFaces(){
         Iterator_on_faces itf;
         int i = 0;
