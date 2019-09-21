@@ -137,7 +137,7 @@ void GLDisplayWidget::initializeGL()
     //initPyramid();
     //initQueenMesh();
     initCubeMesh();
-    /*Mesh titi;
+    Mesh titi;
     titi.meshWithFile("../meshcomputation/data/cube.off");
     titi.printFaces();
     Iterator_on_vertices its;
@@ -147,10 +147,12 @@ void GLDisplayWidget::initializeGL()
         std::cout << "Getting new incident face \n";
         Circulator_on_faces cfbegin = titi.incident_f(*its);
         int cmpt = 0;
-        for (cf = cfbegin, ++cf; cf != cfbegin; cf++)
+        for (cf = cfbegin, ++cf; cf != cfbegin; cf++){
             cmpt++;
+            //std::cout << cmpt << "\n";
+        }
         std::cout << "valence of the vertex "<< cmpt << std::endl;
-    }*/
+    }
 }
 
 void GLDisplayWidget::paintGL()

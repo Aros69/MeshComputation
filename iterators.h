@@ -32,7 +32,7 @@ class Circulator_on_vertices : public std::iterator<std::input_iterator_tag, Fac
     int axisVertexIndex;
     int currentAdjacentVertex;
     Mesh *m;
-    
+
 public:
     Circulator_on_vertices(int faceIndex, int axisIndex, Mesh *mesh) : currentFaceIndex(faceIndex),
                                                                        axisVertexIndex(axisIndex), m(mesh)
@@ -106,7 +106,7 @@ public:
     Circulator_on_faces(int axisIndex, Mesh *mesh) : axisVertexIndex(axisIndex), m(mesh)
     {
         currentFaceIndex = m->getVertex(axisIndex).getFaceIndex();
-        std::cout <<"Circulator Init2\n";
+        std::cout <<"Circulator Init\n";
         std::cout <<"Axis Index is ["<< axisIndex<<"]\nCurrentFace Index is ["<<currentFaceIndex<<"]\n";
     }
 
@@ -114,16 +114,22 @@ public:
     {
         int axisLocalIndex = m->getFace(currentFaceIndex).global2localIndex(axisVertexIndex);
         currentFaceIndex = m->getFace(currentFaceIndex).getNeibFace((axisLocalIndex + 1) % 3);
+        print();
         return *this;
     }
 
     Circulator_on_faces &operator++(int)
     {
         int axisLocalIndex = m->getFace(currentFaceIndex).global2localIndex(axisVertexIndex);
+        std::cout << "\n\nAxis's Local ID : " << axisLocalIndex << "\t Axis's Global ID : "<< m->getFace(currentFaceIndex).getVertex(axisLocalIndex)<<"\n";
+        std::cout << "Getting the face opposite to " << ((axisLocalIndex + 1) % 3) << "\n";
         currentFaceIndex = m->getFace(currentFaceIndex).getNeibFace((axisLocalIndex + 1) % 3);
+        print();
         return *this;
     }
-
+    void print(){
+      std::cout << "Circulator pointing on face n°"<< currentFaceIndex << "\n Rotating around vertex n°" << axisVertexIndex << "\n";
+    }
     friend bool operator!=(Circulator_on_faces v1,Circulator_on_faces v2);
     Face& operator*() { return m->getFace(currentFaceIndex); }
 };

@@ -98,11 +98,14 @@ public:
         return verticesIndex[index];
     }
 
-    void print(){
-        std::cout << "indexes of vertices are 1 : ["<< verticesIndex [0] <<"]\t 2 : ["<< verticesIndex[1]
+    void print(int ID){
+        std::cout << "Face ["<< ID <<"] : \n";
+        std::cout << "Vertices Index :\n 1 :\t ["<< verticesIndex [0] <<"]\t 2 : ["<< verticesIndex[1]
                   <<"]\t 3 :["<< verticesIndex[2]<<"]\n";
+        std::cout << "Near Faces Index :\n 1 :\t ["<< neibFace[0] <<"]\t 2 : ["<< neibFace[1]
+                  <<"]\t 3 :["<< neibFace[2]<<"]\n";
     }
-    
+
     int &operator[](int x)
     {
         return verticesIndex[x];
