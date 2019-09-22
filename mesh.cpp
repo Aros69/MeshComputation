@@ -221,8 +221,11 @@ float Mesh::getFaceArea(int FaceIndex){
 float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
   Vector vec1(v1,v2);
   Vector vec2(v1,v3);
-
-  return getCos(vec1,vec2)/getSin(vec1,vec2);
+  double sin = getSin(vec1,vec2);
+  double cos = getCos(vec1,vec2);
+  if(!sin)
+    return 10000;
+  return cos / sin;
 }
 
 void Mesh::computeLaplacian(){
@@ -274,7 +277,12 @@ void Mesh::computeLaplacian(){
         sum.y += (coBeta + coAlpha) * (nextV.y() - axis.y() );
         sum.z += (coBeta + coAlpha) * (nextV.z() - axis.z() );
 
-        //std::cout << "sum.x = " << sum.x << "\n";
+        // std::cout << "nextV.x() = " << nextV.x() << "\t axis.x = " << axis.x() << "\n";
+        // std::cout << "coBeta = " << coBeta << "\t coAlpha = " << coAlpha << "\n";
+        // std::cout << "(coBeta + coAlpha) = " << (coBeta + coAlpha) << "\t(nextV.x() - axis.x()) = " <<  (nextV.x() - axis.x()) << "\n";
+        // std::cout << "sum.x =" << sum.x << "\n";
+        // std::cout << "sum.y = " << sum.y << "\n";
+        // std::cout << "sum.z = " << sum.z << "\n";
 
         //get the alpha
         //std::cout << "Computing Alpha...\n";
