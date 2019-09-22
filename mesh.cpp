@@ -22,14 +22,10 @@ void Mesh::drawMesh() {
     double redColor, greenColor, blueColor;
     for(int i = 0; i < faceTab.size(); i++) {
 
-        /*moduloI = i%4;
-        if (moduloI == 0) glColor3d(1,0,0);
-        else if (moduloI == 1) glColor3d(0,1,0);
-        else if (moduloI == 2) glColor3d(0,0,1);
-        else glColor3d(1,1,0);*/
+
         if(minValueLaplacien.x!=INT_MIN){
-            // Méthode de coloration avec moyenne
-            /*redColor = double(Laplacien[faceTab[i][0]].x
+            // Méthode de coloration avec moyenne et x,y,z
+            redColor = double(Laplacien[faceTab[i][0]].x
                     + Laplacien[faceTab[i][1]].x
                     + Laplacien[faceTab[i][2]].x)/3;
             blueColor = double(Laplacien[faceTab[i][0]].y
@@ -41,11 +37,26 @@ void Mesh::drawMesh() {
             redColor = double(redColor-minValueLaplacien.x)/(maxValueLaplacien.x-minValueLaplacien.x);
             blueColor = double(blueColor-minValueLaplacien.y)/(maxValueLaplacien.y-minValueLaplacien.y);
             greenColor = double(greenColor-minValueLaplacien.z)/(maxValueLaplacien.z-minValueLaplacien.z);
-            glColor3d(redColor,blueColor,greenColor);*/
-            double t = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
+            glColor3d(redColor,blueColor,greenColor);
+
+            // Méthode de coloration avec norme
+            double t = double(norm(Laplacien[faceTab[i][0]])
+                    + norm(Laplacien[faceTab[i][1]])
+                    + norm(Laplacien[faceTab[i][2]]))/3/maxNormLaplacian;
             glColor3d(t, t, t);
+
+            // Méthode Ultime
+            double ultR = redColor*t*2;
+            double ultG = greenColor*t*2;
+            double ultB = blueColor*t*2;
+            glColor3d(ultR, ultG, ultB);
+
         } else {
-            glColor3d(0.0, 0.0, 0.0);
+            moduloI = i%4;
+            if (moduloI == 0) glColor3d(1,0,0);
+            else if (moduloI == 1) glColor3d(0,1,0);
+            else if (moduloI == 2) glColor3d(0,0,1);
+            else glColor3d(1,1,0);
         }
 
         glBegin(GL_TRIANGLES);
@@ -79,7 +90,7 @@ void Mesh::meshWithFile(std::string filePath){
         std::cout<<"ERROR : Unable to open file : \""<<filePath<<"\"\n";
     } else {
         int nbVertices, nbFaces, dump, a, b, c;
-        float x, y, z;
+        double x, y, z;
         std::string temp;
         file >> nbVertices >> nbFaces >> dump;
 
@@ -155,7 +166,7 @@ Iterator_on_vertices Mesh::v_pend() { return Iterator_on_vertices(vertexTab.size
 Circulator_on_faces Mesh::incident_f(Vertex &v){return Circulator_on_faces(this->getVertexID(v),this);}
 Circulator_on_vertices Mesh::adjacent_v(Vertex &v){return Circulator_on_vertices(getVertexID(v),this);}
 
-float dot(const Vector& v1,const Vector& v2)
+double dot(const Vector& v1,const Vector& v2)
 {
   return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
@@ -167,12 +178,12 @@ Vector cross(const Vector& v1,const Vector& v2)
       (v1.x * v2.y) - (v1.y * v2.x) );
 }
 
-float norm(const Vector& v){
-  return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+double norm(const Vector& v){
+  return double(sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
 }
 
 Vector normalize(const Vector& v){
-  float magnetude = norm(v);
+  double magnetude = norm(v);
   Vector normV(0,0,0);
   normV.x = v.x/magnetude;
   normV.y = v.y/magnetude;
@@ -180,11 +191,11 @@ Vector normalize(const Vector& v){
   return normV;
 }
 
-float getCos(const Vector& v1,const Vector& v2){
+double getCos(const Vector& v1,const Vector& v2){
   return dot(normalize(v1),normalize(v2));
 }
 
-float getSin(const Vector& v1,const Vector& v2){
+double getSin(const Vector& v1,const Vector& v2){
   return cross(normalize(v1),normalize(v2)).x;
 }
 
@@ -210,23 +221,23 @@ int Mesh::getVertexID(const Vertex &m)
     return -1;
 }
 
-float Mesh::getFaceArea(Vertex& vert1,Vertex& vert2, Vertex& vert3){
+double Mesh::getFaceArea(Vertex& vert1,Vertex& vert2, Vertex& vert3){
   Vector v1(vert1,vert2);
   Vector v2(vert1,vert3);
   return norm(cross(v1,v2));
 }
 
-float Mesh::getFaceArea(int FaceIndex){
+double Mesh::getFaceArea(int FaceIndex){
   return getFaceArea(getVertex(getFace(FaceIndex).getVertex(0)),getVertex(getFace(FaceIndex).getVertex(1))
             ,getVertex(getFace(FaceIndex).getVertex(2)));
 }
 
-float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
+double Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
   Vector vec1(v1,v2);
   Vector vec2(v1,v3);
   double sin = getSin(vec1,vec2);
   double cos = getCos(vec1,vec2);
-  float clamp = 1000;
+  double clamp = 1;
   if(!sin)
     return clamp;
   double cot = cos/sin;
@@ -347,9 +358,3 @@ void Mesh::minMaxLaplacian(){
         }
     }
 }
-
-
-/*void Mesh::threadedLaplacian(){
-    QThread t;
-    t.create(&computeLaplacian);
-}*/
