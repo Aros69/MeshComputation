@@ -147,8 +147,8 @@ private:
     QVector<Vertex> vertexTab;
     QVector<Face> faceTab;
     QVector<Vector> Laplacien;
-    Vector colorA = Vector(0.2,0.25,0.0);
-    Vector colorB = Vector(0.0,1.0,0.0);
+    Vector colorA = Vector(0.75,0.75,0.75);
+    Vector colorB = Vector(1,0.85,0);
     Vector maxValueLaplacien;
     Vector minValueLaplacien;
     double maxNormLaplacian;

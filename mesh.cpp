@@ -240,7 +240,7 @@ double Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
   Vector vec2(v1,v3);
   double sin = getSin(vec1,vec2);
   double cos = getCos(vec1,vec2);
-  double clamp = 1;
+  double clamp = 100;
   if(!sin)
     return clamp;
   double cot = cos/sin;
@@ -256,23 +256,27 @@ void Mesh::computeLaplacian(){
   Laplacien = QVector<Vector>(vertexTab.size());
   Iterator_on_vertices its;
   Circulator_on_faces cf;
-  int i = 0;
+  Circulator_on_faces cfbegin;
+  int i =0 , axisGlID, axisLocID;
+  float coAlpha, coBeta, area;
+  Vector sum(0,0,0);
+  Vertex axis, nextV, lastV;
 
   //For every vertex
   for (its = v_begin(); its != v_pend(); ++its)
   {
-      float coAlpha = 0;
-      float coBeta = 0;
-      float area = 0;
-      Vector sum(0,0,0);
-      Circulator_on_faces cfbegin = incident_f(*its);
+      coAlpha = 0;
+      coBeta = 0;
+      area = 0;
+      sum = Vector(0,0,0);
+      cfbegin = incident_f(*its);
 
       //Variables for lisibility to avoid redundancy
-      Vertex axis = *its;
-      int axisGlID = getVertexID(axis);
-      int axisLocID = (*cfbegin).global2localIndex(axisGlID);
-      Vertex nextV = getVertex((*cfbegin).getVertex( (axisLocID+1) %3)); // Vertex next to axis in counter-clock wise order
-      Vertex lastV = getVertex((*cfbegin).getVertex( (axisLocID+2) %3)); // Vertex next to axis in clock wise order
+      axis = *its;
+      axisGlID = getVertexID(axis);
+      axisLocID = (*cfbegin).global2localIndex(axisGlID);
+      nextV = getVertex((*cfbegin).getVertex( (axisLocID+1) %3)); // Vertex next to axis in counter-clock wise order
+      lastV = getVertex((*cfbegin).getVertex( (axisLocID+2) %3)); // Vertex next to axis in clock wise order
       //Get the first face's alpha,
       //get first alpha
       coAlpha = getCot( nextV, axis, lastV );
