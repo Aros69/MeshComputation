@@ -32,20 +32,20 @@ void GLDisplayWidget::initThetrahedron()
     vertexTab.push_back(Vertex(0, 0.5, -0.5));     // 2
     vertexTab.push_back(Vertex(0, -0.5, 0.5));     // 3
 
-    faceTab.push_back(Face(0, 1, 2));
-    faceTab.push_back(Face(1, 3, 2));
-    faceTab.push_back(Face(3, 0, 2));
+    faceTab.push_back(Face(0, 2, 1));
+    faceTab.push_back(Face(1, 2, 3));
+    faceTab.push_back(Face(0, 3, 2));
     faceTab.push_back(Face(0, 1, 3));
 
-    vertexTab[0].setFaceIndex(1);
-    vertexTab[1].setFaceIndex(2);
-    vertexTab[2].setFaceIndex(3);
-    vertexTab[3].setFaceIndex(0);
+    vertexTab[0].setFaceIndex(0);
+    vertexTab[1].setFaceIndex(1);
+    vertexTab[2].setFaceIndex(2);
+    vertexTab[3].setFaceIndex(3);
 
-    faceTab[0].setNeibFace(1, 2, 3);
-    faceTab[1].setNeibFace(0, 2, 3);
-    faceTab[2].setNeibFace(0, 1, 3);
-    faceTab[3].setNeibFace(0, 1, 2);
+    faceTab[0].setNeibFace(1, 3, 2);
+    faceTab[1].setNeibFace(2, 3, 0);
+    faceTab[2].setNeibFace(1, 0, 3);
+    faceTab[3].setNeibFace(1, 2, 0);
 
     _mesh.setMesh(vertexTab, faceTab);
     _mesh.defineNeighbourFaces();
