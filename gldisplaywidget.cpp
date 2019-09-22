@@ -7,15 +7,11 @@
 
 #include "QDebug"
 #include <iostream>
-GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent){
-
-    /*format().setVersion(3, 3.00);
-    format().setProfile(QGLFormat::CoreProfile);
-    format().setSampleBuffers( true );*/
-
+GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
+{
     // Update the scene
     connect(&_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
-    //connect(pushButton,SIGNAL(released()),this, SLOT(onWireframe()));
+    // connect(pushButton,SIGNAL(released()),this, SLOT(onWireframe()));
     _timer.start(16);
 }
 
@@ -132,8 +128,8 @@ void GLDisplayWidget::initCubeMesh()
     //_mesh.meshWithFile("data/cube.off");
 }
 
-//Test the circulator with a mesh
-void testMesh(){
+//Test the iterators on a mesh
+void testIterators(){
   Mesh titi;
   titi.meshWithFile("../meshcomputation/data/queen.off");
   //titi.printFaces();
@@ -166,8 +162,8 @@ void GLDisplayWidget::initializeGL()
     if(shader->compileSourceFile("../meshcomputation/data/shaders/mesh_color.glsl")){
         //std::cout<<"Youpi le shader compile\n";
         program.addShader(shader);
-        program.link();
-        program.bind();
+        program.link();      
+        //program.bind(); // Uncomment to use the shader
     } else {
         //std::cout<<"Nope pas de shader\n";
         qDebug(qUtf8Printable(shader->log()));
@@ -176,9 +172,10 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
-    //initCubeMesh();
     initQueenMesh();
-    //testMesh();
+
+    _mesh.computeLaplacian();
+    //testIterators();
 }
 
 void GLDisplayWidget::paintGL()
