@@ -150,7 +150,8 @@ private:
 
     Vector maxValueLaplacien;
     Vector minValueLaplacien;
-    QMap<double, int> indexValueLaplacian;
+    double maxNormLaplacian;
+    double minNormLaplacian;
 
 public:
     Mesh();
@@ -177,7 +178,6 @@ public:
     //Laplacian Functions
     void computeLaplacian();
     void minMaxLaplacian();
-    void sortedLaplacian();
 
     //void threadedLaplacian();
 

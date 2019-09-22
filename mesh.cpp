@@ -29,7 +29,7 @@ void Mesh::drawMesh() {
         else glColor3d(1,1,0);*/
         if(minValueLaplacien.x!=INT_MIN){
             // Méthode de coloration avec moyenne
-            redColor = double(Laplacien[faceTab[i][0]].x
+            /*redColor = double(Laplacien[faceTab[i][0]].x
                     + Laplacien[faceTab[i][1]].x
                     + Laplacien[faceTab[i][2]].x)/3;
             blueColor = double(Laplacien[faceTab[i][0]].y
@@ -41,10 +41,9 @@ void Mesh::drawMesh() {
             redColor = double(redColor-minValueLaplacien.x)/(maxValueLaplacien.x-minValueLaplacien.x);
             blueColor = double(blueColor-minValueLaplacien.y)/(maxValueLaplacien.y-minValueLaplacien.y);
             greenColor = double(greenColor-minValueLaplacien.z)/(maxValueLaplacien.z-minValueLaplacien.z);
-            glColor3d(redColor,blueColor,greenColor);
-
-            // Méthode de coloration avec médiane
-
+            glColor3d(redColor,blueColor,greenColor);*/
+            double t = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
+            glColor3d(t, t, t);
         } else {
             glColor3d(0.0, 0.0, 0.0);
         }
@@ -313,12 +312,14 @@ void Mesh::computeLaplacian(){
   }
 
   minMaxLaplacian();
-  sortedLaplacian();
 }
 
 void Mesh::minMaxLaplacian(){
     maxValueLaplacien = Laplacien[0];
     minValueLaplacien = Laplacien[0];
+    maxNormLaplacian = norm(Laplacien[0]);
+    minNormLaplacian = norm(Laplacien[0]);
+    double n;
     for(auto p : Laplacien){
         if (p.x>maxValueLaplacien.x){
             maxValueLaplacien.x = p.x;
@@ -338,23 +339,15 @@ void Mesh::minMaxLaplacian(){
         if (p.z<minValueLaplacien.z){
             minValueLaplacien.z = p.z;
         }
+        n=norm(p);
+        if(n>maxNormLaplacian){
+            maxNormLaplacian=n;
+        } else if(n<minNormLaplacian) {
+            minNormLaplacian=n;
+        }
     }
-    //std::cout<<"Max laplacian value : ("<<maxValueLaplacien.x<<", "<<maxValueLaplacien.y<<", "<<maxValueLaplacien.z<<")\n";
-    //std::cout<<"Min laplacian value : ("<<minValueLaplacien.x<<", "<<minValueLaplacien.y<<", "<<minValueLaplacien.z<<")\n";
 }
 
-void Mesh::sortedLaplacian(){
-    // Trier les laplaciens par grandeur de distance à 0;
-    // Créer la QMap avec comme clé la distance et comme valeur la place dans les laplaciens trié
-    QVector<double> sortedLaplacian(Laplacien.size());
-    for(int i=0;i<Laplacien.size();++i){
-        sortedLaplacian[i]=norm(Laplacien[i]);
-    }
-    qSort(sortedLaplacian);
-    for (int i=0;i<Laplacien.size();++i) {
-        indexValueLaplacian.insert(sortedLaplacian[i], i);
-    }
-}
 
 /*void Mesh::threadedLaplacian(){
     QThread t;
