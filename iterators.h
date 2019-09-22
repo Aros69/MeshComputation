@@ -130,6 +130,11 @@ public:
         //print();
         return *this;
     }
+    
+    int getAxisIndex(){
+      return axisVertexIndex;
+    }
+
     void print(){
       std::cout << "Circulator pointing on face n°"<< currentFaceIndex << "\n Rotating around vertex n°" << axisVertexIndex << "\n";
     }

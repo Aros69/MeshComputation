@@ -209,11 +209,14 @@ float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
 }
 //TODO
 void Mesh::computeLaplacian(){
-  std::cout << "Computing Laplacian ===================================================================\n";
+  //std::cout << "Computing Laplacian ===================================================================\n";
+
   Laplacien = QVector<Vector>(vertexTab.size());
   Iterator_on_vertices its;
   Circulator_on_faces cf;
   int i = 0;
+
+  //For every vertex
   for (its = v_begin(); its != v_pend(); ++its)
   {
       float coAlpha = 0;
@@ -221,55 +224,54 @@ void Mesh::computeLaplacian(){
       float area = 0;
       Vector sum(0,0,0);
       Circulator_on_faces cfbegin = incident_f(*its);
-      //Get the alpha : v1 = axisId + 1 % 3,
+
+      //Variables for lisibility to avoid redundancy
       Vertex axis = *its;
       int axisGlID = getVertexID(axis);
       int axisLocID = (*cfbegin).global2localIndex(axisGlID);
+      Vertex nextV = getVertex((*cfbegin).getVertex( (axisLocID+1) %3)); // Vertex next to axis in counter-clock wise order
+      Vertex lastV = getVertex((*cfbegin).getVertex( (axisLocID+2) %3)); // Vertex next to axis in clock wise order
+      //Get the first face's alpha,
       //get first alpha
-      coAlpha = getCot( getVertex((*cfbegin).getVertex( (axisLocID+1) %3)),
-                  getVertex((*cfbegin).getVertex(axisLocID)),
-                  getVertex((*cfbegin).getVertex( (axisLocID+2) %3)));
+      coAlpha = getCot( nextV, axis, lastV );
 
-      //CIRCULATOR begins from the second face (Alpha is known)
-      for (cf = ++incident_f(*its), ++cf; cf != cfbegin; cf++){
-        std::cout << "Circulating around axis : " << axisGlID << "\n";
+      cfbegin++;
+      //CIRCULATOR begins from the second face (Alpha of first face is known)
+      for (cf = cfbegin, ++cf; cf != cfbegin; cf++){
+        //std::cout << "Circulating around axis : " << axisGlID << "\n";
         axisLocID = (*cf).global2localIndex(axisGlID);
-
+        nextV = getVertex((*cf).getVertex( (axisLocID+1) %3));
+        lastV = getVertex((*cf).getVertex( (axisLocID+2) %3));
         //get beta
-        std::cout << "Computing Beta...\n";
-        coBeta = getCot( getVertex((*cf).getVertex( (axisLocID+2)%3) ),
-                    getVertex((*cf).getVertex( (axisLocID+1)%3) ),
-                    getVertex((*cf).getVertex(axisLocID)));
-        std::cout << "CoBeta = " << coBeta << "\n";
+        //std::cout << "Computing Beta...\n";
+        coBeta = getCot( lastV, nextV, axis );
+        //std::cout << "CoBeta = " << coBeta << "\n";
 
         //get area
-        std::cout << "Computing Area...\n";
-        area += getFaceArea(getVertex((*cf).getVertex( (axisLocID+2)%3)),
-                    getVertex((*cf).getVertex( (axisLocID+1) %3)),
-                    getVertex((*cf).getVertex(axisLocID)));
-        std::cout << "area = " << area << "\n";
+        //std::cout << "Computing Area...\n";
+        area += getFaceArea( lastV, nextV, axis );
+        //std::cout << "area = " << area << "\n";
 
         //Compute sigma
-        sum.x += (coBeta + coAlpha) * (getVertex((*cf).getVertex( (axisLocID+1) %3) ).x() - axis.x() );
-        sum.y += (coBeta + coAlpha) * (getVertex((*cf).getVertex( (axisLocID+1) %3) ).y() - axis.y() );
-        sum.z += (coBeta + coAlpha) * (getVertex((*cf).getVertex( (axisLocID+1) %3) ).z() - axis.z() );
+        sum.x += (coBeta + coAlpha) * (nextV.x() - axis.x());
+        sum.y += (coBeta + coAlpha) * (nextV.y() - axis.y() );
+        sum.z += (coBeta + coAlpha) * (nextV.z() - axis.z() );
 
-        std::cout << "sum.x = " << sum.x << "\n";
+        //std::cout << "sum.x = " << sum.x << "\n";
 
         //get the alpha
-        std::cout << "Computing Alpha...\n";
-        coAlpha = getCot( getVertex((*cf).getVertex( (axisLocID+1) %3)),
-                    getVertex((*cf).getVertex(axisLocID)),
-                    getVertex((*cf).getVertex( (axisLocID+2) %3)));
-        std::cout << "Circulated ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++on a face\n";
+        //std::cout << "Computing Alpha...\n";
+        coAlpha = getCot( nextV, axis, lastV );
+        //std::cout << "Circulated ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++on a face\n";
 
       }
-      std::cout << "setting Laplacian ["<< i <<"] with 1/Area = "<< 1/area << " And sum.x = "<< sum.x << std::endl;
-      std::cout << "Laplacien of x is : " << ((1 / (2 * area)) * sum.x) << "\n";
+      //std::cout << "setting Laplacian ["<< i <<"] with 1/Area = "<< 1/area << " And sum.x = "<< sum.x << std::endl;
+      //std::cout << "Laplacien of x is : " << ((1 / (2 * area)) * sum.x) << "\n";
       Laplacien[i].x = (1 / (2 * area)) * sum.x;
       Laplacien[i].y = (1 / (2 * area)) * sum.y;
       Laplacien[i].z = (1 / (2 * area)) * sum.z;
-      std::cout << "Computed Laplacian of vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
+
+      std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
       i++;
   }
 }
