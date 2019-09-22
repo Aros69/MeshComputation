@@ -329,8 +329,8 @@ void Mesh::minMaxLaplacian(){
             minValueLaplacien.z = p.z;
         }
     }
-    std::cout<<"Max laplacian value : ("<<maxValueLaplacien.x<<", "<<maxValueLaplacien.y<<", "<<maxValueLaplacien.z<<")\n";
-    std::cout<<"Min laplacian value : ("<<minValueLaplacien.x<<", "<<minValueLaplacien.y<<", "<<minValueLaplacien.z<<")\n";
+    //std::cout<<"Max laplacian value : ("<<maxValueLaplacien.x<<", "<<maxValueLaplacien.y<<", "<<maxValueLaplacien.z<<")\n";
+    //std::cout<<"Min laplacian value : ("<<minValueLaplacien.x<<", "<<minValueLaplacien.y<<", "<<minValueLaplacien.z<<")\n";
 }
 
 /*void Mesh::threadedLaplacian(){
