@@ -135,7 +135,6 @@ class Circulator_on_vertices;
 class Iterator_on_faces;
 class Circulator_on_faces;
 
-//** TO MODIFY
 class Mesh
 {
 private:
@@ -143,8 +142,10 @@ private:
     QVector<Face> faceTab;
     QVector<Point> Laplacien;
 
+
 public:
     Mesh();
+    ~Mesh();
     void setMesh(QVector<Vertex>, QVector<Face>);
     void drawMesh();
     void drawMeshWireFrame();

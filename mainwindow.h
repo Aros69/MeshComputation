@@ -21,7 +21,6 @@ private:
 public slots:
     void onWireframe();
     void onPlain();
-
 };
 
 #endif // MAINWINDOW_H

@@ -1,7 +1,9 @@
 #include "mesh.h"
 
-Mesh::Mesh()
-{}
+Mesh::Mesh(){}
+
+Mesh::~Mesh(){}
+
 
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
 // Draw a vertex
@@ -9,7 +11,6 @@ void glVertexDraw(const Vertex & p) {
     glVertex3f(p.x(), p.y(), p.z());
 }
 
-//Example with a tetraedra
 void Mesh::drawMesh() {
     int moduloI;
     for(int i = 0; i < faceTab.size(); i++) {
@@ -28,23 +29,15 @@ void Mesh::drawMesh() {
     }
 }
 
-//Example with a wireframe tedraedra
 void Mesh::drawMeshWireFrame() {
     for(int i = 0; i < faceTab.size(); i++) {
-        glBegin(GL_LINE_STRIP);
+        glBegin(GL_LINES);
             glVertexDraw(vertexTab[faceTab[i][0]]);
             glVertexDraw(vertexTab[faceTab[i][1]]);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
-            glVertexDraw(vertexTab[faceTab[i][1]]);
             glVertexDraw(vertexTab[faceTab[i][2]]);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
             glVertexDraw(vertexTab[faceTab[i][0]]);
-            glVertexDraw(vertexTab[faceTab[i][2]]);
         glEnd();
     }
-
 }
 
 void Mesh::setMesh(QVector<Vertex> vertices,QVector<Face> faces){
@@ -53,7 +46,7 @@ void Mesh::setMesh(QVector<Vertex> vertices,QVector<Face> faces){
 }
 
 void Mesh::meshWithFile(std::string filePath){
-    std::cout<<"Begin of creating a mesh with .off file\n";
+    //std::cout<<"Begin of creating a mesh with .off file\n";
     std::ifstream file(filePath.c_str());
     if(!file.is_open()){
         std::cout<<"ERROR : Unable to open file : \""<<filePath<<"\"\n";
@@ -80,7 +73,7 @@ void Mesh::meshWithFile(std::string filePath){
         defineNeighbourFaces();
         file.close();
     }
-    std::cout<<"End of creating a mesh with .off file\n";
+    //std::cout<<"End of creating a mesh with .off file\n";
 }
 
 void printFacesNeib(const QVector<Face> & f){

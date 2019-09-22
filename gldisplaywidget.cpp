@@ -7,13 +7,23 @@
 
 #include "QDebug"
 #include <iostream>
-GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
-{
+GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent){
+
+    /*format().setVersion(3, 3.00);
+    format().setProfile(QGLFormat::CoreProfile);
+    format().setSampleBuffers( true );*/
+
     // Update the scene
     connect(&_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
-    // connect(pushButton,SIGNAL(released()),this, SLOT(onWireframe()));
+    //connect(pushButton,SIGNAL(released()),this, SLOT(onWireframe()));
     _timer.start(16);
 }
+
+/*GLDisplayWidget::~GLDisplayWidget(){
+    // TODO maybe disable shader program before destroy shader
+    delete shader;
+    shader = nullptr;
+}*/
 
 void GLDisplayWidget::initThetrahedron()
 {
@@ -141,6 +151,7 @@ void testMesh(){
       std::cout << "valence of the vertex "<< cmpt << std::endl;
   }
 }
+
 void GLDisplayWidget::initializeGL()
 {
     // background color
@@ -151,9 +162,22 @@ void GLDisplayWidget::initializeGL()
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
 
+    shader = new QOpenGLShader(QOpenGLShader::Fragment);
+    if(shader->compileSourceFile("../meshcomputation/data/shaders/mesh_color.glsl")){
+        //std::cout<<"Youpi le shader compile\n";
+        program.addShader(shader);
+        program.link();
+        program.bind();
+    } else {
+        //std::cout<<"Nope pas de shader\n";
+        qDebug(qUtf8Printable(shader->log()));
+    }
+
+
     // Construction of the mesh before it is displayed
     // To add....
-    initCubeMesh();
+    //initCubeMesh();
+    initQueenMesh();
     //testMesh();
 }
 

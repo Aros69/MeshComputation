@@ -12,6 +12,7 @@ class GLDisplayWidget : public QGLWidget
 public:
     explicit GLDisplayWidget(QWidget *parent = 0);
 
+    //~GLDisplayWidget();
     void initializeGL(); // The scene may be initialized in this function since the mesh is a data member...
     void paintGL(); // Display the scene Gl
     void resizeGL(int width, int height);
@@ -36,12 +37,14 @@ private:
     Mesh _mesh; // The object to be displayed, may be replaced by a scene if there are several objects....
     int displayMode = 0; // 0 : Plain Mode 1 : WireFrame
 
+    QOpenGLShaderProgram program;
+    QOpenGLShader *shader;
+
     void initThetrahedron();
     void initQueenMesh();
     void initCubeMesh();
     void initPyramid();
     void init2DBBox();
-
 
 };
 

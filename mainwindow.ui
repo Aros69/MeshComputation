@@ -49,7 +49,7 @@
       <x>10</x>
       <y>10</y>
       <width>120</width>
-      <height>80</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="title">
@@ -60,22 +60,25 @@
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>82</width>
-       <height>38</height>
+       <width>100</width>
+       <height>62</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QRadioButton" name="pushButton_2">
         <property name="text">
          <string>Wireframe</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QRadioButton" name="pushButton_3">
         <property name="text">
          <string>Plain</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -120,38 +123,6 @@
     <hint type="destinationlabel">
      <x>94</x>
      <y>268</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_2</sender>
-   <signal>released()</signal>
-   <receiver>widget</receiver>
-   <slot>onWireframe()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>49</x>
-     <y>64</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>162</x>
-     <y>55</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_3</sender>
-   <signal>clicked()</signal>
-   <receiver>widget</receiver>
-   <slot>onPlain()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>69</x>
-     <y>86</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>161</x>
-     <y>109</y>
     </hint>
    </hints>
   </connection>
