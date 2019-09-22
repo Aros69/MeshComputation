@@ -29,7 +29,7 @@ void Mesh::drawMesh() {
         else glColor3d(1,1,0);*/
         if(minValueLaplacien.x!=INT_MIN){
             // Méthode de coloration avec moyenne
-            /*redColor = double(Laplacien[faceTab[i][0]].x
+            redColor = double(Laplacien[faceTab[i][0]].x
                     + Laplacien[faceTab[i][1]].x
                     + Laplacien[faceTab[i][2]].x)/3;
             blueColor = double(Laplacien[faceTab[i][0]].y
@@ -41,7 +41,7 @@ void Mesh::drawMesh() {
             redColor = double(redColor-minValueLaplacien.x)/(maxValueLaplacien.x-minValueLaplacien.x);
             blueColor = double(blueColor-minValueLaplacien.y)/(maxValueLaplacien.y-minValueLaplacien.y);
             greenColor = double(greenColor-minValueLaplacien.z)/(maxValueLaplacien.z-minValueLaplacien.z);
-            glColor3d(redColor,blueColor,greenColor);*/
+            glColor3d(redColor,blueColor,greenColor);
 
             // Méthode de coloration avec médiane
 
@@ -227,11 +227,12 @@ float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
   Vector vec2(v1,v3);
   double sin = getSin(vec1,vec2);
   double cos = getCos(vec1,vec2);
+  float clamp = 1000;
   if(!sin)
-    return 10000;
+    return clamp;
   double cot = cos/sin;
-  if(cot > 10000) return 10000;
-  if(cot < -10000) return -10000;
+  if(cot > clamp) return clamp;
+  if(cot < -clamp) return -clamp;
   return cot;
   //return (cos / sin) > 10000  ? 10000:(cos/sin);
 }

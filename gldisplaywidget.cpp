@@ -162,7 +162,7 @@ void GLDisplayWidget::initializeGL()
     if(shader->compileSourceFile("../meshcomputation/data/shaders/mesh_color.glsl")){
         //std::cout<<"Youpi le shader compile\n";
         program.addShader(shader);
-        program.link();      
+        program.link();
         //program.bind(); // Uncomment to use the shader
     } else {
         //std::cout<<"Nope pas de shader\n";
@@ -172,6 +172,7 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
+    //initCubeMesh();
     initQueenMesh();
 
     _mesh.computeLaplacian();
