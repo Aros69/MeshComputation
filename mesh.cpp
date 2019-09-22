@@ -6,6 +6,7 @@ Mesh::Mesh(){
         p.y = INT_MIN;
         p.z = INT_MIN;
     }
+    minValueLaplacien.x=INT_MIN;
 }
 
 Mesh::~Mesh(){}
@@ -25,7 +26,7 @@ void Mesh::drawMesh() {
 
         if(minValueLaplacien.x!=INT_MIN){
             // Méthode de coloration avec moyenne et x,y,z
-            redColor = double(Laplacien[faceTab[i][0]].x
+            /*redColor = double(Laplacien[faceTab[i][0]].x
                     + Laplacien[faceTab[i][1]].x
                     + Laplacien[faceTab[i][2]].x)/3;
             blueColor = double(Laplacien[faceTab[i][0]].y
@@ -37,19 +38,13 @@ void Mesh::drawMesh() {
             redColor = double(redColor-minValueLaplacien.x)/(maxValueLaplacien.x-minValueLaplacien.x);
             blueColor = double(blueColor-minValueLaplacien.y)/(maxValueLaplacien.y-minValueLaplacien.y);
             greenColor = double(greenColor-minValueLaplacien.z)/(maxValueLaplacien.z-minValueLaplacien.z);
-            glColor3d(redColor,blueColor,greenColor);
+            glColor3d(redColor,blueColor,greenColor);*/
 
             // Méthode de coloration avec norme
             double t = double(norm(Laplacien[faceTab[i][0]])
                     + norm(Laplacien[faceTab[i][1]])
                     + norm(Laplacien[faceTab[i][2]]))/3/maxNormLaplacian;
             glColor3d(t, t, t);
-
-            // Méthode Ultime
-            double ultR = redColor*t*2;
-            double ultG = greenColor*t*2;
-            double ultB = blueColor*t*2;
-            glColor3d(ultR, ultG, ultB);
 
         } else {
             moduloI = i%4;
@@ -315,13 +310,15 @@ void Mesh::computeLaplacian(){
       Laplacien[i].y = (1 / (2 * area)) * sum.y;
       Laplacien[i].z = (1 / (2 * area)) * sum.z;
 
-      //std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
+      // std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]" << std::endl;
+      // std::cout << "2H = \t" << norm(Laplacien[i]) << std::endl;
       if(i%1000 == 0){
-          std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]"<<std::endl;
+        std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]" << std::endl;
+        std::cout << "2H = \t" << norm(Laplacien[i]) << std::endl;
       }
       i++;
   }
-
+  clampLamplacian(50);
   minMaxLaplacian();
 }
 
@@ -357,4 +354,26 @@ void Mesh::minMaxLaplacian(){
             minNormLaplacian=n;
         }
     }
+}
+
+void Mesh::clampLamplacian(int clamp){
+    for(int i = 0; i< Laplacien.size();i++){
+      if(Laplacien[i].x > clamp)
+        Laplacien[i].x = clamp;
+      if(Laplacien[i].y > clamp)
+        Laplacien[i].y = clamp;
+      if(Laplacien[i].z > clamp)
+        Laplacien[i].z = clamp;
+
+      if(Laplacien[i].x < -clamp)
+        Laplacien[i].x = -clamp;
+      if(Laplacien[i].y < -clamp)
+        Laplacien[i].y = -clamp;
+      if(Laplacien[i].z < -clamp)
+        Laplacien[i].z = -clamp;
+    }
+}
+
+void Mesh::threadedLaplacian(){
+
 }

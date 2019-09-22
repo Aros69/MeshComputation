@@ -177,9 +177,10 @@ public:
 
     //Laplacian Functions
     void computeLaplacian();
+    void threadedLaplacian();
     void minMaxLaplacian();
+    void clampLamplacian(int clamp);
 
-    //void threadedLaplacian();
 
     double getFaceArea(int index);
     double getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);
