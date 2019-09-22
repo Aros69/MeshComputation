@@ -43,6 +43,8 @@ void Mesh::drawMesh() {
             greenColor = double(greenColor-minValueLaplacien.z)/(maxValueLaplacien.z-minValueLaplacien.z);
             glColor3d(redColor,blueColor,greenColor);*/
             double t = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
+
+            //std::cout << "Color for drawing ["<< i <<"] is " << t << std::endl;
             glColor3d(t, t, t);
         } else {
             glColor3d(0.0, 0.0, 0.0);
@@ -304,13 +306,15 @@ void Mesh::computeLaplacian(){
       Laplacien[i].y = (1 / (2 * area)) * sum.y;
       Laplacien[i].z = (1 / (2 * area)) * sum.z;
 
-      //std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
+      // std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]" << std::endl;
+      // std::cout << "2H = \t" << norm(Laplacien[i]) << std::endl;
       if(i%1000 == 0){
-          std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]"<<std::endl;
+        std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]" << std::endl;
+        std::cout << "2H = \t" << norm(Laplacien[i]) << std::endl;
       }
       i++;
   }
-
+  clampLamplacian(50);
   minMaxLaplacian();
 }
 
@@ -348,6 +352,23 @@ void Mesh::minMaxLaplacian(){
     }
 }
 
+void Mesh::clampLamplacian(int clamp){
+    for(int i = 0; i< Laplacien.size();i++){
+      if(Laplacien[i].x > clamp)
+        Laplacien[i].x = clamp;
+      if(Laplacien[i].y > clamp)
+        Laplacien[i].y = clamp;
+      if(Laplacien[i].z > clamp)
+        Laplacien[i].z = clamp;
+
+      if(Laplacien[i].x < -clamp)
+        Laplacien[i].x = -clamp;
+      if(Laplacien[i].y < -clamp)
+        Laplacien[i].y = -clamp;
+      if(Laplacien[i].z < -clamp)
+        Laplacien[i].z = -clamp;
+    }
+}
 
 /*void Mesh::threadedLaplacian(){
     QThread t;

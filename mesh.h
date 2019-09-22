@@ -178,7 +178,7 @@ public:
     //Laplacian Functions
     void computeLaplacian();
     void minMaxLaplacian();
-
+    void clampLamplacian(int clamp);
     //void threadedLaplacian();
 
     float getFaceArea(int index);
