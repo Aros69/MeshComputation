@@ -208,7 +208,11 @@ float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
   double cos = getCos(vec1,vec2);
   if(!sin)
     return 10000;
-  return cos / sin;
+  double cot = cos/sin;
+  if(cot > 10000) return 10000;
+  if(cot < -10000) return -10000;
+  return cot;
+  //return (cos / sin) > 10000  ? 10000:(cos/sin);
 }
 //TODO
 void Mesh::computeLaplacian(){
