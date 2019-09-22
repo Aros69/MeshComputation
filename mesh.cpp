@@ -49,10 +49,18 @@ void Mesh::drawMesh() {
         } else {
             glColor3d(0.0, 0.0, 0.0);
         }
+        double t1 = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
+        double t2 = norm(Laplacien[faceTab[i][1]])/maxNormLaplacian;
+        double t3 = norm(Laplacien[faceTab[i][2]])/maxNormLaplacian;
 
         glBegin(GL_TRIANGLES);
+        glColor3d(t1*colorA.x - (1-t1)*colorB.x, t1*colorA.y - (1-t1)*colorB.y, t1*colorA.z - (1-t1)*colorB.z);
         glVertexDraw(vertexTab[faceTab[i][0]]);
+
+        glColor3d(t2*colorA.x - (1-t2)*colorB.x, t2*colorA.y - (1-t2)*colorB.y, t2*colorA.z - (1-t2)*colorB.z);
         glVertexDraw(vertexTab[faceTab[i][1]]);
+
+        glColor3d(t3*colorA.x - (1-t3)*colorB.x, t3*colorA.y - (1-t3)*colorB.y, t3*colorA.z - (1-t3)*colorB.z);
         glVertexDraw(vertexTab[faceTab[i][2]]);
         glEnd();
     }
