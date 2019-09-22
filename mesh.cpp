@@ -223,11 +223,12 @@ float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
   Vector vec2(v1,v3);
   double sin = getSin(vec1,vec2);
   double cos = getCos(vec1,vec2);
+  float clamp = 1000;
   if(!sin)
-    return 10000;
+    return clamp;
   double cot = cos/sin;
-  if(cot > 10000) return 10000;
-  if(cot < -10000) return -10000;
+  if(cot > clamp) return clamp;
+  if(cot < -clamp) return -clamp;
   return cot;
   //return (cos / sin) > 10000  ? 10000:(cos/sin);
 }
@@ -302,7 +303,7 @@ void Mesh::computeLaplacian(){
 
       //std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
       if(i%1000 == 0){
-          std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
+          std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z << std::endl;
       }
       i++;
   }
