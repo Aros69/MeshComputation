@@ -122,8 +122,8 @@ void GLDisplayWidget::initCubeMesh()
     //_mesh.meshWithFile("data/cube.off");
 }
 
-//Test the circulator with a mesh
-void testMesh(){
+//Test the iterators on a mesh
+void testIterators(){
   Mesh titi;
   titi.meshWithFile("../meshcomputation/data/queen.off");
   //titi.printFaces();
@@ -141,6 +141,7 @@ void testMesh(){
       std::cout << "valence of the vertex "<< cmpt << std::endl;
   }
 }
+
 void GLDisplayWidget::initializeGL()
 {
     // background color
@@ -153,8 +154,9 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
-    initCubeMesh();
-    //testMesh();
+    initQueenMesh();
+    _mesh.computeLaplacian();
+    //testIterators();
 }
 
 void GLDisplayWidget::paintGL()

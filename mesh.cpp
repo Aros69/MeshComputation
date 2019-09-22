@@ -146,9 +146,28 @@ Vector cross(const Vector& v1,const Vector& v2)
       (v1.z * v2.x) - (v1.x * v2.z),
       (v1.x * v2.y) - (v1.y * v2.x) );
 }
+
 float norm(const Vector& v){
   return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
+
+Vector normalize(const Vector& v){
+  float magnetude = norm(v);
+  Vector normV(0,0,0);
+  normV.x = v.x/magnetude;
+  normV.y = v.y/magnetude;
+  normV.z = v.z/magnetude;
+  return normV;
+}
+
+float getCos(const Vector& v1,const Vector& v2){
+  return dot(normalize(v1),normalize(v2));
+}
+
+float getSin(const Vector& v1,const Vector& v2){
+  return cross(normalize(v1),normalize(v2)).x;
+}
+
 void Mesh::printFaces(){
         Iterator_on_faces itf;
         int i = 0;
@@ -158,7 +177,99 @@ void Mesh::printFaces(){
         }
 }
 
+int Mesh::getVertexID(const Vertex &m)
+{
+    for (int i = 0; i < vertexTab.size(); i++)
+    {
+        if (m.equals(vertexTab[i]))
+        {
+            return i;
+        }
+    }
+    std::cout << "Invalid ID";
+    return -1;
+}
+
+float Mesh::getFaceArea(Vertex& vert1,Vertex& vert2, Vertex& vert3){
+  Vector v1(vert1,vert2);
+  Vector v2(vert1,vert3);
+  return norm(cross(v1,v2));
+}
+
+float Mesh::getFaceArea(int FaceIndex){
+  return getFaceArea(getVertex(getFace(FaceIndex).getVertex(0)),getVertex(getFace(FaceIndex).getVertex(1))
+            ,getVertex(getFace(FaceIndex).getVertex(2)));
+}
+
+float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
+  Vector vec1(v1,v2);
+  Vector vec2(v1,v3);
+
+  return getCos(vec1,vec2)/getSin(vec1,vec2);
+}
 //TODO
 void Mesh::computeLaplacian(){
+  std::cout << "Computing Laplacian ===================================================================\n";
+  Laplacien = QVector<Vector>(vertexTab.size());
+  Iterator_on_vertices its;
+  Circulator_on_faces cf;
+  int i = 0;
+  for (its = v_begin(); its != v_pend(); ++its)
+  {
+      float coAlpha = 0;
+      float coBeta = 0;
+      float area = 0;
+      Vector sum(0,0,0);
+      Circulator_on_faces cfbegin = incident_f(*its);
+      //Get the alpha : v1 = axisId + 1 % 3,
+      Vertex axis = *its;
+      int axisGlID = getVertexID(axis);
+      int axisLocID = (*cfbegin).global2localIndex(axisGlID);
+      //get first alpha
+      coAlpha = getCot( getVertex((*cfbegin).getVertex( (axisLocID+1) %3)),
+                  getVertex((*cfbegin).getVertex(axisLocID)),
+                  getVertex((*cfbegin).getVertex( (axisLocID+2) %3)));
 
+      //CIRCULATOR begins from the second face (Alpha is known)
+      for (cf = ++incident_f(*its), ++cf; cf != cfbegin; cf++){
+        std::cout << "Circulating around axis : " << axisGlID << "\n";
+        axisLocID = (*cf).global2localIndex(axisGlID);
+
+        //get beta
+        std::cout << "Computing Beta...\n";
+        coBeta = getCot( getVertex((*cf).getVertex( (axisLocID+2)%3) ),
+                    getVertex((*cf).getVertex( (axisLocID+1)%3) ),
+                    getVertex((*cf).getVertex(axisLocID)));
+        std::cout << "CoBeta = " << coBeta << "\n";
+
+        //get area
+        std::cout << "Computing Area...\n";
+        area += getFaceArea(getVertex((*cf).getVertex( (axisLocID+2)%3)),
+                    getVertex((*cf).getVertex( (axisLocID+1) %3)),
+                    getVertex((*cf).getVertex(axisLocID)));
+        std::cout << "area = " << area << "\n";
+
+        //Compute sigma
+        sum.x += (coBeta + coAlpha) * (getVertex((*cf).getVertex( (axisLocID+1) %3) ).x() - axis.x() );
+        sum.y += (coBeta + coAlpha) * (getVertex((*cf).getVertex( (axisLocID+1) %3) ).y() - axis.y() );
+        sum.z += (coBeta + coAlpha) * (getVertex((*cf).getVertex( (axisLocID+1) %3) ).z() - axis.z() );
+
+        std::cout << "sum.x = " << sum.x << "\n";
+
+        //get the alpha
+        std::cout << "Computing Alpha...\n";
+        coAlpha = getCot( getVertex((*cf).getVertex( (axisLocID+1) %3)),
+                    getVertex((*cf).getVertex(axisLocID)),
+                    getVertex((*cf).getVertex( (axisLocID+2) %3)));
+        std::cout << "Circulated ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++on a face\n";
+
+      }
+      std::cout << "setting Laplacian ["<< i <<"] with 1/Area = "<< 1/area << " And sum.x = "<< sum.x << std::endl;
+      std::cout << "Laplacien of x is : " << ((1 / (2 * area)) * sum.x) << "\n";
+      Laplacien[i].x = (1 / (2 * area)) * sum.x;
+      Laplacien[i].y = (1 / (2 * area)) * sum.y;
+      Laplacien[i].z = (1 / (2 * area)) * sum.z;
+      std::cout << "Computed Laplacian of vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
+      i++;
+  }
 }

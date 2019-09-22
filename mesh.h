@@ -53,18 +53,22 @@ struct Vector
     float x;
     float y;
     float z;
-    Vector(): x(), y(), z() {}
+    Vector(): x(0), y(0), z(0) {}
     Vector(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
 
     //Init a vector going FROM p1 TO p2
     Vector(const Point& p1,const Point& p2) : x(p2.x() - p1.x()), y(p2.y() - p1.y()), z(p2.z() - p1.z()){}
     //Init a vector going FROM v1 TO v2
     Vector(const Vertex& v1,const Vertex& v2) : x(v2.x() - v1.x()), y(v2.y() - v1.y()), z(v2.z() - v1.z()){}
+
 };
 
 float dot(const Vector& v1,const Vector& v2);
 Vector cross(const Vector& v1,const Vector& v2);
 float norm(const Vector& v);
+Vector normalize(const Vector& v);
+float getCos(const Vector& v1,const Vector& v2);
+float getSin(const Vector& v1,const Vector& v2);
 
 class Face
 {
@@ -112,6 +116,7 @@ public:
         std::cout << " Provided was " << globalIndex << "\n";
         return -1;
     }
+
     int getVertex(int index) const
     {
         return verticesIndex[index];
@@ -141,43 +146,36 @@ class Mesh
 private:
     QVector<Vertex> vertexTab;
     QVector<Face> faceTab;
-    QVector<Point> Laplacien;
+    QVector<Vector> Laplacien;
 
 public:
     Mesh();
     void setMesh(QVector<Vertex>, QVector<Face>);
     void drawMesh();
     void drawMeshWireFrame();
-
     void meshWithFile(std::string filePath);
     void defineNeighbourFaces();
 
+    //Getters
     Vertex& getVertex(int index) { return vertexTab[index]; }
     Face& getFace(int index) { return faceTab[index]; }
+    int getVertexID(const Vertex &m);
 
-    int getVertexID(const Vertex &m)
-    {
-        for (int i = 0; i < vertexTab.size(); i++)
-        {
-
-            if (m.equals(vertexTab[i]))
-            {
-                return i;
-            }
-        }
-        std::cout << "Invalid ID";
-        return -1;
-    }
-
-    void computeLaplacian();
     Iterator_on_faces f_begin();
     Iterator_on_faces f_pend();
     Iterator_on_vertices v_begin();
     Iterator_on_vertices v_pend();
-    //Todo
+
     Circulator_on_faces incident_f(Vertex &v);
     Circulator_on_vertices adjacent_v(Vertex &v);
 
+    //Laplacian Functions
+    void computeLaplacian();
+    float getFaceArea(int index);
+    float getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);
+
+    //Get Cot of the angle (v2 v1 v3)
+    float getCot(Vertex& v1,Vertex& v2, Vertex& v3);
     void printFaces();
 
 };
