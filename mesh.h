@@ -3,7 +3,7 @@
 
 #include <QGLWidget>
 #include <QMap>
-#include <QThread>
+#include <QtAlgorithms>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -150,6 +150,7 @@ private:
 
     Vector maxValueLaplacien;
     Vector minValueLaplacien;
+    QMap<double, int> indexValueLaplacian;
 
 public:
     Mesh();
@@ -176,6 +177,7 @@ public:
     //Laplacian Functions
     void computeLaplacian();
     void minMaxLaplacian();
+    void sortedLaplacian();
 
     //void threadedLaplacian();
 

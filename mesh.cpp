@@ -28,19 +28,23 @@ void Mesh::drawMesh() {
         else if (moduloI == 2) glColor3d(0,0,1);
         else glColor3d(1,1,0);*/
         if(minValueLaplacien.x!=INT_MIN){
-            redColor = (Laplacien[faceTab[i][0]].x
+            // Méthode de coloration avec moyenne
+            /*redColor = double(Laplacien[faceTab[i][0]].x
                     + Laplacien[faceTab[i][1]].x
                     + Laplacien[faceTab[i][2]].x)/3;
-            blueColor = (Laplacien[faceTab[i][0]].y
+            blueColor = double(Laplacien[faceTab[i][0]].y
                     + Laplacien[faceTab[i][1]].y
                     + Laplacien[faceTab[i][2]].y)/3;
-            greenColor = (Laplacien[faceTab[i][0]].z
+            greenColor = double(Laplacien[faceTab[i][0]].z
                     + Laplacien[faceTab[i][1]].z
                     + Laplacien[faceTab[i][2]].z)/3;
-            redColor = (redColor+minValueLaplacien.x)/(maxValueLaplacien.x+minValueLaplacien.x);
-            blueColor = (blueColor+minValueLaplacien.y)/(maxValueLaplacien.y+minValueLaplacien.y);
-            greenColor = (greenColor+minValueLaplacien.z)/(maxValueLaplacien.z+minValueLaplacien.z);
-            glColor3d(redColor,blueColor,greenColor);
+            redColor = double(redColor-minValueLaplacien.x)/(maxValueLaplacien.x-minValueLaplacien.x);
+            blueColor = double(blueColor-minValueLaplacien.y)/(maxValueLaplacien.y-minValueLaplacien.y);
+            greenColor = double(greenColor-minValueLaplacien.z)/(maxValueLaplacien.z-minValueLaplacien.z);
+            glColor3d(redColor,blueColor,greenColor);*/
+
+            // Méthode de coloration avec médiane
+
         } else {
             glColor3d(0.0, 0.0, 0.0);
         }
@@ -302,12 +306,13 @@ void Mesh::computeLaplacian(){
 
       //std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
       if(i%1000 == 0){
-          std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
+          std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]"<<std::endl;
       }
       i++;
   }
 
   minMaxLaplacian();
+  sortedLaplacian();
 }
 
 void Mesh::minMaxLaplacian(){
@@ -333,8 +338,21 @@ void Mesh::minMaxLaplacian(){
             minValueLaplacien.z = p.z;
         }
     }
-    std::cout<<"Max laplacian value : ("<<maxValueLaplacien.x<<", "<<maxValueLaplacien.y<<", "<<maxValueLaplacien.z<<")\n";
-    std::cout<<"Min laplacian value : ("<<minValueLaplacien.x<<", "<<minValueLaplacien.y<<", "<<minValueLaplacien.z<<")\n";
+    //std::cout<<"Max laplacian value : ("<<maxValueLaplacien.x<<", "<<maxValueLaplacien.y<<", "<<maxValueLaplacien.z<<")\n";
+    //std::cout<<"Min laplacian value : ("<<minValueLaplacien.x<<", "<<minValueLaplacien.y<<", "<<minValueLaplacien.z<<")\n";
+}
+
+void Mesh::sortedLaplacian(){
+    // Trier les laplaciens par grandeur de distance à 0;
+    // Créer la QMap avec comme clé la distance et comme valeur la place dans les laplaciens trié
+    QVector<double> sortedLaplacian(Laplacien.size());
+    for(int i=0;i<Laplacien.size();++i){
+        sortedLaplacian[i]=norm(Laplacien[i]);
+    }
+    qSort(sortedLaplacian);
+    for (int i=0;i<Laplacien.size();++i) {
+        indexValueLaplacian.insert(sortedLaplacian[i], i);
+    }
 }
 
 /*void Mesh::threadedLaplacian(){
