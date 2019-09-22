@@ -34,9 +34,9 @@ void Mesh::drawMesh() {
             blueColor = (Laplacien[faceTab[i][0]].y
                     + Laplacien[faceTab[i][1]].y
                     + Laplacien[faceTab[i][2]].y)/3;
-            greenColor = (Laplacien[faceTab[i][0]].y
-                    + Laplacien[faceTab[i][1]].y
-                    + Laplacien[faceTab[i][2]].y)/3;
+            greenColor = (Laplacien[faceTab[i][0]].z
+                    + Laplacien[faceTab[i][1]].z
+                    + Laplacien[faceTab[i][2]].z)/3;
             redColor = (redColor+minValueLaplacien.x)/(maxValueLaplacien.x+minValueLaplacien.x);
             blueColor = (blueColor+minValueLaplacien.y)/(maxValueLaplacien.y+minValueLaplacien.y);
             greenColor = (greenColor+minValueLaplacien.z)/(maxValueLaplacien.z+minValueLaplacien.z);
