@@ -202,6 +202,13 @@ double getSin(const Vector& v1,const Vector& v2){
   return cross(normalize(v1),normalize(v2)).x;
 }
 
+int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3){
+  Vector vec1(v1,v2);
+  Vector vec2(v1,v3);
+  Vector oz(0,0,1);
+  return dot(normalize(vec1),normalize(vec2));
+}
+
 void Mesh::printFaces(){
         Iterator_on_faces itf;
         int i = 0;
@@ -384,6 +391,20 @@ void Mesh::clampLamplacian(int clamp){
       if(Laplacien[i].z < -clamp)
         Laplacien[i].z = -clamp;
     }
+}
+
+bool Mesh::isInFace(int index,const Vertex& v){
+  int segment[2];
+  Face f = getFace(index);
+  //For all segments
+  for(int i = 0; i < 3;i++ ){
+    segment[0] = i;
+    segment[1] = (i+1)%3;
+    //If v and the segment are incorrectly ordered
+    if(orientation(v, getVertex(f.getVertex(segment[0])), getVertex(f.getVertex(segment[1]))) < 0)
+          return false;
+  }
+  return true;
 }
 
 void Mesh::threadedLaplacian(){

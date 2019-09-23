@@ -71,6 +71,9 @@ Vector normalize(const Vector& v);
 double getCos(const Vector& v1,const Vector& v2);
 double getSin(const Vector& v1,const Vector& v2);
 
+//Return a positive value if v1,v2,v3 are in a trigonometric order
+int orientation(const Vertex& v1, const Vertex& v2, const Vertex& v3);
+
 class Face
 {
 
@@ -188,6 +191,9 @@ public:
 
     //Get Cot of the angle (v2 v1 v3)
     double getCot(Vertex& v1,Vertex& v2, Vertex& v3);
+
+    //InFace test
+    bool isInFace(int index,const Vertex& v);
     void printFaces();
 
 };
