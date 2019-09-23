@@ -3,6 +3,7 @@
 
 #include <QGLWidget>
 #include <QMap>
+#include <QtAlgorithms>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -12,17 +13,17 @@
 // Advice => You should create a new file for each module but not necessarily for each class
 class Point
 {
-    float _x;
-    float _y;
-    float _z;
+    double _x;
+    double _y;
+    double _z;
 
 public:
     Point() : _x(), _y(), _z() {}
-    Point(float x_, float y_, float z_) : _x(x_), _y(y_), _z(z_) {}
+    Point(double x_, double y_, double z_) : _x(x_), _y(y_), _z(z_) {}
     // get
-    float x() const { return _x; }
-    float y() const { return _y; }
-    float z() const { return _z; }
+    double x() const { return _x; }
+    double y() const { return _y; }
+    double z() const { return _z; }
 };
 
 class Vertex
@@ -32,10 +33,10 @@ class Vertex
 
 public:
     Vertex() : point() {}
-    Vertex(float x_, float y_, float z_) : point(x_, y_, z_) {}
-    float x() const { return point.x(); }
-    float y() const { return point.y(); }
-    float z() const { return point.z(); }
+    Vertex(double x_, double y_, double z_) : point(x_, y_, z_) {}
+    double x() const { return point.x(); }
+    double y() const { return point.y(); }
+    double z() const { return point.z(); }
     void setFaceIndex(int i) { faceIndex = i; }
     int getFaceIndex() { return faceIndex; }
     bool equals(const Vertex& m) const
@@ -50,11 +51,11 @@ public:
 
 struct Vector
 {
-    float x;
-    float y;
-    float z;
+    double x;
+    double y;
+    double z;
     Vector(): x(0), y(0), z(0) {}
-    Vector(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
+    Vector(double x_, double y_, double z_) : x(x_), y(y_), z(z_) {}
 
     //Init a vector going FROM p1 TO p2
     Vector(const Point& p1,const Point& p2) : x(p2.x() - p1.x()), y(p2.y() - p1.y()), z(p2.z() - p1.z()){}
@@ -63,12 +64,12 @@ struct Vector
 
 };
 
-float dot(const Vector& v1,const Vector& v2);
+double dot(const Vector& v1,const Vector& v2);
 Vector cross(const Vector& v1,const Vector& v2);
-float norm(const Vector& v);
+double norm(const Vector& v);
 Vector normalize(const Vector& v);
-float getCos(const Vector& v1,const Vector& v2);
-float getSin(const Vector& v1,const Vector& v2);
+double getCos(const Vector& v1,const Vector& v2);
+double getSin(const Vector& v1,const Vector& v2);
 
 class Face
 {
@@ -140,16 +141,22 @@ class Circulator_on_vertices;
 class Iterator_on_faces;
 class Circulator_on_faces;
 
-//** TO MODIFY
 class Mesh
 {
 private:
     QVector<Vertex> vertexTab;
     QVector<Face> faceTab;
     QVector<Vector> Laplacien;
+    Vector colorA = Vector(0.75,0.75,0.75);
+    Vector colorB = Vector(1,0.85,0);
+    Vector maxValueLaplacien;
+    Vector minValueLaplacien;
+    double maxNormLaplacian;
+    double minNormLaplacian;
 
 public:
     Mesh();
+    ~Mesh();
     void setMesh(QVector<Vertex>, QVector<Face>);
     void drawMesh();
     void drawMeshWireFrame();
@@ -171,11 +178,16 @@ public:
 
     //Laplacian Functions
     void computeLaplacian();
-    float getFaceArea(int index);
-    float getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);
+    void threadedLaplacian();
+    void minMaxLaplacian();
+    void clampLamplacian(int clamp);
+
+
+    double getFaceArea(int index);
+    double getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);
 
     //Get Cot of the angle (v2 v1 v3)
-    float getCot(Vertex& v1,Vertex& v2, Vertex& v3);
+    double getCot(Vertex& v1,Vertex& v2, Vertex& v3);
     void printFaces();
 
 };

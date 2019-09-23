@@ -11,11 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_3,SIGNAL(released()),this, SLOT(onPlain()));
 }
 void MainWindow::onWireframe(){
-    std::cout <<"WireFrame Display Mode\n";
+    //std::cout <<"WireFrame Display Mode\n";
     ui->widget->setDisplayWireframe();
 }
 void MainWindow::onPlain(){
-    std::cout <<"Plain Display Mode\n";
+    //std::cout <<"Plain Display Mode\n";
     ui->widget->setDisplayPlain();
 }
 MainWindow::~MainWindow()

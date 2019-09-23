@@ -1,7 +1,16 @@
 #include "mesh.h"
 
-Mesh::Mesh()
-{}
+Mesh::Mesh(){
+    for(auto p : Laplacien){
+        p.x = INT_MIN;
+        p.y = INT_MIN;
+        p.z = INT_MIN;
+    }
+    minValueLaplacien.x=INT_MIN;
+}
+
+Mesh::~Mesh(){}
+
 
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
 // Draw a vertex
@@ -9,42 +18,67 @@ void glVertexDraw(const Vertex & p) {
     glVertex3f(p.x(), p.y(), p.z());
 }
 
-//Example with a tetraedra
 void Mesh::drawMesh() {
     int moduloI;
+    double redColor, greenColor, blueColor;
     for(int i = 0; i < faceTab.size(); i++) {
 
-        moduloI = i%4;
-        if (moduloI == 0) glColor3d(1,0,0);
-        else if (moduloI == 1) glColor3d(0,1,0);
-        else if (moduloI == 2) glColor3d(0,0,1);
-        else glColor3d(1,1,0);
+
+        if(minValueLaplacien.x!=INT_MIN){
+            // Méthode de coloration avec moyenne et x,y,z
+            /*redColor = double(Laplacien[faceTab[i][0]].x
+                    + Laplacien[faceTab[i][1]].x
+                    + Laplacien[faceTab[i][2]].x)/3;
+            blueColor = double(Laplacien[faceTab[i][0]].y
+                    + Laplacien[faceTab[i][1]].y
+                    + Laplacien[faceTab[i][2]].y)/3;
+            greenColor = double(Laplacien[faceTab[i][0]].z
+                    + Laplacien[faceTab[i][1]].z
+                    + Laplacien[faceTab[i][2]].z)/3;
+            redColor = double(redColor-minValueLaplacien.x)/(maxValueLaplacien.x-minValueLaplacien.x);
+            blueColor = double(blueColor-minValueLaplacien.y)/(maxValueLaplacien.y-minValueLaplacien.y);
+            greenColor = double(greenColor-minValueLaplacien.z)/(maxValueLaplacien.z-minValueLaplacien.z);
+            glColor3d(redColor,blueColor,greenColor);*/
+
+            // Méthode de coloration avec norme
+            double t = double(norm(Laplacien[faceTab[i][0]])
+                    + norm(Laplacien[faceTab[i][1]])
+                    + norm(Laplacien[faceTab[i][2]]))/3/maxNormLaplacian;
+            glColor3d(t, t, t);
+
+        } else {
+            moduloI = i%4;
+            if (moduloI == 0) glColor3d(1,0,0);
+            else if (moduloI == 1) glColor3d(0,1,0);
+            else if (moduloI == 2) glColor3d(0,0,1);
+            else glColor3d(1,1,0);
+        }
+        double t1 = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
+        double t2 = norm(Laplacien[faceTab[i][1]])/maxNormLaplacian;
+        double t3 = norm(Laplacien[faceTab[i][2]])/maxNormLaplacian;
 
         glBegin(GL_TRIANGLES);
+        glColor3d(t1*colorA.x - (1-t1)*colorB.x, t1*colorA.y - (1-t1)*colorB.y, t1*colorA.z - (1-t1)*colorB.z);
         glVertexDraw(vertexTab[faceTab[i][0]]);
+
+        glColor3d(t2*colorA.x - (1-t2)*colorB.x, t2*colorA.y - (1-t2)*colorB.y, t2*colorA.z - (1-t2)*colorB.z);
         glVertexDraw(vertexTab[faceTab[i][1]]);
+
+        glColor3d(t3*colorA.x - (1-t3)*colorB.x, t3*colorA.y - (1-t3)*colorB.y, t3*colorA.z - (1-t3)*colorB.z);
         glVertexDraw(vertexTab[faceTab[i][2]]);
         glEnd();
     }
 }
 
-//Example with a wireframe tedraedra
 void Mesh::drawMeshWireFrame() {
     for(int i = 0; i < faceTab.size(); i++) {
-        glBegin(GL_LINE_STRIP);
+        glBegin(GL_LINES);
             glVertexDraw(vertexTab[faceTab[i][0]]);
             glVertexDraw(vertexTab[faceTab[i][1]]);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
-            glVertexDraw(vertexTab[faceTab[i][1]]);
             glVertexDraw(vertexTab[faceTab[i][2]]);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
             glVertexDraw(vertexTab[faceTab[i][0]]);
-            glVertexDraw(vertexTab[faceTab[i][2]]);
         glEnd();
     }
-
 }
 
 void Mesh::setMesh(QVector<Vertex> vertices,QVector<Face> faces){
@@ -53,13 +87,13 @@ void Mesh::setMesh(QVector<Vertex> vertices,QVector<Face> faces){
 }
 
 void Mesh::meshWithFile(std::string filePath){
-    std::cout<<"Begin of creating a mesh with .off file\n";
+    //std::cout<<"Begin of creating a mesh with .off file\n";
     std::ifstream file(filePath.c_str());
     if(!file.is_open()){
         std::cout<<"ERROR : Unable to open file : \""<<filePath<<"\"\n";
     } else {
         int nbVertices, nbFaces, dump, a, b, c;
-        float x, y, z;
+        double x, y, z;
         std::string temp;
         file >> nbVertices >> nbFaces >> dump;
 
@@ -80,7 +114,7 @@ void Mesh::meshWithFile(std::string filePath){
         defineNeighbourFaces();
         file.close();
     }
-    std::cout<<"End of creating a mesh with .off file\n";
+    //std::cout<<"End of creating a mesh with .off file\n";
 }
 
 void printFacesNeib(const QVector<Face> & f){
@@ -135,7 +169,7 @@ Iterator_on_vertices Mesh::v_pend() { return Iterator_on_vertices(vertexTab.size
 Circulator_on_faces Mesh::incident_f(Vertex &v){return Circulator_on_faces(this->getVertexID(v),this);}
 Circulator_on_vertices Mesh::adjacent_v(Vertex &v){return Circulator_on_vertices(getVertexID(v),this);}
 
-float dot(const Vector& v1,const Vector& v2)
+double dot(const Vector& v1,const Vector& v2)
 {
   return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
@@ -147,12 +181,12 @@ Vector cross(const Vector& v1,const Vector& v2)
       (v1.x * v2.y) - (v1.y * v2.x) );
 }
 
-float norm(const Vector& v){
-  return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+double norm(const Vector& v){
+  return double(sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
 }
 
 Vector normalize(const Vector& v){
-  float magnetude = norm(v);
+  double magnetude = norm(v);
   Vector normV(0,0,0);
   normV.x = v.x/magnetude;
   normV.y = v.y/magnetude;
@@ -160,11 +194,11 @@ Vector normalize(const Vector& v){
   return normV;
 }
 
-float getCos(const Vector& v1,const Vector& v2){
+double getCos(const Vector& v1,const Vector& v2){
   return dot(normalize(v1),normalize(v2));
 }
 
-float getSin(const Vector& v1,const Vector& v2){
+double getSin(const Vector& v1,const Vector& v2){
   return cross(normalize(v1),normalize(v2)).x;
 }
 
@@ -190,54 +224,59 @@ int Mesh::getVertexID(const Vertex &m)
     return -1;
 }
 
-float Mesh::getFaceArea(Vertex& vert1,Vertex& vert2, Vertex& vert3){
+double Mesh::getFaceArea(Vertex& vert1,Vertex& vert2, Vertex& vert3){
   Vector v1(vert1,vert2);
   Vector v2(vert1,vert3);
   return norm(cross(v1,v2));
 }
 
-float Mesh::getFaceArea(int FaceIndex){
+double Mesh::getFaceArea(int FaceIndex){
   return getFaceArea(getVertex(getFace(FaceIndex).getVertex(0)),getVertex(getFace(FaceIndex).getVertex(1))
             ,getVertex(getFace(FaceIndex).getVertex(2)));
 }
 
-float Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
+double Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
   Vector vec1(v1,v2);
   Vector vec2(v1,v3);
   double sin = getSin(vec1,vec2);
   double cos = getCos(vec1,vec2);
+  double clamp = 100;
   if(!sin)
-    return 10000;
+    return clamp;
   double cot = cos/sin;
-  if(cot > 10000) return 10000;
-  if(cot < -10000) return -10000;
+  if(cot > clamp) return clamp;
+  if(cot < -clamp) return -clamp;
   return cot;
   //return (cos / sin) > 10000  ? 10000:(cos/sin);
 }
-//TODO
+
 void Mesh::computeLaplacian(){
   //std::cout << "Computing Laplacian ===================================================================\n";
 
   Laplacien = QVector<Vector>(vertexTab.size());
   Iterator_on_vertices its;
   Circulator_on_faces cf;
-  int i = 0;
+  Circulator_on_faces cfbegin;
+  int i =0 , axisGlID, axisLocID;
+  float coAlpha, coBeta, area;
+  Vector sum(0,0,0);
+  Vertex axis, nextV, lastV;
 
   //For every vertex
   for (its = v_begin(); its != v_pend(); ++its)
   {
-      float coAlpha = 0;
-      float coBeta = 0;
-      float area = 0;
-      Vector sum(0,0,0);
-      Circulator_on_faces cfbegin = incident_f(*its);
+      coAlpha = 0;
+      coBeta = 0;
+      area = 0;
+      sum = Vector(0,0,0);
+      cfbegin = incident_f(*its);
 
       //Variables for lisibility to avoid redundancy
-      Vertex axis = *its;
-      int axisGlID = getVertexID(axis);
-      int axisLocID = (*cfbegin).global2localIndex(axisGlID);
-      Vertex nextV = getVertex((*cfbegin).getVertex( (axisLocID+1) %3)); // Vertex next to axis in counter-clock wise order
-      Vertex lastV = getVertex((*cfbegin).getVertex( (axisLocID+2) %3)); // Vertex next to axis in clock wise order
+      axis = *its;
+      axisGlID = getVertexID(axis);
+      axisLocID = (*cfbegin).global2localIndex(axisGlID);
+      nextV = getVertex((*cfbegin).getVertex( (axisLocID+1) %3)); // Vertex next to axis in counter-clock wise order
+      lastV = getVertex((*cfbegin).getVertex( (axisLocID+2) %3)); // Vertex next to axis in clock wise order
       //Get the first face's alpha,
       //get first alpha
       coAlpha = getCot( nextV, axis, lastV );
@@ -283,7 +322,70 @@ void Mesh::computeLaplacian(){
       Laplacien[i].y = (1 / (2 * area)) * sum.y;
       Laplacien[i].z = (1 / (2 * area)) * sum.z;
 
-      std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]\n";
+      // std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]" << std::endl;
+      // std::cout << "2H = \t" << norm(Laplacien[i]) << std::endl;
+      if(i%1000 == 0){
+        std::cout << "Computed Laplacian for vertex ["<< i <<"] : \t ["<< Laplacien[i].x << "]["<< Laplacien[i].y <<"]["<< Laplacien[i].z <<"]" << std::endl;
+        std::cout << "2H = \t" << norm(Laplacien[i]) << std::endl;
+      }
       i++;
   }
+  clampLamplacian(50);
+  minMaxLaplacian();
+}
+
+void Mesh::minMaxLaplacian(){
+    maxValueLaplacien = Laplacien[0];
+    minValueLaplacien = Laplacien[0];
+    maxNormLaplacian = norm(Laplacien[0]);
+    minNormLaplacian = norm(Laplacien[0]);
+    double n;
+    for(auto p : Laplacien){
+        if (p.x>maxValueLaplacien.x){
+            maxValueLaplacien.x = p.x;
+        }
+        if (p.y>maxValueLaplacien.y){
+            maxValueLaplacien.y = p.y;
+        }
+        if (p.z>maxValueLaplacien.z){
+            maxValueLaplacien.z = p.z;
+        }
+        if (p.x<minValueLaplacien.x){
+            minValueLaplacien.x = p.x;
+        }
+        if (p.y<minValueLaplacien.y){
+            minValueLaplacien.y = p.y;
+        }
+        if (p.z<minValueLaplacien.z){
+            minValueLaplacien.z = p.z;
+        }
+        n=norm(p);
+        if(n>maxNormLaplacian){
+            maxNormLaplacian=n;
+        } else if(n<minNormLaplacian) {
+            minNormLaplacian=n;
+        }
+    }
+}
+
+void Mesh::clampLamplacian(int clamp){
+    for(int i = 0; i< Laplacien.size();i++){
+      if(Laplacien[i].x > clamp)
+        Laplacien[i].x = clamp;
+      if(Laplacien[i].y > clamp)
+        Laplacien[i].y = clamp;
+      if(Laplacien[i].z > clamp)
+        Laplacien[i].z = clamp;
+
+      if(Laplacien[i].x < -clamp)
+        Laplacien[i].x = -clamp;
+      if(Laplacien[i].y < -clamp)
+        Laplacien[i].y = -clamp;
+      if(Laplacien[i].z < -clamp)
+        Laplacien[i].z = -clamp;
+    }
+}
+
+void Mesh::threadedLaplacian(){
+
 }
