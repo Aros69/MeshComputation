@@ -176,12 +176,13 @@ public:
     Circulator_on_faces incident_f(Vertex &v);
     Circulator_on_vertices adjacent_v(Vertex &v);
 
-    //Laplacian Functions
+    // Laplacian Functions
     void computeLaplacian();
-    void threadedLaplacian();
     void minMaxLaplacian();
     void clampLamplacian(int clamp);
 
+    // TrinagleSplit
+    void triangleSplit(int faceIndex, Point newV);
 
     double getFaceArea(int index);
     double getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);

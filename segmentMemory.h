@@ -2,6 +2,7 @@
 #include <QMap>
 
 class SegmentMemory{
+public:
     class SegmentMemoryKey{
     public:
         int vertexIndex1;

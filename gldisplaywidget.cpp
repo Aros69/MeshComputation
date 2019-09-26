@@ -172,10 +172,11 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
-    //initCubeMesh();
-    initQueenMesh();
+    initCubeMesh();
+    //initQueenMesh();
 
-    _mesh.computeLaplacian();
+    //_mesh.computeLaplacian();
+    _mesh.triangleSplit(0, Point(1.5, 1.5, 1.5));
     //testIterators();
 }
 
