@@ -71,6 +71,9 @@ Vector normalize(const Vector& v);
 double getCos(const Vector& v1,const Vector& v2);
 double getSin(const Vector& v1,const Vector& v2);
 
+//Return a positive value if v1,v2,v3 are in a trigonometric order
+int orientation(const Vertex& v1, const Vertex& v2, const Vertex& v3);
+
 class Face
 {
 
@@ -89,52 +92,31 @@ public:
         neibFace[2] = -1;
     }
 
-    void setNeibFace(int neib1, int neib2, int neib3)
-    {
-        neibFace[0] = neib1;
-        neibFace[1] = neib2;
-        neibFace[2] = neib3;
-    }
+    //Setters ==============
+    //Set all near face's index
+    void setNeibFace(int neib1, int neib2, int neib3);
+    //Set a specific near Face
+    void setNeibFace(int neib, int index);
+    //Set all vertices's index
+    void setVertices(int v1,int v2,int v3);
+    //Set specific vertex
+    void setVertex(int index,int v);
 
-    void setNeibFace(int neib, int index)
-    {
-        neibFace[index] = neib;
-    }
 
+    //Getters ==============
+    //Get the near face with index
     int getNeibFace(int index) const { return neibFace[index]; }
 
-    int global2localIndex(int globalIndex)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            if (verticesIndex[i] == globalIndex)
-            {
-                return i;
-            }
-        }
-        std::cout << "vertex not part of this triangle\n";
-        std::cout << "indexes are ["<< verticesIndex [0] <<"] ["<< verticesIndex[1] <<"] and ["<< verticesIndex[2]<<"\n";
-        std::cout << " Provided was " << globalIndex << "\n";
-        return -1;
-    }
+    //Convert global Index to local Index
+    int global2localIndex(int globalIndex);
 
-    int getVertex(int index) const
-    {
-        return verticesIndex[index];
-    }
+    //Get vertex with index
+    int getVertex(int index) const{return verticesIndex[index];}
 
-    void print(int ID){
-        std::cout << "Face ["<< ID <<"] : \n";
-        std::cout << "Vertices Index :\n 1 :\t ["<< verticesIndex [0] <<"]\t 2 : ["<< verticesIndex[1]
-                  <<"]\t 3 :["<< verticesIndex[2]<<"]\n";
-        std::cout << "Near Faces Index :\n 1 :\t ["<< neibFace[0] <<"]\t 2 : ["<< neibFace[1]
-                  <<"]\t 3 :["<< neibFace[2]<<"]\n";
-    }
+    //Print the face's infos
+    void print(int ID);
 
-    int &operator[](int x)
-    {
-        return verticesIndex[x];
-    }
+    int &operator[](int x){return verticesIndex[x];}
 };
 class Iterator_on_vertices;
 class Circulator_on_vertices;
@@ -177,6 +159,7 @@ public:
     Circulator_on_vertices adjacent_v(Vertex &v);
 
     // Laplacian Functions
+    //Mesh statistics methods
     void computeLaplacian();
     void minMaxLaplacian();
     void clampLamplacian(int clamp);
@@ -186,10 +169,18 @@ public:
 
     double getFaceArea(int index);
     double getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);
-
     //Get Cot of the angle (v2 v1 v3)
     double getCot(Vertex& v1,Vertex& v2, Vertex& v3);
+    //InFace test
+    bool isInFace(int index,const Vertex& v);
     void printFaces();
+
+    //Mesh Modification methods
+    void flip(int index1, int index2){
+      Face f1 = getFace(index1);
+      Face f2 = getFace(index2);
+      //Get all the data that needs to persist
+    }
 
 };
 

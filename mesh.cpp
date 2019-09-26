@@ -1,5 +1,52 @@
 #include "mesh.h"
 
+void Face::setNeibFace(int neib1, int neib2, int neib3)
+{
+    neibFace[0] = neib1;
+    neibFace[1] = neib2;
+    neibFace[2] = neib3;
+}
+
+void Face::setNeibFace(int neib, int index)
+{
+    neibFace[index] = neib;
+}
+
+void Face::setVertex(int index,int v)
+{
+  verticesIndex[index] = v;
+}
+
+void Face::setVertices(int v1,int v2,int v3)
+{
+  verticesIndex[0] = v1;
+  verticesIndex[1] = v2;
+  verticesIndex[2] = v3;
+}
+
+int Face::global2localIndex(int globalIndex)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (verticesIndex[i] == globalIndex)
+        {
+            return i;
+        }
+    }
+    std::cout << "vertex not part of this triangle\n";
+    std::cout << "indexes are ["<< verticesIndex [0] <<"] ["<< verticesIndex[1] <<"] and ["<< verticesIndex[2]<<"\n";
+    std::cout << " Provided was " << globalIndex << "\n";
+    return -1;
+}
+
+void Face::print(int ID){
+    std::cout << "Face ["<< ID <<"] : \n";
+    std::cout << "Vertices Index :\n 1 :\t ["<< verticesIndex [0] <<"]\t 2 : ["<< verticesIndex[1]
+              <<"]\t 3 :["<< verticesIndex[2]<<"]\n";
+    std::cout << "Near Faces Index :\n 1 :\t ["<< neibFace[0] <<"]\t 2 : ["<< neibFace[1]
+              <<"]\t 3 :["<< neibFace[2]<<"]\n";
+}
+
 Mesh::Mesh(){
     for(auto p : Laplacien){
         p.x = INT_MIN;
@@ -10,8 +57,6 @@ Mesh::Mesh(){
 }
 
 Mesh::~Mesh(){}
-
-
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
 // Draw a vertex
 void glVertexDraw(const Vertex & p) {
@@ -183,6 +228,13 @@ double getCos(const Vector& v1,const Vector& v2){
 
 double getSin(const Vector& v1,const Vector& v2){
   return cross(normalize(v1),normalize(v2)).x;
+}
+
+int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3){
+  Vector vec1(v1,v2);
+  Vector vec2(v1,v3);
+  Vector oz(0,0,1);
+  return dot(normalize(vec1),normalize(vec2));
 }
 
 void Mesh::printFaces(){
@@ -385,7 +437,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
 
         // Face 1
     Face newFace1;
-    if(orientation(vertexTab.size(), faceTab[faceIndex][0], faceTab[faceIndex][1]>0)){
+    if(orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][1]])>0){
         newFace1 = Face(vertexTab.size(), faceTab[faceIndex][0], faceTab[faceIndex][1]);
         newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceIndex, faceTab.size()+1);
     } else {
@@ -399,7 +451,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
 
         // Face 2
     Face newFace2;
-    if(orientation(vertexTab.size(), faceTab[faceIndex][0], faceTab[faceIndex][2]>0)){
+    if(orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][2]])>0){
         newFace2 = Face(vertexTab.size(), faceTab[faceIndex][0], faceTab[faceIndex][2]);
         newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceIndex, faceTab.size()-1);
     } else {
@@ -449,3 +501,19 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
     // Fin mise à jour du Laplacien
     std::cout<<"End of triangleSplit"<<std::endl;
 }
+
+bool Mesh::isInFace(int index,const Vertex& v){
+  int segment[2];
+  Face f = getFace(index);
+  //For all segments
+  for(int i = 0; i < 3;i++ ){
+    segment[0] = i;
+    segment[1] = (i+1)%3;
+    //If v and the segment are incorrectly ordered
+    if(orientation(v, getVertex(f.getVertex(segment[0])), getVertex(f.getVertex(segment[1]))) < 0)
+          return false;
+  }
+  return true;
+}
+
+

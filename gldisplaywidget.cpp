@@ -175,8 +175,8 @@ void GLDisplayWidget::initializeGL()
     initCubeMesh();
     //initQueenMesh();
 
-    //_mesh.computeLaplacian();
-    _mesh.triangleSplit(0, Point(1.5, 1.5, 1.5));
+    //_mesh.triangleSplit(0, Point(1.5, 1.5, 1.5));
+    _mesh.computeLaplacian();
     //testIterators();
 }
 
