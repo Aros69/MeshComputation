@@ -1,60 +1,7 @@
 #include "mesh.h"
 
-void Face::setNeibFace(int neib1, int neib2, int neib3)
-{
-    neibFace[0] = neib1;
-    neibFace[1] = neib2;
-    neibFace[2] = neib3;
-}
 
-void Face::setNeibFace(int neib, int index)
-{
-    neibFace[index] = neib;
-}
-
-void Face::setVertex(int index,int v)
-{
-  verticesIndex[index] = v;
-}
-
-void Face::setVertices(int v1,int v2,int v3)
-{
-  verticesIndex[0] = v1;
-  verticesIndex[1] = v2;
-  verticesIndex[2] = v3;
-}
-
-int Face::global2localIndex(int globalIndex)
-{
-    for (int i = 0; i < 3; i++)
-    {
-        if (verticesIndex[i] == globalIndex)
-        {
-            return i;
-        }
-    }
-    std::cout << "vertex not part of this triangle\n";
-    std::cout << "indexes are ["<< verticesIndex [0] <<"] ["<< verticesIndex[1] <<"] and ["<< verticesIndex[2]<<"\n";
-    std::cout << " Provided was " << globalIndex << "\n";
-    return -1;
-}
-
-void Face::print(int ID){
-    std::cout << "Face ["<< ID <<"] : \n";
-    std::cout << "Vertices Index :\n 1 :\t ["<< verticesIndex [0] <<"]\t 2 : ["<< verticesIndex[1]
-              <<"]\t 3 :["<< verticesIndex[2]<<"]\n";
-    std::cout << "Near Faces Index :\n 1 :\t ["<< neibFace[0] <<"]\t 2 : ["<< neibFace[1]
-              <<"]\t 3 :["<< neibFace[2]<<"]\n";
-}
-
-Mesh::Mesh(){
-    for(auto p : Laplacien){
-        p.x = INT_MIN;
-        p.y = INT_MIN;
-        p.z = INT_MIN;
-    }
-    minValueLaplacien.x=INT_MIN;
-}
+Mesh::Mesh(){}
 
 Mesh::~Mesh(){}
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
@@ -65,12 +12,16 @@ void glVertexDraw(const Vertex & p) {
 
 void Mesh::drawMesh() {
     int moduloI;
-    double redColor, greenColor, blueColor;
+    double t1, t2, t3;
     for(int i = 0; i < faceTab.size(); i++) {
-        if(minValueLaplacien.x!=INT_MIN){
-            double t1 = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
-            double t2 = norm(Laplacien[faceTab[i][1]])/maxNormLaplacian;
-            double t3 = norm(Laplacien[faceTab[i][2]])/maxNormLaplacian;
+        /* std::cout<<"Triangle n°:"<<i<<" pour le mesh de taille : "
+                << vertexTab.size() <<" avec en vertex : ("
+                << faceTab[i][0] <<", "<< faceTab[i][1] <<", "
+                << faceTab[i][2]<<")"<<std::endl; */
+        if(laplacianDone){
+            t1 = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
+            t2 = norm(Laplacien[faceTab[i][1]])/maxNormLaplacian;
+            t3 = norm(Laplacien[faceTab[i][2]])/maxNormLaplacian;
 
             glBegin(GL_TRIANGLES);
             glColor3d(t1*colorA.x - (1-t1)*colorB.x, t1*colorA.y - (1-t1)*colorB.y, t1*colorA.z - (1-t1)*colorB.z);
@@ -83,6 +34,14 @@ void Mesh::drawMesh() {
             glVertexDraw(vertexTab[faceTab[i][2]]);
             glEnd();
         } else {
+
+            glColor3d(1,1,1);
+            glBegin(GL_LINE_STRIP);
+            glVertexDraw(vertexTab[faceTab[i][0]]);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glEnd();
+
             moduloI = i%4;
             if (moduloI == 0) glColor3d(1,0,0);
             else if (moduloI == 1) glColor3d(0,1,0);
@@ -103,8 +62,10 @@ void Mesh::drawMeshWireFrame() {
         glBegin(GL_LINES);
             glVertexDraw(vertexTab[faceTab[i][0]]);
             glVertexDraw(vertexTab[faceTab[i][1]]);
-            glVertexDraw(vertexTab[faceTab[i][2]]);
             glVertexDraw(vertexTab[faceTab[i][0]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
         glEnd();
     }
 }
@@ -143,15 +104,6 @@ void Mesh::meshWithFile(std::string filePath){
         file.close();
     }
     //std::cout<<"End of creating a mesh with .off file\n";
-}
-
-void printFacesNeib(const QVector<Face> & f){
-    for(int j=0;j<f.size();++j){
-        std::cout<<"Face : "<<j<<" : ("<<f[j].getVertex(0)<<", "
-                <<f[j].getNeibFace(0)<<") (" <<f[j].getVertex(1)
-                <<", "<<f[j].getNeibFace(1) <<") ("
-                <<f[j].getVertex(2)<<", "<<f[j].getNeibFace(2)<<")\n";
-    }
 }
 
 void Mesh::defineNeighbourFaces(){
@@ -197,46 +149,6 @@ Iterator_on_vertices Mesh::v_pend() { return Iterator_on_vertices(vertexTab.size
 Circulator_on_faces Mesh::incident_f(Vertex &v){return Circulator_on_faces(this->getVertexID(v),this);}
 Circulator_on_vertices Mesh::adjacent_v(Vertex &v){return Circulator_on_vertices(getVertexID(v),this);}
 
-double dot(const Vector& v1,const Vector& v2)
-{
-  return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-}
-
-Vector cross(const Vector& v1,const Vector& v2)
-{
-  return Vector( (v1.y * v2.z) - (v1.z * v2.y),
-      (v1.z * v2.x) - (v1.x * v2.z),
-      (v1.x * v2.y) - (v1.y * v2.x) );
-}
-
-double norm(const Vector& v){
-  return double(sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
-}
-
-Vector normalize(const Vector& v){
-  double magnetude = norm(v);
-  Vector normV(0,0,0);
-  normV.x = v.x/magnetude;
-  normV.y = v.y/magnetude;
-  normV.z = v.z/magnetude;
-  return normV;
-}
-
-double getCos(const Vector& v1,const Vector& v2){
-  return dot(normalize(v1),normalize(v2));
-}
-
-double getSin(const Vector& v1,const Vector& v2){
-  return cross(normalize(v1),normalize(v2)).x;
-}
-
-int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3){
-  Vector vec1(v1,v2);
-  Vector vec2(v1,v3);
-  Vector oz(0,0,1);
-  return dot(normalize(vec1),normalize(vec2));
-}
-
 void Mesh::printFaces(){
         Iterator_on_faces itf;
         int i = 0;
@@ -248,12 +160,8 @@ void Mesh::printFaces(){
 
 int Mesh::getVertexID(const Vertex &m)
 {
-    for (int i = 0; i < vertexTab.size(); i++)
-    {
-        if (m.equals(vertexTab[i]))
-        {
-            return i;
-        }
+    for (int i = 0; i < vertexTab.size(); i++) {
+        if (m.equals(vertexTab[i])) {return i;}
     }
     std::cout << "Invalid ID";
     return -1;
@@ -367,6 +275,7 @@ void Mesh::computeLaplacian(){
   }
   clampLamplacian(50);
   minMaxLaplacian();
+  laplacianDone = true;
 }
 
 void Mesh::minMaxLaplacian(){
@@ -425,7 +334,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
 
     // TODO check if newV is in the triangle at faceIndex
 
-    std::cout<<"Begining of triangleSplit"<<std::endl;
+    //std::cout<<"Begining of triangleSplit"<<std::endl;
 
     // Définition du nouveau Vertex
     Vertex v(newV.x(), newV.y(), newV.z());
@@ -438,10 +347,10 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
         // Face 1
     Face newFace1;
     if(orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][1]])>0){
-        newFace1 = Face(vertexTab.size(), faceTab[faceIndex][0], faceTab[faceIndex][1]);
+        newFace1 = Face(vertexTab.size()-1, faceTab[faceIndex][0], faceTab[faceIndex][1]);
         newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceIndex, faceTab.size()+1);
     } else {
-        newFace1 = Face(vertexTab.size(), faceTab[faceIndex][1], faceTab[faceIndex][0]);
+        newFace1 = Face(vertexTab.size()-1, faceTab[faceIndex][1], faceTab[faceIndex][0]);
         newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceTab.size()+1, faceIndex);
     }
     faceTab.push_back(newFace1);
@@ -452,10 +361,10 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
         // Face 2
     Face newFace2;
     if(orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][2]])>0){
-        newFace2 = Face(vertexTab.size(), faceTab[faceIndex][0], faceTab[faceIndex][2]);
+        newFace2 = Face(vertexTab.size()-1, faceTab[faceIndex][0], faceTab[faceIndex][2]);
         newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceIndex, faceTab.size()-1);
     } else {
-        newFace2 = Face(vertexTab.size(), faceTab[faceIndex][2], faceTab[faceIndex][0]);
+        newFace2 = Face(vertexTab.size()-1, faceTab[faceIndex][2], faceTab[faceIndex][0]);
         newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceTab.size()-1, faceIndex);
     }
     faceTab.push_back(newFace2);
@@ -466,7 +375,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
 
     // Mise à jour de l'ancienne face
     Face oldFace = faceTab[faceIndex];
-    faceTab[faceIndex][0]=vertexTab.size();
+    faceTab[faceIndex][0]=vertexTab.size()-1;
     faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size()-1, faceTab.size()-2);
     // Fin mise à jour de l'ancienne face
 
@@ -498,8 +407,8 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
     // Fin mise à jour des face voisine
 
     // Mise à jour du Laplacien
+    // TODO !!
     // Fin mise à jour du Laplacien
-    std::cout<<"End of triangleSplit"<<std::endl;
 }
 
 bool Mesh::isInFace(int index,const Vertex& v){

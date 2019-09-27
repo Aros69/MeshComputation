@@ -15,13 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     gldisplaywidget.cpp \
-    mesh.cpp
+    mesh.cpp \
+    utils.cpp
 
 HEADERS  += mainwindow.h \
     gldisplaywidget.h \
     mesh.h \
     segmentMemory.h \
-    iterators.h
+    iterators.h \
+    utils.h
 
 FORMS    += mainwindow.ui
 

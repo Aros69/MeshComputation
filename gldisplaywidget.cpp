@@ -175,14 +175,12 @@ void GLDisplayWidget::initializeGL()
     initCubeMesh();
     //initQueenMesh();
 
-    //_mesh.triangleSplit(0, Point(1.5, 1.5, 1.5));
-    _mesh.computeLaplacian();
+    _mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
+    //_mesh.computeLaplacian();
     //testIterators();
 }
 
-void GLDisplayWidget::paintGL()
-{
-
+void GLDisplayWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Center the camera
