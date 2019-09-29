@@ -14,11 +14,19 @@ void Mesh::drawMesh() {
     int moduloI;
     double t1, t2, t3;
     for(int i = 0; i < faceTab.size(); i++) {
-        /* std::cout<<"Triangle n°:"<<i<<" pour le mesh de taille : "
+        /*std::cout<<"Triangle n°:"<<i<<" pour le mesh de taille : "
                 << vertexTab.size() <<" avec en vertex : ("
                 << faceTab[i][0] <<", "<< faceTab[i][1] <<", "
-                << faceTab[i][2]<<")"<<std::endl; */
-        if(laplacianDone){
+                << faceTab[i][2]<<")"<<std::endl;*/
+        if(faceDebugTab[i].debug){
+          glColor3d(faceDebugTab[i].debugColor.x,faceDebugTab[i].debugColor.y,faceDebugTab[i].debugColor.z);
+          glBegin(GL_TRIANGLES);
+          glVertexDraw(vertexTab[faceTab[i][0]]);
+          glVertexDraw(vertexTab[faceTab[i][1]]);
+          glVertexDraw(vertexTab[faceTab[i][2]]);
+          glEnd();
+        }
+        else if(laplacianDone){
             t1 = norm(Laplacien[faceTab[i][0]])/maxNormLaplacian;
             t2 = norm(Laplacien[faceTab[i][1]])/maxNormLaplacian;
             t3 = norm(Laplacien[faceTab[i][2]])/maxNormLaplacian;
@@ -73,6 +81,7 @@ void Mesh::drawMeshWireFrame() {
 void Mesh::setMesh(QVector<Vertex> vertices,QVector<Face> faces){
     vertexTab = vertices;
     faceTab = faces;
+    updateDebugObj();
 }
 
 void Mesh::meshWithFile(std::string filePath){
@@ -104,6 +113,7 @@ void Mesh::meshWithFile(std::string filePath){
         file.close();
     }
     //std::cout<<"End of creating a mesh with .off file\n";
+    updateDebugObj();
 }
 
 void Mesh::defineNeighbourFaces(){
@@ -409,8 +419,45 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
     // Mise à jour du Laplacien
     // TODO !!
     // Fin mise à jour du Laplacien
-}
 
+    //Mise à jour des debugObj
+    updateDebugObj();
+}
+void Mesh::flip(int index1, int index2){
+  std::cout << "Flipping Face "<< index1 <<"\t and Face " << index2 << std::endl;
+  markFace(index1);
+  markFace(index2);
+  Face fA = getFace(index1);
+  Face fB = getFace(index2);
+  int vA = fA.getDifferentVertex(fB);  // The index of the opposite vertex on fA (-1 if disjointed triangles)
+  int vB = fB.getDifferentVertex(fA);  // The index of the opposite vertex on fB (-1 if disjointed triangles)
+  int fA1ID = fA.getNeibFace( (vA + 1) % 3 );
+  int fB1ID = fB.getNeibFace( (vB + 1) % 3 );
+  Face fA1 = getFace(fA1ID); // The face near fA
+  Face fB1 = getFace(fB1ID); // The face near fB
+  std::cout << "Data : fA1 = " << fA.getNeibFace( (vA + 1) % 3)  <<"\nfB1 = "<< fB.getNeibFace((vB + 1) % 3 ) << std::endl;
+
+  //Set faces for neibghor's faces first
+  std::cout << "Different vertex A: " << fA1.getDifferentVertex(fA) << std::endl;
+  std::cout << "Different vertex B: " << fB1.getDifferentVertex(fB) << std::endl;
+  fA1.setNeibFace(index2,fA1.getDifferentVertex(fA));
+  fB1.setNeibFace(index1,fB1.getDifferentVertex(fB));
+
+  //Set faces for fA / fB
+  fA.setNeibFace(fB.getNeibFace( (vB + 1) % 3 ),vA );
+  fB.setNeibFace(fA.getNeibFace( (vA + 1) % 3 ),vB );
+  fA.setNeibFace(index2, (vA + 1) % 3 );
+  fB.setNeibFace(index1,(vB + 1) % 3 );
+
+  //Set vertices
+  fA.setVertex((vA + 2) % 3,fB.getVertex(vB));
+  fB.setVertex((vB + 2) % 3,fA.getVertex(vA));
+
+  faceTab[index1] = fA;
+  faceTab[index2] = fB;
+  faceTab[fA1ID] = fA1;
+  faceTab[fB1ID] = fB1;
+}
 bool Mesh::isInFace(int index,const Vertex& v){
   int segment[2];
   Face f = getFace(index);
@@ -424,5 +471,23 @@ bool Mesh::isInFace(int index,const Vertex& v){
   }
   return true;
 }
-
-
+void Mesh::updateDebugObj(){
+  vertexDebugTab = QVector<DebugObj>(vertexTab.size());
+  faceDebugTab = QVector<DebugObj>(faceTab.size());
+}
+void Mesh::markFace(int index){
+  faceDebugTab[index].debug = true;
+}
+void Mesh::markVertex(int index){
+  vertexDebugTab[index].debug = true;
+}
+void Mesh::unMarkAll(){
+  for(int i = 0; i < faceDebugTab.size();i++)
+  {
+    faceDebugTab[i].debug = false;
+  }
+  for(int i = 0; i < vertexDebugTab.size();i++)
+  {
+    vertexDebugTab[i].debug = false;
+  }
+}

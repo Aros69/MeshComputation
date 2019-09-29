@@ -70,6 +70,13 @@ double getSin(const Vector& v1,const Vector& v2);
 //Return a positive value if v1,v2,v3 are in a trigonometric order
 int orientation(const Vertex& v1, const Vertex& v2, const Vertex& v3);
 
+struct DebugObj
+{
+  Vector debugColor;
+  bool debug;
+  DebugObj():debugColor(1.0,0.0,1.0),debug(false){}
+
+};
 class Face
 {
 
@@ -109,6 +116,28 @@ public:
     //Get vertex with index
     int getVertex(int index) const{return verticesIndex[index];}
 
+    //Return the local index of the different vertex
+    int getDifferentVertex(Face f){
+      bool found = false;
+      for(int i = 0;i < 3;i++){
+          for (int j = 0; j < 3; j++)
+          {
+              // if(getVertex(i) == f.getVertex(j) && found == true){
+              //   std::cout << "The triangles have more than one different vertex\n";
+              //   return -1;
+              // }
+              if(getVertex(i) == f.getVertex(j)){
+                found = true; // fA[i] is a common vertex
+              }
+          }
+          if(!found){
+            return i;
+          }
+          found = false;
+      }
+      std::cout << "No uncommon vertex..." << std::endl;
+      return -1;
+    }
     //Print the face's infos
     void print(int ID);
 

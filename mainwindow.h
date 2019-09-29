@@ -21,6 +21,9 @@ private:
 public slots:
     void onWireframe();
     void onPlain();
+    void randomFlip();
+    void randomFHighlight();
+    void unmarkAll();
 };
 
 #endif // MAINWINDOW_H

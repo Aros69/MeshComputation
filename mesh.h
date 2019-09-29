@@ -6,7 +6,7 @@
 #include <QtAlgorithms>
 #include <fstream>
 #include <sstream>
-
+#include <stdlib.h>
 #include "utils.h"
 
 class Iterator_on_vertices;
@@ -18,7 +18,9 @@ class Mesh
 {
 private:
     QVector<Vertex> vertexTab;
+    QVector<DebugObj> vertexDebugTab;
     QVector<Face> faceTab;
+    QVector<DebugObj> faceDebugTab;
     QVector<Vector> Laplacien;
     bool laplacianDone = false;
     Vector colorA = Vector(0.75,0.75,0.75);
@@ -56,24 +58,32 @@ public:
     void minMaxLaplacian();
     void clampLamplacian(int clamp);
 
-    // TrinagleSplit
-    void triangleSplit(int faceIndex, Point newV);
-
     double getFaceArea(int index);
     double getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);
     //Get Cot of the angle (v2 v1 v3)
     double getCot(Vertex& v1,Vertex& v2, Vertex& v3);
     //InFace test
     bool isInFace(int index,const Vertex& v);
-    void printFaces();
 
     //Mesh Modification methods
-    void flip(int index1, int index2){
-      Face f1 = getFace(index1);
-      Face f2 = getFace(index2);
-      //Get all the data that needs to persist
-    }
+    void flip(int index1, int index2);
+    // TriangleSplit
+    void triangleSplit(int faceIndex, Point newV);
 
+    //Debugging Methods ===================================================================
+    void updateDebugObj();
+    void printFaces();
+    void markFace(int index);
+    void markVertex(int index);
+    void unMarkAll();
+    void randomFlip(){
+      int index1 = rand()%faceTab.size();
+      int index2 = getFace(index1).getNeibFace(rand()%3);
+      flip(index1,index2);
+    }
+    void randomFHighlight(){
+      markFace(rand()%faceTab.size());
+    }
 };
 
 #include "iterators.h"

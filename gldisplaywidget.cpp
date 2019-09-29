@@ -175,7 +175,7 @@ void GLDisplayWidget::initializeGL()
     initCubeMesh();
     //initQueenMesh();
 
-    _mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
+    //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
     //_mesh.computeLaplacian();
     //testIterators();
 }
@@ -245,6 +245,18 @@ void GLDisplayWidget::wheelEvent(QWheelEvent *event)
     }
 }
 
+void GLDisplayWidget::randomFlip()
+{
+    _mesh.randomFlip();
+}
+void GLDisplayWidget::randomFHighlight()
+{
+  _mesh.randomFHighlight();
+}
+void GLDisplayWidget::unmarkAll()
+{
+  _mesh.unMarkAll();
+}
 void GLDisplayWidget::setDisplayWireframe()
 {
     displayMode = 1;
@@ -254,6 +266,7 @@ void GLDisplayWidget::setDisplayPlain()
 {
     displayMode = 0;
 }
+
 void GLDisplayWidget::drawMesh()
 {
     if (displayMode == 0)

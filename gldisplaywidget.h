@@ -19,6 +19,9 @@ public:
     void drawMesh();
     void setDisplayWireframe();
     void setDisplayPlain();
+    void randomFlip();
+    void randomFHighlight();
+    void unmarkAll();
 
 protected:
     // Mouse Management

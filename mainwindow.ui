@@ -85,6 +85,45 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QPushButton" name="randFlip">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>130</y>
+      <width>80</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Random Flip</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="randomFH">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Random Face Highlight</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="unmark">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>210</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Remove Highlights</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -105,6 +144,9 @@
    <slots>
     <slot>onWireframe()</slot>
     <slot>onPlain()</slot>
+    <slot>randomFlip()</slot>
+    <slot>randomFHighlight()</slot>
+    <slot>unmark()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -121,8 +163,56 @@
      <y>472</y>
     </hint>
     <hint type="destinationlabel">
-     <x>94</x>
-     <y>268</y>
+     <x>120</x>
+     <y>467</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>randFlip</sender>
+   <signal>released()</signal>
+   <receiver>widget</receiver>
+   <slot>randomFlip()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>88</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>294</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>randomFH</sender>
+   <signal>released()</signal>
+   <receiver>widget</receiver>
+   <slot>randomFHighlight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>175</x>
+     <y>194</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>unmark</sender>
+   <signal>released()</signal>
+   <receiver>widget</receiver>
+   <slot>unmark()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>156</x>
+     <y>232</y>
     </hint>
    </hints>
   </connection>
