@@ -91,5 +91,5 @@ int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
   Vector vec1(v1,v2);
   Vector vec2(v1,v3);
   Vector oz(0,0,1);
-  return dot(normalize(vec1),normalize(vec2));
+  return dot(cross(normalize(vec1),normalize(vec2),oz);
 }
