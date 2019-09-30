@@ -48,6 +48,7 @@ private:
     void initCubeMesh();
     void initPyramid();
     void init2DBBox();
+    void initFlatMesh();
 
 };
 
