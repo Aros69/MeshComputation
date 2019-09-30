@@ -150,7 +150,7 @@ void testIterators(Mesh mesh){
       int cmpt = 0;
       for (cf = cfbegin, ++cf; cf != cfbegin; cf++){
           cmpt++;
-          std::cout<<"nb Faces Circulated :" << cmpt << std::endl;
+          //std::cout<<"nb Faces Circulated :" << cmpt << std::endl;
       }
       //std::cout << "valence of the vertex "<< cmpt << std::endl;
       i++;
