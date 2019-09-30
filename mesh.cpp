@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-Mesh::Mesh() {}
+Mesh::Mesh() {srand(time(NULL));}
 
 Mesh::~Mesh() {}
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
@@ -16,61 +16,61 @@ void Mesh::drawMesh()
     double t1, t2, t3;
     for (int i = 0; i < faceTab.size(); i++)
     {
-        /*std::cout<<"Triangle n°:"<<i<<" pour le mesh de taille : "
-                << vertexTab.size() <<" avec en vertex : ("
-                << faceTab[i][0] <<", "<< faceTab[i][1] <<", "
-                << faceTab[i][2]<<")"<<std::endl;*/
-        if (faceDebugTab[i].debug)
-        {
-            glColor3d(faceDebugTab[i].debugColor.x, faceDebugTab[i].debugColor.y, faceDebugTab[i].debugColor.z);
-            glBegin(GL_TRIANGLES);
-            glVertexDraw(vertexTab[faceTab[i][0]]);
-            glVertexDraw(vertexTab[faceTab[i][1]]);
-            glVertexDraw(vertexTab[faceTab[i][2]]);
-            glEnd();
-        }
-        else if (laplacianDone)
-        {
-            t1 = norm(Laplacien[faceTab[i][0]]) / maxNormLaplacian;
-            t2 = norm(Laplacien[faceTab[i][1]]) / maxNormLaplacian;
-            t3 = norm(Laplacien[faceTab[i][2]]) / maxNormLaplacian;
+        if(!(vertexTab[faceTab[i][0]].z()==INT_MIN
+             ||vertexTab[faceTab[i][1]].z()==INT_MIN
+             ||vertexTab[faceTab[i][2]].z()==INT_MIN)){
+            if (faceDebugTab[i].debug)
+            {
+                glColor3d(faceDebugTab[i].debugColor.x, faceDebugTab[i].debugColor.y, faceDebugTab[i].debugColor.z);
+                glBegin(GL_TRIANGLES);
+                glVertexDraw(vertexTab[faceTab[i][0]]);
+                glVertexDraw(vertexTab[faceTab[i][1]]);
+                glVertexDraw(vertexTab[faceTab[i][2]]);
+                glEnd();
+            }
+            else if (laplacianDone)
+            {
+                t1 = norm(Laplacien[faceTab[i][0]]) / maxNormLaplacian;
+                t2 = norm(Laplacien[faceTab[i][1]]) / maxNormLaplacian;
+                t3 = norm(Laplacien[faceTab[i][2]]) / maxNormLaplacian;
 
-            glBegin(GL_TRIANGLES);
-            glColor3d(t1 * colorA.x - (1 - t1) * colorB.x, t1 * colorA.y - (1 - t1) * colorB.y, t1 * colorA.z - (1 - t1) * colorB.z);
-            glVertexDraw(vertexTab[faceTab[i][0]]);
+                glBegin(GL_TRIANGLES);
+                glColor3d(t1 * colorA.x - (1 - t1) * colorB.x, t1 * colorA.y - (1 - t1) * colorB.y, t1 * colorA.z - (1 - t1) * colorB.z);
+                glVertexDraw(vertexTab[faceTab[i][0]]);
 
-            glColor3d(t2 * colorA.x - (1 - t2) * colorB.x, t2 * colorA.y - (1 - t2) * colorB.y, t2 * colorA.z - (1 - t2) * colorB.z);
-            glVertexDraw(vertexTab[faceTab[i][1]]);
+                glColor3d(t2 * colorA.x - (1 - t2) * colorB.x, t2 * colorA.y - (1 - t2) * colorB.y, t2 * colorA.z - (1 - t2) * colorB.z);
+                glVertexDraw(vertexTab[faceTab[i][1]]);
 
-            glColor3d(t3 * colorA.x - (1 - t3) * colorB.x, t3 * colorA.y - (1 - t3) * colorB.y, t3 * colorA.z - (1 - t3) * colorB.z);
-            glVertexDraw(vertexTab[faceTab[i][2]]);
-            glEnd();
-        }
-        else
-        {
-
-            glColor3d(1, 1, 1);
-            glBegin(GL_LINE_STRIP);
-            glVertexDraw(vertexTab[faceTab[i][0]]);
-            glVertexDraw(vertexTab[faceTab[i][1]]);
-            glVertexDraw(vertexTab[faceTab[i][2]]);
-            glEnd();
-
-            moduloI = i % 4;
-            if (moduloI == 0)
-                glColor3d(1, 0, 0);
-            else if (moduloI == 1)
-                glColor3d(0, 1, 0);
-            else if (moduloI == 2)
-                glColor3d(0, 0, 1);
+                glColor3d(t3 * colorA.x - (1 - t3) * colorB.x, t3 * colorA.y - (1 - t3) * colorB.y, t3 * colorA.z - (1 - t3) * colorB.z);
+                glVertexDraw(vertexTab[faceTab[i][2]]);
+                glEnd();
+            }
             else
-                glColor3d(1, 1, 0);
+            {
 
-            glBegin(GL_TRIANGLES);
-            glVertexDraw(vertexTab[faceTab[i][0]]);
-            glVertexDraw(vertexTab[faceTab[i][1]]);
-            glVertexDraw(vertexTab[faceTab[i][2]]);
-            glEnd();
+                glColor3d(1, 1, 1);
+                glBegin(GL_LINE_STRIP);
+                glVertexDraw(vertexTab[faceTab[i][0]]);
+                glVertexDraw(vertexTab[faceTab[i][1]]);
+                glVertexDraw(vertexTab[faceTab[i][2]]);
+                glEnd();
+
+                moduloI = i % 4;
+                if (moduloI == 0)
+                    glColor3d(1, 0, 0);
+                else if (moduloI == 1)
+                    glColor3d(0, 1, 0);
+                else if (moduloI == 2)
+                    glColor3d(0, 0, 1);
+                else
+                    glColor3d(1, 1, 0);
+
+                glBegin(GL_TRIANGLES);
+                glVertexDraw(vertexTab[faceTab[i][0]]);
+                glVertexDraw(vertexTab[faceTab[i][1]]);
+                glVertexDraw(vertexTab[faceTab[i][2]]);
+                glEnd();
+            }
         }
     }
 }
@@ -79,6 +79,10 @@ void Mesh::drawMeshWireFrame()
 {
     for (int i = 0; i < faceTab.size(); i++)
     {
+        if(!(vertexTab[faceTab[i][0]].z()==INT_MIN
+             ||vertexTab[faceTab[i][1]].z()==INT_MIN
+             ||vertexTab[faceTab[i][2]].z()==INT_MIN))
+        {
         glBegin(GL_LINES);
         glVertexDraw(vertexTab[faceTab[i][0]]);
         glVertexDraw(vertexTab[faceTab[i][1]]);
@@ -87,6 +91,7 @@ void Mesh::drawMeshWireFrame()
         glVertexDraw(vertexTab[faceTab[i][1]]);
         glVertexDraw(vertexTab[faceTab[i][2]]);
         glEnd();
+        }
     }
 }
 
@@ -178,6 +183,7 @@ void Mesh::defineNeighbourFaces()
             memory.addSegment(faceTab[i][0], faceTab[i][2], i, 1);
         }
     }
+    printFacesNeib(faceTab);
     if(!memory.isEmpty()){
         // On crée le point infinis coordonées (0,0,INT_MIN)
         Vertex infiniteV(0, 0, INT_MIN);
@@ -194,7 +200,6 @@ void Mesh::defineNeighbourFaces()
         }
         defineNeighbourFaces();
     }
-    //printFacesNeib(faceTab);
     //memory.print();
 }
 
@@ -462,13 +467,14 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
     // Fin création des deux nouvelles faces
 
     // Mise à jour de l'ancienne face
-    Face oldFace = faceTab[faceIndex];
+    //Face oldFace = faceTab[faceIndex];
     faceTab[faceIndex][0] = vertexTab.size() - 1;
     faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size() - 1, faceTab.size() - 2);
     // Fin mise à jour de l'ancienne face
 
     // Mise à jour des face voisine
-    for (auto f : faceTab)
+    defineNeighbourFaces();
+    /*for (auto f : faceTab)
     {
         if (f.getNeibFace(0) == faceIndex)
         {
@@ -506,7 +512,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
                 f.setNeibFace(faceTab.size() - 1, 2);
             }
         }
-    }
+    }*/
     // Fin mise à jour des face voisine
 
     // Mise à jour du Laplacien
@@ -571,6 +577,9 @@ bool Mesh::isInFace(int index, const Vertex &v)
     }
     return true;
 }
+
+
+
 void Mesh::updateDebugObj()
 {
     vertexDebugTab = QVector<DebugObj>(vertexTab.size());

@@ -70,6 +70,8 @@ public:
     // TriangleSplit
     void triangleSplit(int faceIndex, Point newV);
 
+    // Naive Insertion
+
     //Debugging Methods ===================================================================
     void updateDebugObj();
     void printFaces();
@@ -79,6 +81,7 @@ public:
     void randomFlip(){
       int index1 = rand()%faceTab.size();
       int index2 = getFace(index1).getNeibFace(rand()%3);
+      std::cout<<"size : "<<faceTab.size()<<" Index 1 : " <<index1<<" Index 2 : "<<index2<<std::endl;
       flip(index1,index2);
     }
     void randomFHighlight(){

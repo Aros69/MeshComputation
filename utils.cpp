@@ -48,12 +48,14 @@ void Face::print(int ID){
 }
 
 void printFacesNeib(const QVector<Face> & f){
+    std::cout<<"Affichages des faces voisines"<<std::endl;
     for(int j=0;j<f.size();++j){
         std::cout<<"Face : "<<j<<" : ("<<f[j].getVertex(0)<<", "
                 <<f[j].getNeibFace(0)<<") (" <<f[j].getVertex(1)
                 <<", "<<f[j].getNeibFace(1) <<") ("
                 <<f[j].getVertex(2)<<", "<<f[j].getNeibFace(2)<<")\n";
     }
+    std::cout<<"Fin affichages des faces voisines"<<std::endl;
 }
 
 double dot(const Vector& v1,const Vector& v2) {

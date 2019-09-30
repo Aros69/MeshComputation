@@ -136,22 +136,25 @@ void GLDisplayWidget::initFlatMesh()
     //_mesh.meshWithFile("data/cube.off");
 }
 //Test the iterators on a mesh
-void testIterators(){
-  Mesh titi;
-  titi.meshWithFile("../meshcomputation/data/queen.off");
+void testIterators(Mesh mesh){
+  /*Mesh titi;
+  titi.meshWithFile("../meshcomputation/data/queen.off");*/
   //titi.printFaces();
   Iterator_on_vertices its;
   Circulator_on_faces cf;
-  for (its = titi.v_begin(); its != titi.v_pend(); ++its)
+  int i = 0;
+  for (its = mesh.v_begin(); its != mesh.v_pend(); ++its)
   {
-      std::cout << "Getting new incident face \n";
-      Circulator_on_faces cfbegin = titi.incident_f(*its);
+      //std::cout << "Getting new incident face"<<std::endl;
+      Circulator_on_faces cfbegin = mesh.incident_f(*its);
       int cmpt = 0;
       for (cf = cfbegin, ++cf; cf != cfbegin; cf++){
           cmpt++;
-          //std::cout << cmpt << "\n";
+          //std::cout<<"nb Faces Circulated :" << cmpt << std::endl;
       }
-      std::cout << "valence of the vertex "<< cmpt << std::endl;
+      //std::cout << "valence of the vertex "<< cmpt << std::endl;
+      i++;
+      std::cout<<"nb Faces Done : "<<i<<std::endl;
   }
 }
 
@@ -181,11 +184,11 @@ void GLDisplayWidget::initializeGL()
     // To add....
     //initCubeMesh();
     initFlatMesh();
-    // initQueenMesh();
+    //initQueenMesh();
 
     //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
     //_mesh.computeLaplacian();
-    //testIterators();
+    testIterators(_mesh);
 }
 
 void GLDisplayWidget::paintGL() {
