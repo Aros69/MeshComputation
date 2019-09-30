@@ -11,6 +11,7 @@ GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
 {
     // Update the scene
     connect(&_timer, SIGNAL(timeout()), this, SLOT(updateGL()));
+
     // connect(pushButton,SIGNAL(released()),this, SLOT(onWireframe()));
     _timer.start(16);
 }

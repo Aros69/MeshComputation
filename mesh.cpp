@@ -148,6 +148,22 @@ void Mesh::defineNeighbourFaces(){
             memory.addSegment(faceTab[i][0], faceTab[i][2], i, 1);
         }
     }
+    if(!memory.isEmpty()){
+        // On crée le point infinis coordonées (0,0,INT_MIN)
+        Vertex infiniteV(0, 0, INT_MIN);
+        infiniteV.setFaceIndex(faceTab.size());
+        vertexTab.push_back(infiniteV);
+        // Pour tous les segments sans voisin on crée la face avec ce segment et le point infinis.
+        for(auto segment : memory.hashMap){
+            SegmentMemory::SegmentMemoryKey tempKey = memory.hashMap.key(segment);
+            if(orientation(infiniteV, vertexTab[tempKey.vertexIndex1], vertexTab[tempKey.vertexIndex2])>0){
+                faceTab.push_back(Face(vertexTab.size()-1, tempKey.vertexIndex1, tempKey.vertexIndex2));
+            } else {
+                faceTab.push_back(Face(vertexTab.size()-1, tempKey.vertexIndex2, tempKey.vertexIndex1));
+            }
+        }
+        defineNeighbourFaces();
+    }
     //printFacesNeib(faceTab);
     //memory.print();
 }
@@ -178,14 +194,15 @@ int Mesh::getVertexID(const Vertex &m)
 }
 
 double Mesh::getFaceArea(Vertex& vert1,Vertex& vert2, Vertex& vert3){
-  Vector v1(vert1,vert2);
-  Vector v2(vert1,vert3);
-  return norm(cross(v1,v2));
+    Vector v1(vert1,vert2);
+    Vector v2(vert1,vert3);
+    return norm(cross(v1,v2));
 }
 
 double Mesh::getFaceArea(int FaceIndex){
-  return getFaceArea(getVertex(getFace(FaceIndex).getVertex(0)),getVertex(getFace(FaceIndex).getVertex(1))
-            ,getVertex(getFace(FaceIndex).getVertex(2)));
+  return getFaceArea(getVertex(getFace(FaceIndex).getVertex(0)),
+                     getVertex(getFace(FaceIndex).getVertex(1)),
+                     getVertex(getFace(FaceIndex).getVertex(2)));
 }
 
 double Mesh::getCot(Vertex& v1,Vertex& v2, Vertex& v3){
@@ -384,7 +401,6 @@ void Mesh::triangleSplit(int faceIndex, Point newV){
     // Fin création des deux nouvelles faces
 
     // Mise à jour de l'ancienne face
-    Face oldFace = faceTab[faceIndex];
     faceTab[faceIndex][0]=vertexTab.size()-1;
     faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size()-1, faceTab.size()-2);
     // Fin mise à jour de l'ancienne face

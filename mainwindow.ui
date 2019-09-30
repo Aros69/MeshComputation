@@ -88,10 +88,10 @@
    <widget class="QPushButton" name="randFlip">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>9</x>
       <y>130</y>
-      <width>80</width>
-      <height>16</height>
+      <width>121</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -102,13 +102,14 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>170</y>
+      <y>160</y>
       <width>121</width>
-      <height>31</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Random Face Highlight</string>
+     <string>Random Face
+Highlight</string>
     </property>
    </widget>
    <widget class="QPushButton" name="unmark">
@@ -117,11 +118,15 @@
       <x>20</x>
       <y>210</y>
       <width>101</width>
-      <height>16</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Remove Highlights</string>
+     <string>Remove
+Highlights</string>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>
@@ -197,22 +202,6 @@
     <hint type="destinationlabel">
      <x>175</x>
      <y>194</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>unmark</sender>
-   <signal>released()</signal>
-   <receiver>widget</receiver>
-   <slot>unmark()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>104</x>
-     <y>224</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>156</x>
-     <y>232</y>
     </hint>
    </hints>
   </connection>
