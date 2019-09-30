@@ -178,6 +178,22 @@ void Mesh::defineNeighbourFaces()
             memory.addSegment(faceTab[i][0], faceTab[i][2], i, 1);
         }
     }
+    if(!memory.isEmpty()){
+        // On crée le point infinis coordonées (0,0,INT_MIN)
+        Vertex infiniteV(0, 0, INT_MIN);
+        infiniteV.setFaceIndex(faceTab.size());
+        vertexTab.push_back(infiniteV);
+        // Pour tous les segments sans voisin on crée la face avec ce segment et le point infinis.
+        for(auto segment : memory.hashMap){
+            SegmentMemory::SegmentMemoryKey tempKey = memory.hashMap.key(segment);
+            if(orientation(infiniteV, vertexTab[tempKey.vertexIndex1], vertexTab[tempKey.vertexIndex2])>0){
+                faceTab.push_back(Face(vertexTab.size()-1, tempKey.vertexIndex1, tempKey.vertexIndex2));
+            } else {
+                faceTab.push_back(Face(vertexTab.size()-1, tempKey.vertexIndex2, tempKey.vertexIndex1));
+            }
+        }
+        defineNeighbourFaces();
+    }
     //printFacesNeib(faceTab);
     //memory.print();
 }
