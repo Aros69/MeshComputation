@@ -289,3 +289,7 @@ void GLDisplayWidget::drawMesh()
         _mesh.drawMeshWireFrame();
     }
 }
+void GLDisplayWidget::circulate(int i)
+{
+
+}

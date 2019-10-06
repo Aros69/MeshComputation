@@ -24,6 +24,7 @@ public slots:
     void randomFlip();
     void randomFHighlight();
     void unmarkAll();
+    void circulate();
 };
 
 #endif // MAINWINDOW_H

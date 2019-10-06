@@ -22,7 +22,7 @@ public:
     void randomFlip();
     void randomFHighlight();
     void unmarkAll();
-
+    void circulate(int i);
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);
@@ -43,6 +43,8 @@ private:
     QOpenGLShaderProgram program;
     QOpenGLShader *shader;
 
+    Circulator_on_faces cf;
+    int axis;
     void initThetrahedron();
     void initQueenMesh();
     void initCubeMesh();

@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->randFlip,SIGNAL(released()),this, SLOT(randomFlip()));
     connect(ui->randomFH,SIGNAL(released()),this, SLOT(randomFHighlight()));
     connect(ui->unmark,SIGNAL(released()),this, SLOT(unmarkAll()));
+    connect(ui->nextFace,SIGNAL(released()),this,SLOT(circulate()));
 }
 void MainWindow::onWireframe(){
     //std::cout <<"WireFrame Display Mode\n";
@@ -33,6 +34,11 @@ void MainWindow::unmarkAll(){
     // std::cout << "Remove Highlights" << std::endl;
     ui->widget->unmarkAll();
 }
+void MainWindow::circulate(){
+    int axis = std::stoi(ui->axisIndex->text().toLocal8Bit().constData());
+    std::cout << "Circulating around : "<< axis << std::endl;
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;

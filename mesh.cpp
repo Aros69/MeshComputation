@@ -525,8 +525,10 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
 void Mesh::flip(int index1, int index2)
 {
     std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
-    markFace(index1);
-    markFace(index2);
+    // markFace(index1);
+    // markFace(index2);
+    index1 = 0;
+    index2 = 1;
     Face fA = getFace(index1);
     Face fB = getFace(index2);
     int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)
@@ -535,6 +537,12 @@ void Mesh::flip(int index1, int index2)
     int fB1ID = fB.getNeibFace((vB + 1) % 3);
     Face fA1 = getFace(fA1ID); // The face near fA
     Face fB1 = getFace(fB1ID); // The face near fB
+    
+    if(vA == -1 ||vB == -1 || fA1ID == -1 || fB1ID == -1 || fA1.getDifferentVertex(fA) == -1 ||fB1.getDifferentVertex(fB) == -1)
+    {
+        std::cout << "Bad indexes \n";
+        return;
+    }
     std::cout << "Data : fA1 = " << fA.getNeibFace((vA + 1) % 3) << "\nfB1 = " << fB.getNeibFace((vB + 1) % 3) << std::endl;
 
     //Set incident faces for triangles
@@ -561,6 +569,7 @@ void Mesh::flip(int index1, int index2)
     faceTab[index2] = fB;
     faceTab[fA1ID] = fA1;
     faceTab[fB1ID] = fB1;
+    // defineNeighbourFaces();
 }
 bool Mesh::isInFace(int index, const Vertex &v)
 {
