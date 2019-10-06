@@ -98,10 +98,11 @@ class Circulator_on_faces : public std::iterator<std::input_iterator_tag, Face>
 {
     int currentFaceIndex;
     int axisVertexIndex;
+    bool debug;
     Mesh *m;
 
 public:
-    Circulator_on_faces():currentFaceIndex(-1),axisVertexIndex(-1){}
+    Circulator_on_faces():currentFaceIndex(-1),axisVertexIndex(-1),debug(false){}
     Circulator_on_faces(int faceIndex, int axisIndex, Mesh *mesh) : currentFaceIndex(faceIndex),
                                                                     axisVertexIndex(axisIndex), m(mesh) {}
 
@@ -111,16 +112,13 @@ public:
         //std::cout <<"Circulator Init\n";
       //  std::cout <<"Axis Index is ["<< axisIndex<<"]\nCurrentFace Index is ["<<currentFaceIndex<<"]\n";
     }
-
-    Circulator_on_faces &operator++()
+    Circulator_on_faces(int axisIndex, Mesh *mesh, bool _debug) : axisVertexIndex(axisIndex), m(mesh),debug(_debug)
     {
-        int axisLocalIndex = m->getFace(currentFaceIndex).global2localIndex(axisVertexIndex);
-        currentFaceIndex = m->getFace(currentFaceIndex).getNeibFace((axisLocalIndex + 1) % 3);
-        //print();
-        return *this;
+        currentFaceIndex = m->getVertex(axisIndex).getFaceIndex();
+        m->markFace(currentFaceIndex);
+        std::cout << "Marked face number " << currentFaceIndex << std::endl;
     }
-
-    Circulator_on_faces &operator++(int)
+    Circulator_on_faces &increment()
     {
         int axisLocalIndex = m->getFace(currentFaceIndex).global2localIndex(axisVertexIndex);
         //std::cout << "\n\nAxis's Local ID : " << axisLocalIndex << "\t Axis's Global ID : "<< m->getFace(currentFaceIndex).getVertex(axisLocalIndex)<<"\n";
@@ -128,8 +126,15 @@ public:
         currentFaceIndex = m->getFace(currentFaceIndex).getNeibFace((axisLocalIndex + 1) % 3);
         //m->getFace(currentFaceIndex).print(currentFaceIndex);
         //print();
+        if(debug){
+            m->unMarkAll();
+            m->markFace(currentFaceIndex);
+        }
         return *this;
     }
+    Circulator_on_faces &operator++(){return increment();}
+
+    Circulator_on_faces &operator++(int){return increment();}
     
     int getAxisIndex(){
       return axisVertexIndex;

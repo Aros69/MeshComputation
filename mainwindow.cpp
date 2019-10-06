@@ -37,6 +37,7 @@ void MainWindow::unmarkAll(){
 void MainWindow::circulate(){
     int axis = std::stoi(ui->axisIndex->text().toLocal8Bit().constData());
     std::cout << "Circulating around : "<< axis << std::endl;
+    ui->widget->circulate(axis);
 }
 
 MainWindow::~MainWindow()

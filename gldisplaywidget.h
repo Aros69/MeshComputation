@@ -43,7 +43,7 @@ private:
     QOpenGLShaderProgram program;
     QOpenGLShader *shader;
 
-    Circulator_on_faces cf;
+    Circulator_on_faces debugCf;
     int axis;
     void initThetrahedron();
     void initQueenMesh();
