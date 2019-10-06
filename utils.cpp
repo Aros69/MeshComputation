@@ -95,3 +95,10 @@ int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
   Vector oz(0,0,1);
   return dot(cross(normalize(vec1),normalize(vec2)),oz);
 }
+
+double getArea(Vertex &vert1, Vertex &vert2, Vertex &vert3)
+{
+    Vector v1(vert1, vert2);
+    Vector v2(vert1, vert3);
+    return norm(cross(v1, v2))/2;
+}

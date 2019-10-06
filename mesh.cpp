@@ -234,16 +234,10 @@ int Mesh::getVertexID(const Vertex &m)
     return -1;
 }
 
-double Mesh::getFaceArea(Vertex &vert1, Vertex &vert2, Vertex &vert3)
-{
-    Vector v1(vert1, vert2);
-    Vector v2(vert1, vert3);
-    return norm(cross(v1, v2));
-}
 
 double Mesh::getFaceArea(int FaceIndex)
 {
-    return getFaceArea(getVertex(getFace(FaceIndex).getVertex(0)), getVertex(getFace(FaceIndex).getVertex(1)), getVertex(getFace(FaceIndex).getVertex(2)));
+    return getArea(getVertex(getFace(FaceIndex).getVertex(0)), getVertex(getFace(FaceIndex).getVertex(1)), getVertex(getFace(FaceIndex).getVertex(2)));
 }
 
 double Mesh::getCot(Vertex &v1, Vertex &v2, Vertex &v3)
@@ -311,7 +305,7 @@ void Mesh::computeLaplacian()
 
             //get area
             //std::cout << "Computing Area...\n";
-            area += getFaceArea(lastV, nextV, axis);
+            area += getArea(lastV, nextV, axis);
             //std::cout << "area = " << area << "\n";
 
             //Compute sigma

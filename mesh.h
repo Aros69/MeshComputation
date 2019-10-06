@@ -59,7 +59,6 @@ public:
     void clampLamplacian(int clamp);
 
     double getFaceArea(int index);
-    double getFaceArea(Vertex& v1,Vertex& v2, Vertex& v3);
     //Get Cot of the angle (v2 v1 v3)
     double getCot(Vertex& v1,Vertex& v2, Vertex& v3);
     //InFace test
