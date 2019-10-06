@@ -1,8 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#endif // UTILS_H
-
 #include <iostream>
 #include <cmath>
 #include <QVector>
@@ -153,3 +151,4 @@ Vector normalize(const Vector& v);
 double getCos(const Vector& v1,const Vector& v2);
 double getSin(const Vector& v1,const Vector& v2);
 int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3);
+#endif

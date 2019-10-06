@@ -23,7 +23,8 @@ HEADERS  += mainwindow.h \
     mesh.h \
     segmentMemory.h \
     iterators.h \
-    utils.h
+    utils.h \
+    testUtil.h
 
 FORMS    += mainwindow.ui
 

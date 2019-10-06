@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include <QTimer>
 #include "mesh.h"
+#include "testUtil.h"
 #include <iostream>
 
 class GLDisplayWidget : public QGLWidget

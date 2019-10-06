@@ -131,7 +131,7 @@ void GLDisplayWidget::initCubeMesh()
 void GLDisplayWidget::initFlatMesh()
 {
     // If you are in qtCreator
-    _mesh.meshWithFile("../meshcomputation/data/flat02.off");
+    _mesh.meshWithFile("../meshcomputation/data/flat01.off");
     // If you are at the root of the project
     //_mesh.meshWithFile("data/cube.off");
 }
@@ -160,6 +160,9 @@ void testIterators(Mesh mesh){
 
 void GLDisplayWidget::initializeGL()
 {
+    //Run tests 
+    TestUtil testingUnit;
+    testingUnit.run();
     // background color
     glClearColor(0.2, 0.2, 0.2, 1);
 
@@ -182,12 +185,12 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
-    initCubeMesh();
+    //initCubeMesh();
     //initFlatMesh();
-    //initQueenMesh();
+    initQueenMesh();
 
     //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
-    //_mesh.computeLaplacian();
+    _mesh.computeLaplacian();
     //testIterators(_mesh);
 }
 

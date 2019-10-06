@@ -527,8 +527,8 @@ void Mesh::flip(int index1, int index2)
     std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
     // markFace(index1);
     // markFace(index2);
-    index1 = 0;
-    index2 = 1;
+    if(index1 > 6) index1 = 6;
+    if(index2 > 6) index2 = 6;
     Face fA = getFace(index1);
     Face fB = getFace(index2);
     int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)

@@ -86,7 +86,7 @@ double getCos(const Vector& v1,const Vector& v2) {
 }
 
 double getSin(const Vector& v1,const Vector& v2) {
-  return cross(normalize(v1),normalize(v2)).x;
+  return norm(cross(v1,v2)) / (norm(v1)*norm(v2));
 }
 
 int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
