@@ -36,16 +36,22 @@ void MainWindow::unmarkAll(){
     ui->widget->unmarkAll();
 }
 void MainWindow::circulate(){
-    int axis = std::stoi(ui->axisIndex->text().toLocal8Bit().constData());
-    std::cout << "Circulating around : "<< axis << std::endl;
-    ui->widget->circulate(axis);
+    if(ui->axisIndex->text() != 0)
+    {
+        int axis = std::stoi(ui->axisIndex->text().toLocal8Bit().constData());
+        std::cout << "Circulating around : "<< axis << std::endl;
+        ui->widget->circulate(axis);
+    }
 }
 void MainWindow::naiveInsert(){
-    float x = std::stof(ui->xInsert->text().toLocal8Bit().constData());
-    float y = std::stof(ui->yInsert->text().toLocal8Bit().constData());
-    float z = std::stof(ui->zInsert->text().toLocal8Bit().constData());
-    std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
-    ui->widget->naiveInsert(x,y,z);
+    if(ui->xInsert->text().size() != 0 || ui->yInsert->text().size() != 0 || ui->zInsert->text().size() != 0)
+    {
+        float x = std::stof(ui->xInsert->text().toLocal8Bit().constData());
+        float y = std::stof(ui->yInsert->text().toLocal8Bit().constData());
+        float z = std::stof(ui->zInsert->text().toLocal8Bit().constData());
+        std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
+        ui->widget->naiveInsert(x,y,z);
+    }
 }
 
 MainWindow::~MainWindow()
