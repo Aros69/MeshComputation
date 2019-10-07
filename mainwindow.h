@@ -25,6 +25,7 @@ public slots:
     void randomFHighlight();
     void unmarkAll();
     void circulate();
+    void naiveInsert();
 };
 
 #endif // MAINWINDOW_H

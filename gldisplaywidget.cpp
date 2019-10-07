@@ -193,7 +193,7 @@ void GLDisplayWidget::initializeGL()
     //initQueenMesh();
 
     //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
-    _mesh.computeLaplacian();
+    //_mesh.computeLaplacian();
     //testIterators(_mesh);
 }
 
@@ -303,4 +303,9 @@ void GLDisplayWidget::circulate(int i)
     }
     else
         debugCf = Circulator_on_faces(i,&_mesh,true);
+}
+void GLDisplayWidget::naiveInsert(float x, float y, float z)
+{
+    Vertex v(x,y,z);
+    //TODO ROBIN
 }
