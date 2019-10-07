@@ -193,7 +193,7 @@ void GLDisplayWidget::initializeGL()
     //initQueenMesh();
 
     //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
-    _mesh.computeLaplacian();
+    //_mesh.computeLaplacian();
     //testIterators(_mesh);
 }
 
