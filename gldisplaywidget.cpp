@@ -188,8 +188,8 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
-    initCubeMesh();
-    //initFlatMesh();
+    //initCubeMesh();
+    initFlatMesh();
     //initQueenMesh();
 
     //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));

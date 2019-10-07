@@ -186,7 +186,7 @@ void Mesh::defineNeighbourFaces()
     printFacesNeib(faceTab);
     if(!memory.isEmpty()){
         // On crée le point infinis coordonées (0,0,INT_MIN)
-        Vertex infiniteV(0, 0, INT_MIN);
+        Vertex infiniteV(0, 0, -3);
         infiniteV.setFaceIndex(faceTab.size());
         vertexTab.push_back(infiniteV);
         // Pour tous les segments sans voisin on crée la face avec ce segment et le point infinis.
