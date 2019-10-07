@@ -24,6 +24,7 @@ public:
     void randomFHighlight();
     void unmarkAll();
     void circulate(int i);
+    void naiveInsert(float x, float y, float z);
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);

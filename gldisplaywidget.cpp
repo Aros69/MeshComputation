@@ -304,3 +304,8 @@ void GLDisplayWidget::circulate(int i)
     else
         debugCf = Circulator_on_faces(i,&_mesh,true);
 }
+void GLDisplayWidget::naiveInsert(float x, float y, float z)
+{
+    Vertex v(x,y,z);
+    //TODO ROBIN
+}

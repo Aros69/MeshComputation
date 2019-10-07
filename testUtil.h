@@ -40,7 +40,6 @@ class TestUtil{
             std::cout << "Orientation tests passed" << std::endl;
             //area Tests
             std::cout << "getArea testing..." << std::endl;
-            std::cout << "area = " << getArea(p,pX,pY);
             assert(getArea(p,pX,pY) == 0.5);
             std::cout << "getArea tests passed" << std::endl;
         }
