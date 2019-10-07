@@ -1,4 +1,4 @@
-#version 130
+#version 130 
 #define mediump
 
 out vec4 fragment_color;

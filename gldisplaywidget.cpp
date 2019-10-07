@@ -16,11 +16,11 @@ GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
     _timer.start(16);
 }
 
-/*GLDisplayWidget::~GLDisplayWidget(){
+GLDisplayWidget::~GLDisplayWidget(){
     // TODO maybe disable shader program before destroy shader
     delete shader;
     shader = nullptr;
-}*/
+}
 
 void GLDisplayWidget::initThetrahedron()
 {
@@ -177,6 +177,9 @@ void GLDisplayWidget::initializeGL()
         program.addShader(shader);
         program.link();
         //program.bind(); // Uncomment to use the shader
+
+        // init buffer et vao ?
+
     } else {
         //std::cout<<"Nope pas de shader\n";
         qDebug(qUtf8Printable(shader->log()));
@@ -209,7 +212,7 @@ void GLDisplayWidget::paintGL() {
     glRotatef(_angle, 1.0f, 1.0f, 0.0f);
 
     // Color for your mesh
-    glColor3f(0, 1, 0);
+    //glColor3f(0, 1, 0);
 
     drawMesh();
 }
