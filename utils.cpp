@@ -89,7 +89,7 @@ double getSin(const Vector& v1,const Vector& v2) {
   return norm(cross(v1,v2)) / (norm(v1)*norm(v2));
 }
 
-int orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
+double orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
   Vector vec1(v1,v2);
   Vector vec2(v1,v3);
   Vector oz(0,0,1);
