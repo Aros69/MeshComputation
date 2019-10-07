@@ -412,109 +412,108 @@ void Mesh::clampLamplacian(int clamp)
 
 void Mesh::triangleSplit(int faceIndex, Point newV)
 {
-
-    // TODO check if newV is in the triangle at faceIndex
-
     //std::cout<<"Begining of triangleSplit"<<std::endl;
 
-    // Définition du nouveau Vertex
     Vertex v(newV.x(), newV.y(), newV.z());
-    v.setFaceIndex(faceIndex);
-    vertexTab.push_back(v);
-    // Fin Définition
+    if(isInFace(faceIndex, v)){
+        // Définition du nouveau Vertex
+        v.setFaceIndex(faceIndex);
+        vertexTab.push_back(v);
+        // Fin Définition
 
-    // Création des deux nouvelles faces
+        // Création des deux nouvelles faces
 
-    // Face 1
-    Face newFace1;
-    if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][1]]) > 0)
-    {
-        newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][1]);
-        newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceIndex, faceTab.size() + 1);
-    }
-    else
-    {
-        newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][1], faceTab[faceIndex][0]);
-        newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceTab.size() + 1, faceIndex);
-    }
-    faceTab.push_back(newFace1);
-    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
-    vertexTab[faceTab[faceIndex][1]].setFaceIndex(faceTab.size());
-    // Fin Face 1
-
-    // Face 2
-    Face newFace2;
-    if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][2]]) > 0)
-    {
-        newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][2]);
-        newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceIndex, faceTab.size() - 1);
-    }
-    else
-    {
-        newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][2], faceTab[faceIndex][0]);
-        newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceTab.size() - 1, faceIndex);
-    }
-    faceTab.push_back(newFace2);
-    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
-    vertexTab[faceTab[faceIndex][2]].setFaceIndex(faceTab.size());
-    // Fin Face 2
-    // Fin création des deux nouvelles faces
-
-    // Mise à jour de l'ancienne face
-    //Face oldFace = faceTab[faceIndex];
-    faceTab[faceIndex][0] = vertexTab.size() - 1;
-    faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size() - 1, faceTab.size() - 2);
-    // Fin mise à jour de l'ancienne face
-
-    // Mise à jour des face voisine
-    defineNeighbourFaces();
-    /*for (auto f : faceTab)
-    {
-        if (f.getNeibFace(0) == faceIndex)
+        // Face 1
+        Face newFace1;
+        if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][1]]) > 0)
         {
-            SegmentMemory::SegmentMemoryKey segment(f[1], f[2]);
-            if (segment == SegmentMemory::SegmentMemoryKey(newFace1[1], newFace1[2]))
-            {
-                f.setNeibFace(faceTab.size() - 2, 0);
-            }
-            else if (segment == SegmentMemory::SegmentMemoryKey(newFace2[1], newFace2[2]))
-            {
-                f.setNeibFace(faceTab.size() - 1, 0);
-            }
+            newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][1]);
+            newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceIndex, faceTab.size() + 1);
         }
-        else if (f.getNeibFace(1) == faceIndex)
+        else
         {
-            SegmentMemory::SegmentMemoryKey segment(f[0], f[2]);
-            if (segment == SegmentMemory::SegmentMemoryKey(newFace1[1], newFace1[2]))
-            {
-                f.setNeibFace(faceTab.size() - 2, 1);
-            }
-            else if (segment == SegmentMemory::SegmentMemoryKey(newFace2[1], newFace2[2]))
-            {
-                f.setNeibFace(faceTab.size() - 1, 1);
-            }
+            newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][1], faceTab[faceIndex][0]);
+            newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceTab.size() + 1, faceIndex);
         }
-        else if (f.getNeibFace(2) == faceIndex)
+        faceTab.push_back(newFace1);
+        vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
+        vertexTab[faceTab[faceIndex][1]].setFaceIndex(faceTab.size());
+        // Fin Face 1
+
+        // Face 2
+        Face newFace2;
+        if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][2]]) > 0)
         {
-            SegmentMemory::SegmentMemoryKey segment(f[0], f[1]);
-            if (segment == SegmentMemory::SegmentMemoryKey(newFace1[1], newFace1[2]))
-            {
-                f.setNeibFace(faceTab.size() - 2, 2);
-            }
-            else if (segment == SegmentMemory::SegmentMemoryKey(newFace2[1], newFace2[2]))
-            {
-                f.setNeibFace(faceTab.size() - 1, 2);
-            }
+            newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][2]);
+            newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceIndex, faceTab.size() - 1);
         }
-    }*/
-    // Fin mise à jour des face voisine
+        else
+        {
+            newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][2], faceTab[faceIndex][0]);
+            newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceTab.size() - 1, faceIndex);
+        }
+        faceTab.push_back(newFace2);
+        vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
+        vertexTab[faceTab[faceIndex][2]].setFaceIndex(faceTab.size());
+        // Fin Face 2
+        // Fin création des deux nouvelles faces
 
-    // Mise à jour du Laplacien
-    // TODO !!
-    // Fin mise à jour du Laplacien
+        // Mise à jour de l'ancienne face
+        //Face oldFace = faceTab[faceIndex];
+        faceTab[faceIndex][0] = vertexTab.size() - 1;
+        faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size() - 1, faceTab.size() - 2);
+        // Fin mise à jour de l'ancienne face
 
-    //Mise à jour des debugObj
-    updateDebugObj();
+        // Mise à jour des face voisine
+        defineNeighbourFaces();
+        /*for (auto f : faceTab)
+        {
+            if (f.getNeibFace(0) == faceIndex)
+            {
+                SegmentMemory::SegmentMemoryKey segment(f[1], f[2]);
+                if (segment == SegmentMemory::SegmentMemoryKey(newFace1[1], newFace1[2]))
+                {
+                    f.setNeibFace(faceTab.size() - 2, 0);
+                }
+                else if (segment == SegmentMemory::SegmentMemoryKey(newFace2[1], newFace2[2]))
+                {
+                    f.setNeibFace(faceTab.size() - 1, 0);
+                }
+            }
+            else if (f.getNeibFace(1) == faceIndex)
+            {
+                SegmentMemory::SegmentMemoryKey segment(f[0], f[2]);
+                if (segment == SegmentMemory::SegmentMemoryKey(newFace1[1], newFace1[2]))
+                {
+                    f.setNeibFace(faceTab.size() - 2, 1);
+                }
+                else if (segment == SegmentMemory::SegmentMemoryKey(newFace2[1], newFace2[2]))
+                {
+                    f.setNeibFace(faceTab.size() - 1, 1);
+                }
+            }
+            else if (f.getNeibFace(2) == faceIndex)
+            {
+                SegmentMemory::SegmentMemoryKey segment(f[0], f[1]);
+                if (segment == SegmentMemory::SegmentMemoryKey(newFace1[1], newFace1[2]))
+                {
+                    f.setNeibFace(faceTab.size() - 2, 2);
+                }
+                else if (segment == SegmentMemory::SegmentMemoryKey(newFace2[1], newFace2[2]))
+                {
+                    f.setNeibFace(faceTab.size() - 1, 2);
+                }
+            }
+        }*/
+        // Fin mise à jour des face voisine
+
+        // Mise à jour du Laplacien
+        // TODO !!
+        // Fin mise à jour du Laplacien
+
+        //Mise à jour des debugObj
+        updateDebugObj();
+    }
 }
 void Mesh::flip(int index1, int index2)
 {
@@ -565,6 +564,29 @@ void Mesh::flip(int index1, int index2)
     faceTab[fB1ID] = fB1;
     // defineNeighbourFaces();
 }
+
+void Mesh::naiveInsertion(Point newV){
+    Vertex v(newV.x(), newV.y(), newV.z());
+    // Check if NewV is in mesh
+    bool isInMesh = false;
+    int indexFace = -1;
+    int i=0;
+    do {
+        if(isInFace(i, v)){
+            isInMesh = true;
+            indexFace = i;
+        }
+        ++i;
+    } while (!isInMesh && i<faceTab.size());
+    // If it is it's like a split
+    // Else... more complex
+    if(isInMesh){
+        triangleSplit(indexFace, newV);
+    } else {
+
+    }
+}
+
 bool Mesh::isInFace(int index, const Vertex &v)
 {
     int segment[2];

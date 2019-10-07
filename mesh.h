@@ -64,12 +64,12 @@ public:
     //InFace test
     bool isInFace(int index,const Vertex& v);
 
-    //Mesh Modification methods
+    // Mesh Modification methods
     void flip(int index1, int index2);
     // TriangleSplit
     void triangleSplit(int faceIndex, Point newV);
-
     // Naive Insertion
+    void naiveInsertion(Point newV);
 
     //Debugging Methods ===================================================================
     void updateDebugObj();
