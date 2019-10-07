@@ -417,7 +417,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
     //std::cout<<"Begining of triangleSplit"<<std::endl;
 
     Vertex v(newV.x(), newV.y(), newV.z());
-    if(isInFace(faceIndex, v)){
+    //if(isInFace(faceIndex, v)){
         // Définition du nouveau Vertex
         v.setFaceIndex(faceIndex);
         vertexTab.push_back(v);
@@ -515,7 +515,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
 
         //Mise à jour des debugObj
         updateDebugObj();
-    }
+    //}
 }
 void Mesh::flip(int index1, int index2)
 {
@@ -585,7 +585,23 @@ void Mesh::naiveInsertion(Point newV){
     if(isInMesh){
         triangleSplit(indexFace, newV);
     } else {
+        // Chercher le vertex sur le bord de l'enveloppe du maillage le plus proche
+            // Chercher le point infinis
+            // Creer circulateur sur le point infinis
+            // Pour tout les points calculer la distance vers le nouveau point
+            // Garder le vertex le plus petit
+        // Split un triangle contenant le point infini et le vertex proche avec le nouveau point
 
+
+
+        /* A possible implementation using the
+        infinite vertex and the flip operation
+        – Split InfF, one of the infinite face to be
+        destroyed into 3
+        – Iteratively perform flips on the infinite edges
+        bounding that modified area if they are
+        incident to an other infinite face that should
+        disappear (starting from InfF) */
     }
 }
 
