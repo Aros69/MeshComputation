@@ -161,7 +161,7 @@ Highlights</string>
       </rect>
      </property>
      <property name="text">
-      <string>Axe</string>
+      <string>Vertex</string>
      </property>
     </widget>
     <widget class="QPushButton" name="nextFace">
