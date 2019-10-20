@@ -670,7 +670,6 @@ void Mesh::naiveInsertion(Point newV){
                     }
                 }
             }
-            
             Face newFace;
             if (orientation(v, vertexTab[faceTab[bestFaceIndex][goodVertex.first]], vertexTab[faceTab[bestFaceIndex][goodVertex.second]]) > 0)
             {

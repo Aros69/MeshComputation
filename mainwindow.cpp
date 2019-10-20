@@ -48,9 +48,13 @@ void MainWindow::circulate(){
 void MainWindow::naiveInsert(){
     if(ui->xInsert->text().size() != 0 || ui->yInsert->text().size() != 0 || ui->zInsert->text().size() != 0)
     {
-        float x = std::stof(ui->xInsert->text().toLocal8Bit().constData());
+        /*float x = std::stof(ui->xInsert->text().toLocal8Bit().constData());
         float y = std::stof(ui->yInsert->text().toLocal8Bit().constData());
-        float z = std::stof(ui->zInsert->text().toLocal8Bit().constData());
+        float z = std::stof(ui->zInsert->text().toLocal8Bit().constData());*/
+        float x = ui->xInsert->text().toFloat();
+        float y = ui->yInsert->text().toFloat();
+        float z = ui->zInsert->text().toFloat();
+        // TODO Changer la conversion pour vraiment obtenir des flottants
         std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
         ui->widget->naiveInsert(x,y,z);
     }
