@@ -14,13 +14,15 @@ class Circulator_on_vertices;
 class Iterator_on_faces;
 class Circulator_on_faces;
 
+#define infiniteP Point(0,0,INT_MIN)
+
 class Mesh
 {
 private:
     QVector<Vertex>           vertexTab;
     QVector<DebugObj>         vertexDebugTab;
     QVector<Face>             faceTab;
-    QVector<DebugObj>         faceDebugTab;                     
+    QVector<DebugObj>         faceDebugTab;
     QVector<QVector<Vertex>>  voronoiCells;                     // Buffer for drawing voronoi
     QVector<Vector>           Laplacien;
     bool                      laplacianDone = false;
@@ -40,11 +42,13 @@ public:
     void drawMeshWireFrame();
     void meshWithFile(std::string filePath);
     void defineNeighbourFaces();
+    void cleanInfinitePoints();
 
     //Getters
-    Vertex&   getVertex(int index) { return vertexTab[index]; }
-    Face&     getFace(int index) { return faceTab[index]; }
-    int       getVertexID(const Vertex &m);
+    Vertex& getVertex(int index) { return vertexTab[index]; }
+    Face& getFace(int index) { return faceTab[index]; }
+    int getFaceIndex(int vertexes[3]) const;
+    int getVertexID(const Vertex &m);
 
     Iterator_on_faces     f_begin();
     Iterator_on_faces     f_pend();

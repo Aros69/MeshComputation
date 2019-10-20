@@ -58,6 +58,10 @@ void printFacesNeib(const QVector<Face> & f){
     std::cout<<"Fin affichages des faces voisines"<<std::endl;
 }
 
+double distance(const Point &p1, const Point &p2){
+    return sqrt(pow(p2.x()-p1.x(), 2) + pow(p2.y()-p1.y(),2) + pow(p2.z()-p1.z(),2));
+}
+
 Vertex operator*(float f, const Vertex& v)
 {
     return Vertex(v.x() * f, v.y() * f,  v.z() * f);
@@ -118,8 +122,7 @@ double getSin(const Vector& v1,const Vector& v2) {
 }
 
 double getTan(const Vector& v1,const Vector& v2) {
-  
-  return norm(cross(v1,v2)) / dot(v1,v2);
+  return norm(cross(v1,v2)) / std::max(dot(v1,v2),0.1);
 }
 
 double orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
@@ -154,5 +157,5 @@ Vertex getCircumCenter(Vertex A, Vertex B, Vertex C)
 bool isInCircle(Vertex A, Vertex B, Vertex C, Vertex D)
 {
   Vertex center = getCircumCenter(A,B,C);
-  return norm(center-D) <= norm(center-A); 
+  return norm(center-D) <= norm(center-A);
 }

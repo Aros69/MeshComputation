@@ -131,7 +131,7 @@ void GLDisplayWidget::initCubeMesh()
 void GLDisplayWidget::initFlatMesh()
 {
     // If you are in qtCreator
-    _mesh.meshWithFile("../meshcomputation/data/flat01.off");
+    _mesh.meshWithFile("../meshcomputation/data/flat02.off");
     // If you are at the root of the project
     //_mesh.meshWithFile("data/cube.off");
 }
@@ -188,9 +188,9 @@ void GLDisplayWidget::initializeGL()
 
     // Construction of the mesh before it is displayed
     // To add....
-    //initCubeMesh();
-    initFlatMesh();
-    //initQueenMesh();
+    initCubeMesh();
+    // initFlatMesh();
+    // initQueenMesh();
 
     //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
     //_mesh.computeLaplacian();
