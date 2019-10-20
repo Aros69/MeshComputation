@@ -7,13 +7,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    connect(ui->pushButton_2,SIGNAL(released()),this, SLOT(onWireframe()));
-    connect(ui->pushButton_3,SIGNAL(released()),this, SLOT(onPlain()));
-    connect(ui->randFlip,SIGNAL(released()),this, SLOT(randomFlip()));
-    connect(ui->randomFH,SIGNAL(released()),this, SLOT(randomFHighlight()));
-    connect(ui->unmark,SIGNAL(released()),this, SLOT(unmarkAll()));
-    connect(ui->nextFace,SIGNAL(released()),this,SLOT(circulate()));
-    connect(ui->naiveInsert,SIGNAL(released()),this,SLOT(naiveInsert()));
+    connect(ui->pushButton_2,   SIGNAL(released()),     this, SLOT(onWireframe()));
+    connect(ui->pushButton_3,   SIGNAL(released()),     this, SLOT(onPlain()));
+    connect(ui->randFlip,       SIGNAL(released()),     this, SLOT(randomFlip()));
+    connect(ui->randomFH,       SIGNAL(released()),     this, SLOT(randomFHighlight()));
+    connect(ui->unmark,         SIGNAL(released()),     this, SLOT(unmarkAll()));
+    connect(ui->nextFace,       SIGNAL(released()),     this, SLOT(circulate()));
+    connect(ui->naiveInsert,    SIGNAL(released()),     this, SLOT(naiveInsert()));
+    connect(ui->computeVoronoi, SIGNAL(released()),     this, SLOT(computeVoronoi()));
+    connect(ui->showVoronoi,    SIGNAL(toggled(bool)),  this, SLOT(toggleVoronoi()));
 }
 void MainWindow::onWireframe(){
     //std::cout <<"WireFrame Display Mode\n";
@@ -56,6 +58,17 @@ void MainWindow::naiveInsert(){
         std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
         ui->widget->naiveInsert(x,y,z);
     }
+}
+
+void MainWindow::toggleVoronoi()
+{
+    //std::cout <<"Toggle voronoi display" << std::endl;
+    ui->widget->toggleVoronoi();
+}
+void MainWindow::computeVoronoi()
+{
+    //std::cout <<"Computing Voronoi mesh..." << std::endl;
+    ui->widget->computeVoronoi();
 }
 
 MainWindow::~MainWindow()

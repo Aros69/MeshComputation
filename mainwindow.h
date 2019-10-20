@@ -26,6 +26,8 @@ public slots:
     void unmarkAll();
     void circulate();
     void naiveInsert();
+    void toggleVoronoi();
+    void computeVoronoi();
 };
 
 #endif // MAINWINDOW_H

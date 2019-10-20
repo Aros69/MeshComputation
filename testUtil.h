@@ -15,6 +15,10 @@ class TestUtil{
             Vertex p(0,0,0);
             Vertex pX(1,0,0);
             Vertex pY(0,1,0);
+            Vertex pXY(1,1,0);
+            Vertex pXYZ(1,1,1);
+            Vertex pXYZ2(0.5,0.5,0.5);
+            //=========Basic Operations Tests
             //norm tests
             std::cout << "Norm testing..." << std::endl;
             assert( norm(oX) == 1 );
@@ -24,6 +28,11 @@ class TestUtil{
             assert( dot(oX,oY) == 0 );
             assert( dot(oXY,oY) == 1);
             std::cout << "Dot product tests passed" << std::endl;
+            //Vector Creation test
+            std::cout << "Vector operators testing..." << std::endl;
+            Vector vec = pXYZ - p;
+            assert(vec.x == 1 && vec.y == 1 && vec.z == 1);
+            std::cout << "Vector operators tests passed" << std::endl;
             //cross tests
             std::cout << "Cross product testing..." << std::endl;
             assert( cross(oX,oY).z == 1 );
@@ -42,6 +51,22 @@ class TestUtil{
             std::cout << "getArea testing..." << std::endl;
             assert(getArea(p,pX,pY) == 0.5);
             std::cout << "getArea tests passed" << std::endl;
+            //Barycentric operators
+            std::cout << "Barycentric operators testing..." << std::endl;
+            Vertex bar = 0.5 * p + 0.5 * pX;
+            assert(bar.x() == 0.5 && bar.y() == 0 && bar.z() == 0); 
+            bar = 0.5 * p + pXYZ * 0.5;
+            assert(bar.x() == 0.5 && bar.y() == 0.5 && bar.z() == 0.5); 
+            std::cout << "Barycentric operators tests passed..." << std::endl;
+            //=========Delaunay Tests
+            std::cout << "Delaunay function testing..." << std::endl;
+            //Vertex delCenter = getCircumCenter(2*pX, pXY*2,pY);
+            //Found center to be visually correct at [1.25][1.0][0.0]
+            // assert(norm(2*pX - delCenter) == norm(2*pXY - delCenter) && norm(2*pX - delCenter) == norm(pY - delCenter));
+            assert(isInCircle(2*pX, pXY*2,pY,pXY));
+            assert(!isInCircle(2*pX, pXY*2,pY,2.1*pXY));
+            std::cout << "Delaunay functions test passed" << std::endl;
+            
         }
         void run(){
             testVectors();
