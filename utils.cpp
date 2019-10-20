@@ -58,6 +58,34 @@ void printFacesNeib(const QVector<Face> & f){
     std::cout<<"Fin affichages des faces voisines"<<std::endl;
 }
 
+Vertex operator*(float f, const Vertex& v)
+{
+    return Vertex(v.x() * f, v.y() * f,  v.z() * f);
+}
+
+Vertex operator*(const Vertex& v, float f)
+{
+    return Vertex(v.x() * f, v.y() * f,  v.z() * f );
+}
+
+Vertex operator+(const Vertex& v1,const Vertex& v2)
+{
+  return Vertex(v1.x() + v2.x(),  v1.y() + v2.y(),  v1.z() + v2.z());
+}
+
+Vertex operator+(const Vertex& v1,const Vector& vec)
+{
+  return Vertex(v1.x() +  vec.x, v1.y() +  vec.y, v1.z() +  vec.z);
+}
+
+Vertex operator+(const Vector& vec,const Vertex& v1)
+{
+  return Vertex(v1.x() +  vec.x, v1.y() +  vec.y, v1.z() +  vec.z);
+}
+Vector operator-(const Vertex& v1,const Vertex& v2)
+{
+  return Vector(v1.x() - v2.x(),  v1.y() - v2.y(),  v1.z() - v2.z());
+}
 double dot(const Vector& v1,const Vector& v2) {
   return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
@@ -89,6 +117,11 @@ double getSin(const Vector& v1,const Vector& v2) {
   return norm(cross(v1,v2)) / (norm(v1)*norm(v2));
 }
 
+double getTan(const Vector& v1,const Vector& v2) {
+  
+  return norm(cross(v1,v2)) / dot(v1,v2);
+}
+
 double orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
   Vector vec1(v1,v2);
   Vector vec2(v1,v3);
@@ -101,4 +134,25 @@ double getArea(Vertex &vert1, Vertex &vert2, Vertex &vert3)
     Vector v1(vert1, vert2);
     Vector v2(vert1, vert3);
     return norm(cross(v1, v2))/2;
+}
+
+Vertex getCircumCenter(Vertex A, Vertex B, Vertex C)
+{
+  Vertex center;
+  double tanC = getTan( A - C, B - C);
+  double tanA = getTan( C - A, B - A);
+  double tanB = getTan( A - B, C - B);
+  Vertex P = 0.5 * A + 0.5 * B;
+  Vertex M = 0.5 * C + 0.5 * B;
+  Vertex N = 0.5 * A + 0.5 * C;
+  // printf("P [%f][%f][%f] M [%f][%f][%f] N [%f][%f][%f]\n",P.x(),P.y(),P.z(),M.x(),M.y(),M.z(),N.x(),N.y(),N.z());
+  // printf("Delaunay tanA[%f]tanB[%f]tanC[%f]\n",tanA,tanB,tanC);
+  return (P * tanC + M * tanA + N * tanB) * (1/(tanC+tanA+tanB));
+  // return A * (0.5*tanC + 0.5*tanB) + B * (0.5 * tanC + 0.5 * tanA) + C * (0.5 * tanA + 0.5 * tanB);
+}
+
+bool isInCircle(Vertex A, Vertex B, Vertex C, Vertex D)
+{
+  Vertex center = getCircumCenter(A,B,C);
+  return norm(center-D) <= norm(center-A); 
 }

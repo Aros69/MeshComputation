@@ -73,6 +73,16 @@ void Mesh::drawMesh()
             }
         }
     }
+    for(int i = 0 ;  i < voronoiCells.size() ; i++)
+    {
+        //Draw a cell
+        glBegin(GL_LINE_LOOP);
+        for(int j = 0; j < voronoiCells[i].size() ; j++)
+        {
+            glVertexDraw(voronoiCells[i][j]);
+        }
+        glEnd();
+    }
 }
 
 void Mesh::drawMeshWireFrame()
@@ -260,6 +270,10 @@ double Mesh::getCot(Vertex &v1, Vertex &v2, Vertex &v3)
     //return (cos / sin) > 10000  ? 10000:(cos/sin);
 }
 
+void Mesh::toggleVoronoi()
+{
+    drawVoronoi = !drawVoronoi;
+}
 void Mesh::computeLaplacian()
 {
     //std::cout << "Computing Laplacian ===================================================================\n";
@@ -517,6 +531,7 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
         updateDebugObj();
     //}
 }
+
 void Mesh::flip(int index1, int index2)
 {
     std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
@@ -564,7 +579,6 @@ void Mesh::flip(int index1, int index2)
     faceTab[index2] = fB;
     faceTab[fA1ID] = fA1;
     faceTab[fB1ID] = fB1;
-    // defineNeighbourFaces();
 }
 
 void Mesh::naiveInsertion(Point newV){
@@ -621,7 +635,61 @@ bool Mesh::isInFace(int index, const Vertex &v)
     return true;
 }
 
+bool Mesh::isLocallyOfDelaunay(int index,bool debug)
+{
+    Face f = getFace(index);
+    Vertex D;
+    Vertex A = getVertex(f.getVertex(0));
+    Vertex B = getVertex(f.getVertex(1));
+    Vertex C = getVertex(f.getVertex(2));
 
+    //Circulate on all neigbhor faces
+    for(int i = 0; i < 3;i++)
+    {
+        //Get the non adjacent vertex
+        D = getVertex(getFace(f.getNeibFace(i)).getVertex(index));
+        if (isInCircle(A,B,C,D))
+        {
+            if(debug)
+                markFace(f.getNeibFace(i));
+            return false;
+        }
+    }
+    //All the vertices are outside the circle so the triangle is locally of Delaunay
+    return true;
+}
+
+void Mesh::delaunayInsert(Vertex v)
+{
+    printf("Delaunay insertion of vertex [%f][%f][%f]\n",v.x(),v.y(),v.z());
+}
+
+void Mesh::computeVoronoi()
+{
+    printf("Computing Voronoi...\n");
+    Iterator_on_vertices its;
+    Circulator_on_faces cf;
+    Circulator_on_faces cfbegin;
+    voronoiCells.clear();
+    QVector<Vertex> tmp;
+    //For each vertex in a mesh
+    for (its = v_begin(); its != v_pend(); ++its)
+    {
+        cfbegin = incident_f(*its);
+        //Circulate around all the adjacent faces
+        for (cf = cfbegin, ++cf; cf != cfbegin; cf++)
+        {
+            //add face's Circumcenter to the current Qvector<Vertex> reprensenting a cell
+            tmp.push_back(getCircumCenter(  getVertex((*cf).getVertex(0)),
+                                            getVertex((*cf).getVertex(1)), 
+                                            getVertex((*cf).getVertex(2))) );
+        }
+        //Add all cells to the voronoiCells member variable
+        voronoiCells.push_back(tmp);
+        printf("Added one voronoi cell\n");
+    }
+    printf("Voronoi computation ended...\n");
+}
 
 void Mesh::updateDebugObj()
 {

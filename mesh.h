@@ -17,18 +17,20 @@ class Circulator_on_faces;
 class Mesh
 {
 private:
-    QVector<Vertex> vertexTab;
-    QVector<DebugObj> vertexDebugTab;
-    QVector<Face> faceTab;
-    QVector<DebugObj> faceDebugTab;
-    QVector<Vector> Laplacien;
-    bool laplacianDone = false;
-    Vector colorA = Vector(0.75,0.75,0.75);
-    Vector colorB = Vector(1,0.85,0);
-    Vector maxValueLaplacien;
-    Vector minValueLaplacien;
-    double maxNormLaplacian;
-    double minNormLaplacian;
+    QVector<Vertex>           vertexTab;
+    QVector<DebugObj>         vertexDebugTab;
+    QVector<Face>             faceTab;
+    QVector<DebugObj>         faceDebugTab;                     
+    QVector<QVector<Vertex>>  voronoiCells;                     // Buffer for drawing voronoi
+    QVector<Vector>           Laplacien;
+    bool                      laplacianDone = false;
+    Vector                    colorA = Vector(0.75,0.75,0.75);
+    Vector                    colorB = Vector(1,0.85,0);
+    Vector                    maxValueLaplacien;
+    Vector                    minValueLaplacien;
+    double                    maxNormLaplacian;
+    double                    minNormLaplacian;
+    bool                      drawVoronoi = false;
 
 public:
     Mesh();
@@ -40,36 +42,34 @@ public:
     void defineNeighbourFaces();
 
     //Getters
-    Vertex& getVertex(int index) { return vertexTab[index]; }
-    Face& getFace(int index) { return faceTab[index]; }
-    int getVertexID(const Vertex &m);
+    Vertex&   getVertex(int index) { return vertexTab[index]; }
+    Face&     getFace(int index) { return faceTab[index]; }
+    int       getVertexID(const Vertex &m);
 
-    Iterator_on_faces f_begin();
-    Iterator_on_faces f_pend();
-    Iterator_on_vertices v_begin();
-    Iterator_on_vertices v_pend();
+    Iterator_on_faces     f_begin();
+    Iterator_on_faces     f_pend();
+    Iterator_on_vertices  v_begin();
+    Iterator_on_vertices  v_pend();
 
-    Circulator_on_faces incident_f(Vertex &v);
-    Circulator_on_vertices adjacent_v(Vertex &v);
+    Circulator_on_faces     incident_f(Vertex &v);
+    Circulator_on_vertices  adjacent_v(Vertex &v);
 
     // Laplacian Functions
     //Mesh statistics methods
-    void computeLaplacian();
-    void minMaxLaplacian();
-    void clampLamplacian(int clamp);
-
-    double getFaceArea(int index);
-    //Get Cot of the angle (v2 v1 v3)
-    double getCot(Vertex& v1,Vertex& v2, Vertex& v3);
-    //InFace test
-    bool isInFace(int index,const Vertex& v);
-
+    void    computeLaplacian();
+    void    computeVoronoi();
+    void    minMaxLaplacian();
+    void    clampLamplacian(int clamp);
+    double  getFaceArea(int index);
+    double  getCot(Vertex& v1,Vertex& v2, Vertex& v3);     //  Get Cot of the angle (v2 v1 v3)
+    bool    isInFace(int index,const Vertex& v);             //  InFace test
+    bool    isLocallyOfDelaunay(int index,bool debug);
+    void    toggleVoronoi();
     // Mesh Modification methods
-    void flip(int index1, int index2);
-    // TriangleSplit
-    void triangleSplit(int faceIndex, Point newV);
-    // Naive Insertion
-    void naiveInsertion(Point newV);
+    void flip(int index1, int index2);                    //  Flip between two triangles
+    void triangleSplit(int faceIndex, Point newV);        //  Triangle Split
+    void naiveInsertion(Point newV);                      //  Naive Insertion
+    void delaunayInsert(Vertex v);                        //  Delaunay Insertion
 
     //Debugging Methods ===================================================================
     void updateDebugObj();

@@ -295,6 +295,7 @@ void GLDisplayWidget::drawMesh()
         _mesh.drawMeshWireFrame();
     }
 }
+
 void GLDisplayWidget::circulate(int i)
 {
     if(debugCf.getAxisIndex() == i){
@@ -304,8 +305,19 @@ void GLDisplayWidget::circulate(int i)
     else
         debugCf = Circulator_on_faces(i,&_mesh,true);
 }
+
 void GLDisplayWidget::naiveInsert(float x, float y, float z)
 {
     Vertex v(x,y,z);
     //TODO ROBIN
+}
+
+void GLDisplayWidget::computeVoronoi()
+{
+    _mesh.computeVoronoi();
+}
+
+void GLDisplayWidget::toggleVoronoi()
+{
+    _mesh.toggleVoronoi();
 }

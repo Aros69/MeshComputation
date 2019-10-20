@@ -25,6 +25,8 @@ public:
     void unmarkAll();
     void circulate(int i);
     void naiveInsert(float x, float y, float z);
+    void computeVoronoi();
+    void toggleVoronoi();
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);

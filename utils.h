@@ -57,7 +57,12 @@ struct Vector
     Vector(const Vertex& v1,const Vertex& v2) : x(v2.x() - v1.x()), y(v2.y() - v1.y()), z(v2.z() - v1.z()){}
 
 };
-
+Vertex operator*(float f, const Vertex& v);
+Vertex operator*(const Vertex& v, float f);
+Vertex operator+(const Vertex& v1,const Vertex& v2);
+Vertex operator+(const Vertex& v1,const Vector& vec);
+Vertex operator+(const Vector& vec,const Vertex& v1);
+Vector operator-(const Vertex& v1,const Vertex& v2);
 struct DebugObj
 {
   Vector debugColor;
@@ -132,15 +137,17 @@ public:
     int &operator[](int x){return verticesIndex[x];}
 };
 
-void printFacesNeib(const QVector<Face> & f);
+void    printFacesNeib(const QVector<Face> & f);
 
-double dot(const Vector& v1,const Vector& v2);
-Vector cross(const Vector& v1,const Vector& v2);
-double norm(const Vector& v);
-Vector normalize(const Vector& v);
-double getCos(const Vector& v1,const Vector& v2);
-double getSin(const Vector& v1,const Vector& v2);
+double  dot(const Vector& v1,const Vector& v2);
+Vector  cross(const Vector& v1,const Vector& v2);
+double  norm(const Vector& v);
+Vector  normalize(const Vector& v);
+double  getCos(const Vector& v1,const Vector& v2);
+double  getSin(const Vector& v1,const Vector& v2);
 //Return a positive value if v1,v2,v3 are in a trigonometric order
-double orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3);
-double getArea(Vertex &vert1, Vertex &vert2, Vertex &vert3);
+double  orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3);
+double  getArea(Vertex &vert1, Vertex &vert2, Vertex &vert3);
+Vertex  getCircumCenter(Vertex A, Vertex B, Vertex C);
+bool    isInCircle(Vertex A, Vertex B, Vertex C, Vertex D);
 #endif
