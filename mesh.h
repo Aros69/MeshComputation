@@ -14,6 +14,8 @@ class Circulator_on_vertices;
 class Iterator_on_faces;
 class Circulator_on_faces;
 
+#define infiniteP Point(0,0,INT_MIN)
+
 class Mesh
 {
 private:
@@ -38,10 +40,12 @@ public:
     void drawMeshWireFrame();
     void meshWithFile(std::string filePath);
     void defineNeighbourFaces();
+    void cleanInfinitePoints();
 
     //Getters
     Vertex& getVertex(int index) { return vertexTab[index]; }
     Face& getFace(int index) { return faceTab[index]; }
+    int getFaceIndex(int vertexes[3]) const;
     int getVertexID(const Vertex &m);
 
     Iterator_on_faces f_begin();
@@ -53,7 +57,6 @@ public:
     Circulator_on_vertices adjacent_v(Vertex &v);
 
     // Laplacian Functions
-    //Mesh statistics methods
     void computeLaplacian();
     void minMaxLaplacian();
     void clampLamplacian(int clamp);

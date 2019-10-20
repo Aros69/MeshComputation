@@ -27,12 +27,14 @@ class Vertex
 
 public:
     Vertex() : point() {}
+    Vertex(Point p) : point(p.x(), p.y(), p.z()){}
     Vertex(double x_, double y_, double z_) : point(x_, y_, z_) {}
     double x() const { return point.x(); }
     double y() const { return point.y(); }
     double z() const { return point.z(); }
     void setFaceIndex(int i) { faceIndex = i; }
     int getFaceIndex() { return faceIndex; }
+    const Point & getPoint(){return point;}
     bool equals(const Vertex& m) const
     {
         if (m.x() == this->x() && m.y() == this->y() && m.z() == this->z())
@@ -40,6 +42,13 @@ public:
             return true;
         }
         return false;
+    }
+
+    bool operator==(const Point &p){
+        return this->x()==p.x() && this->y()==p.y() && this->z()==p.z();
+    }
+    bool operator!=(const Point &p){
+        return !(*this==p);
     }
 };
 
@@ -104,6 +113,8 @@ public:
     //Get vertex with index
     int getVertex(int index) const{return verticesIndex[index];}
 
+    int* getVertexes(){return verticesIndex;}
+
     //Return the local index of the different vertex
     int getDifferentVertex(Face f){
       bool found = false;
@@ -132,8 +143,12 @@ public:
     int &operator[](int x){return verticesIndex[x];}
 };
 
+/*void printPoint(Point p){
+    std::cout<<"("<<p.x()<<", "<<p.y()<<", "<<p.z()<<")"<<std::endl;
+}*/
 void printFacesNeib(const QVector<Face> & f);
 
+double distance(const Point &p1, const Point &p2);
 double dot(const Vector& v1,const Vector& v2);
 Vector cross(const Vector& v1,const Vector& v2);
 double norm(const Vector& v);

@@ -58,6 +58,10 @@ void printFacesNeib(const QVector<Face> & f){
     std::cout<<"Fin affichages des faces voisines"<<std::endl;
 }
 
+double distance(const Point &p1, const Point &p2){
+    return sqrt(pow(p2.x()-p1.x(), 2) + pow(p2.y()-p1.y(),2) + pow(p2.z()-p1.z(),2));
+}
+
 double dot(const Vector& v1,const Vector& v2) {
   return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }

@@ -192,14 +192,15 @@ void GLDisplayWidget::initializeGL()
     initFlatMesh();
     //initQueenMesh();
 
-    //_mesh.triangleSplit(0, Point(-0.5, 1, 0.5));
+    // Proof for triangle split on FlatMesh()
+    //_mesh.triangleSplit(1, Point(-1.3, 0.6, 0));
+
     //_mesh.computeLaplacian();
     //testIterators(_mesh);
 }
 
 void GLDisplayWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     // Center the camera
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -306,6 +307,6 @@ void GLDisplayWidget::circulate(int i)
 }
 void GLDisplayWidget::naiveInsert(float x, float y, float z)
 {
-    Vertex v(x,y,z);
-    //TODO ROBIN
+    Point v(x,y,z);
+    _mesh.naiveInsertion(v);
 }
