@@ -89,7 +89,7 @@ void Mesh::drawMesh()
             // std::cout << "Voronoi Cell drawing" << std::endl;
             glColor3d(1, 1, 1);
             glBegin(GL_LINES);
-            // glVertexDraw(voronoiCells[0][0] + Vector(0,0,0.1));
+
             for (int j = 0; j < voronoiCells[i].size() - 1; j++)
             {
                 // printf("Drawing voronoi vertice [%f][%f][%f]\n",voronoiCells[i][j].x(),voronoiCells[i][j].y(),voronoiCells[i][j].z());
@@ -770,14 +770,12 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
 
 void Mesh::delaunize()
 {
-    markFace(19);
-    markFace(11);
     int badFaceID = 0;
     //  For all triangles
     for (int i = 0 ; i < faceTab.size() ; i++)
     {
         //  Check if not deDelaunay
-        if(!isLocallyOfDelaunay(i,true,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
+        if(!isLocallyOfDelaunay(i,false,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
         {
             // Flip with bad face
             std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
@@ -803,6 +801,7 @@ void Mesh::delaunayInsert(Vertex v)
 void Mesh::computeVoronoi()
 {
     printf("Computing Voronoi...\n");
+    delaunize();
     Iterator_on_vertices its;
     Circulator_on_faces cf;
     Circulator_on_faces cfbegin;
@@ -813,29 +812,27 @@ void Mesh::computeVoronoi()
     for (its = v_begin(); its != v_pend(); ++its)
     {
         tmp.clear();
+
         cfbegin = incident_f(*its);
         cf = cfbegin;
-        tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
-                               getVertex((*cf).getVertex(1)),
-                               getVertex((*cf).getVertex(2)));
-
-        if(abs(tmpC.z()) < 100)
-            tmp.push_back(tmpC);
         //Circulate around all the adjacent faces
-        for (cf = cfbegin, ++cf; cf != cfbegin; cf++)
+        do
         {
             //add face's Circumcenter to the current Qvector<Vertex> reprensenting a cell
             tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
                                    getVertex((*cf).getVertex(1)),
                                    getVertex((*cf).getVertex(2)));
 
-            if(abs(tmpC.z()) < 100)
+            // if(abs(tmpC.z()) < 100)
             tmp.push_back(tmpC);
-            // else
-            //     tmp.push_back(tmpC);
-            // tmpV = tmpC;
-            // printf("Added voronoi vertex [%f][%f][%f]\n",tmpC.x(),tmpC.y(),tmpC.z());
-        }
+            cf++; 
+        } while (cf != cfbegin);
+
+        tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
+                               getVertex((*cf).getVertex(1)),
+                               getVertex((*cf).getVertex(2)));
+
+        tmp.push_back(tmpC);
         //Add all cells to the voronoiCells member variable
         voronoiCells.push_back(tmp);
         // printf("Added one voronoi cell\n");

@@ -135,7 +135,7 @@ double getSin(const Vector& v1,const Vector& v2) {
 }
 
 double getTan(const Vector& v1,const Vector& v2) {
-  return norm(cross(v1,v2)) / std::max(dot(v1,v2),0.1);
+  return norm(cross(v1,v2)) / std::max(dot(v1,v2),0.01);
 }
 
 double orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
@@ -158,12 +158,17 @@ Vertex getCircumCenter(Vertex A, Vertex B, Vertex C)
   double tanC = getTan( A - C, B - C);
   double tanA = getTan( C - A, B - A);
   double tanB = getTan( A - B, C - B);
+  // double denom = dot(A - C, B - C) * dot(C - A, B - A) * dot(A - B, C - B);
+  // double tanC = norm(cross(A - C, B - C)) *(denom / dot(A - C, B - C));
+  // double tanA = norm(cross(C - A, B - A)) *(denom / dot(C - A, B - A));
+  // double tanB = norm(cross(A - B, C - B)) *(denom / dot(A - B, C - B));
   Vertex P = 0.5 * A + 0.5 * B;
   Vertex M = 0.5 * C + 0.5 * B;
   Vertex N = 0.5 * A + 0.5 * C;
   // printf("P [%f][%f][%f] M [%f][%f][%f] N [%f][%f][%f]\n",P.x(),P.y(),P.z(),M.x(),M.y(),M.z(),N.x(),N.y(),N.z());
   // printf("Delaunay tanA[%f]tanB[%f]tanC[%f]\n",tanA,tanB,tanC);
   return (P * tanC + M * tanA + N * tanB) * (1/(tanC+tanA+tanB));
+  // return (P * tanC + M * tanA + N * tanB) * (1/(tanC+tanA+tanB));
   // return A * (0.5*tanC + 0.5*tanB) + B * (0.5 * tanC + 0.5 * tanA) + C * (0.5 * tanA + 0.5 * tanB);
 }
 
