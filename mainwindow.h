@@ -30,6 +30,7 @@ public slots:
     void computeVoronoi();
     void delaunize();
     void delaunayInsert();
+    void highLightFace();
 };
 
 #endif // MAINWINDOW_H

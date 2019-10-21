@@ -758,6 +758,8 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
 
 void Mesh::delaunize()
 {
+    markFace(19);
+    markFace(11);
     int badFaceID = 0;
     //  For all triangles
     for (int i = 0 ; i < faceTab.size() ; i++)
@@ -765,7 +767,8 @@ void Mesh::delaunize()
         //  Check if not deDelaunay
         if(!isLocallyOfDelaunay(i,true,badFaceID))
         {
-            // Flip with bad face 
+            // Flip with bad face
+            std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
             flip(i,badFaceID);
             
         }
