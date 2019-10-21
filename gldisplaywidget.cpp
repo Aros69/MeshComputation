@@ -322,3 +322,12 @@ void GLDisplayWidget::toggleVoronoi()
 {
     _mesh.toggleVoronoi();
 }
+
+void GLDisplayWidget::delaunize()
+{
+    _mesh.delaunize();
+}
+void GLDisplayWidget::delaunayInsert(float x, float y, float z)
+{
+    _mesh.delaunayInsert(Vertex(x,y,z));
+}

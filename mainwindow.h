@@ -28,6 +28,8 @@ public slots:
     void naiveInsert();
     void toggleVoronoi();
     void computeVoronoi();
+    void delaunize();
+    void delaunayInsert();
 };
 
 #endif // MAINWINDOW_H

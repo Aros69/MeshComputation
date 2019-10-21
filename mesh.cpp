@@ -759,8 +759,9 @@ bool Mesh::isInFace(int index, const Vertex &v)
     return true;
 }
 
-bool Mesh::isLocallyOfDelaunay(int index, bool debug)
+bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
 {
+    std::cout << "\n\n\n\n\nCheck delaunay for face n " << index << std::endl;
     Face f = getFace(index);
     Vertex D;
     Vertex A = getVertex(f.getVertex(0));
@@ -771,25 +772,47 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug)
     for (int i = 0; i < 3; i++)
     {
         //Get the non adjacent vertex
-        D = getVertex(getFace(f.getNeibFace(i)).getVertex(index));
+        std::cout << "Checking with face number " << f.getNeibFace(i) << std::endl;
+        int tmpIndex = (getFace(f.getNeibFace(i))).global2localIndexF(index);
+        std::cout << "Checking with vertex " << tmpIndex << std::endl;
+        // printFaces();
+        D = getVertex( getFace(f.getNeibFace(i)).getVertex(tmpIndex) );
+        std::cout << "I am here bruh" << std::endl;
         if (isInCircle(A, B, C, D))
         {
+            std::cout << "Not delaunay with face n : " <<  f.getNeibFace(i) << std::endl;
             if (debug)
                 markFace(f.getNeibFace(i));
+            badFace = f.getNeibFace(i);
             return false;
         }
     }
+    std::cout << "Is delaunay, nothing to see here" << std::endl;
     //All the vertices are outside the circle so the triangle is locally of Delaunay
     return true;
 }
 
 void Mesh::delaunize()
 {
-    
+    int badFaceID = 0;
+    //  For all triangles
+    for (int i = 0 ; i < faceTab.size() ; i++)
+    {
+        //  Check if not deDelaunay
+        if(!isLocallyOfDelaunay(i,true,badFaceID))
+        {
+            // Flip with bad face 
+            flip(i,badFaceID);
+            
+        }
+    }
 }
+
 void Mesh::delaunayInsert(Vertex v)
 {
     printf("Delaunay insertion of vertex [%f][%f][%f]\n", v.x(), v.y(), v.z());
+    naiveInsertion(v.getPoint());
+    delaunize();
     //  Naive insertion of a point
     //  Stack of all impacted edges
     //  For each impacted edge

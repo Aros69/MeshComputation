@@ -67,7 +67,7 @@ public:
     double  getFaceArea(int index);
     double  getCot(Vertex& v1,Vertex& v2, Vertex& v3);     //  Get Cot of the angle (v2 v1 v3)
     bool    isInFace(int index,const Vertex& v);             //  InFace test
-    bool    isLocallyOfDelaunay(int index,bool debug);
+    bool    isLocallyOfDelaunay(int index,bool debug, int& badFace);
     bool    isInfinite(int index);
     void    toggleVoronoi();
 

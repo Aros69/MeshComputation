@@ -272,6 +272,19 @@ Highlights</string>
       <string>Naive Insert</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="delaunayInsert">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>90</y>
+       <width>80</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Delaunay Insert</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
@@ -283,12 +296,25 @@ Highlights</string>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Delaunay">
      <attribute name="title">
       <string>Delaunay</string>
      </attribute>
+     <widget class="QPushButton" name="Delaunize">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>45</y>
+        <width>80</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delaunize</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="Voronoi">
      <attribute name="title">

@@ -27,6 +27,8 @@ public:
     void naiveInsert(float x, float y, float z);
     void computeVoronoi();
     void toggleVoronoi();
+    void delaunize();
+    void delaunayInsert(float x, float y, float z);
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);

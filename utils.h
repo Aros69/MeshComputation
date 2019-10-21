@@ -114,7 +114,7 @@ public:
 
     //Convert global Index to local Index
     int global2localIndex(int globalIndex);
-
+    int global2localIndexF(int globalIndex);
     //Get vertex with index
     int getVertex(int index) const{return verticesIndex[index];}
 

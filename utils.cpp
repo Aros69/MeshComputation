@@ -38,6 +38,19 @@ int Face::global2localIndex(int globalIndex)
     std::cout << " Provided was " << globalIndex << "\n";
     return -1;
 }
+int Face::global2localIndexF(int globalIndex){
+  for (int i = 0; i < 3; i++)
+    {
+        if (neibFace[i] == globalIndex)
+        {
+            return i;
+        }
+    }
+    std::cout << "Face not part of this triangle\n";
+    std::cout << "indexes are ["<< verticesIndex [0] <<"] ["<< verticesIndex[1] <<"] and ["<< verticesIndex[2]<<"\n";
+    std::cout << " Provided was " << globalIndex << "\n";
+    return -1;
+}
 
 void Face::print(int ID){
     std::cout << "Face ["<< ID <<"] : \n";

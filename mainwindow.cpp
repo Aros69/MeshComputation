@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->naiveInsert,    SIGNAL(released()),     this, SLOT(naiveInsert()));
     connect(ui->computeVoronoi, SIGNAL(released()),     this, SLOT(computeVoronoi()));
     connect(ui->showVoronoi,    SIGNAL(toggled(bool)),  this, SLOT(toggleVoronoi()));
+    connect(ui->Delaunize,      SIGNAL(released()),     this, SLOT(delaunize()));
+    connect(ui->delaunayInsert, SIGNAL(released()),     this, SLOT(delaunayInsert()));
 }
 void MainWindow::onWireframe(){
     //std::cout <<"WireFrame Display Mode\n";
@@ -69,6 +71,25 @@ void MainWindow::computeVoronoi()
 {
     //std::cout <<"Computing Voronoi mesh..." << std::endl;
     ui->widget->computeVoronoi();
+}
+
+void MainWindow::delaunize()
+{
+    ui->widget->delaunize();
+}
+void MainWindow::delaunayInsert(){
+    if(ui->xInsert->text().size() != 0 || ui->yInsert->text().size() != 0 || ui->zInsert->text().size() != 0)
+    {
+        /*float x = std::stof(ui->xInsert->text().toLocal8Bit().constData());
+        float y = std::stof(ui->yInsert->text().toLocal8Bit().constData());
+        float z = std::stof(ui->zInsert->text().toLocal8Bit().constData());*/
+        float x = ui->xInsert->text().toFloat();
+        float y = ui->yInsert->text().toFloat();
+        float z = ui->zInsert->text().toFloat();
+        // TODO Changer la conversion pour vraiment obtenir des flottants
+        std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
+        ui->widget->delaunayInsert(x,y,z);
+    }
 }
 
 MainWindow::~MainWindow()
