@@ -560,10 +560,8 @@ void Mesh::flip(int index1, int index2)
     std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
     // markFace(index1);
     // markFace(index2);
-    if (index1 > 6)
-        index1 = 6;
-    if (index2 > 6)
-        index2 = 6;
+    if(isInfinite(index1) || isInfinite(index2))
+        return;
     Face fA = getFace(index1);
     Face fB = getFace(index2);
     int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)
@@ -703,8 +701,23 @@ void Mesh::naiveInsertion(Point newV){
         // Mettre à jour voisin et laplacien
         defineNeighbourFaces();
        }
+
     }
+
     //std::cout<<"Fin Insertion Naive"<<std::endl;
+}
+
+void Mesh::convexize(int axisVertex, int infiniteTriangle)
+{
+    // Circulator_on_faces cfbegin = incident_f(getVertex(axisVertex) );
+    // Circulator_on_faces cf = cfbegin;
+    // do{
+    //     if(getFaceIndex(isInfinite((*cf).getVertexes())))
+    //     {
+
+    //     }
+    //     cf++;
+    // } while (cfbegin != cf);
 }
 
 bool Mesh::isInFace(int index, const Vertex &v)
@@ -764,7 +777,7 @@ void Mesh::delaunize()
     for (int i = 0 ; i < faceTab.size() ; i++)
     {
         //  Check if not deDelaunay
-        if(!isLocallyOfDelaunay(i,true,badFaceID))
+        if(!isLocallyOfDelaunay(i,true,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
         {
             // Flip with bad face
             std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;

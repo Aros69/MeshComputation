@@ -77,6 +77,7 @@ public:
     void naiveInsertion(Point newV);                      //  Naive Insertion
     void delaunayInsert(Vertex v);                        //  Delaunay Insertion
     void delaunize();
+    void convexize(int axisVertex, int infiniteTriangle);
     //Debugging Methods ===================================================================
     void updateDebugObj();
     void printFaces();

@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_2,   SIGNAL(released()),     this, SLOT(onWireframe()));
     connect(ui->pushButton_3,   SIGNAL(released()),     this, SLOT(onPlain()));
     connect(ui->randFlip,       SIGNAL(released()),     this, SLOT(randomFlip()));
+    connect(ui->flip,           SIGNAL(released()),     this, SLOT(flip()));
     connect(ui->highLightFace,  SIGNAL(released()),     this, SLOT(highLightFace()));
     connect(ui->randomFH,       SIGNAL(released()),     this, SLOT(randomFHighlight()));
     connect(ui->unmark,         SIGNAL(released()),     this, SLOT(unmarkAll()));
@@ -28,6 +29,17 @@ void MainWindow::onWireframe(){
 void MainWindow::onPlain(){
     //std::cout <<"Plain Display Mode" << std::endl;
     ui->widget->setDisplayPlain();
+}
+
+void MainWindow::flip()
+{
+    if(ui->facetoFlip1->text() != 0 && ui->facetoFlip2->text() != 0)
+    {
+        int faceIndex1 = std::stoi(ui->facetoFlip1->text().toLocal8Bit().constData());
+        int faceIndex2 = std::stoi(ui->facetoFlip2->text().toLocal8Bit().constData());
+        std::cout << "flipping faces : "<< faceIndex1 << " and "<< faceIndex2 << std::endl;
+        ui->widget->flip(faceIndex1,faceIndex2);
+    }
 }
 
 void MainWindow::randomFlip(){

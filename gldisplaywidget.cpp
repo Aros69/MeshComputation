@@ -268,6 +268,11 @@ void GLDisplayWidget::randomFlip()
     _mesh.randomFlip();
 }
 
+void GLDisplayWidget::flip(int id1, int id2)
+{
+_mesh.flip(id1,id2);
+}
+
 void GLDisplayWidget::highlightFace(int index)
 {
     _mesh.markFace(index);

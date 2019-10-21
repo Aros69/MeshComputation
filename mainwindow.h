@@ -22,6 +22,7 @@ public slots:
     void onWireframe();
     void onPlain();
     void randomFlip();
+    void flip();
     void randomFHighlight();
     void unmarkAll();
     void circulate();

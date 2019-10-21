@@ -21,6 +21,7 @@ public:
     void setDisplayWireframe();
     void setDisplayPlain();
     void randomFlip();
+    void flip(int id1, int id2);
     void highlightFace(int index);
     void randomFHighlight();
     void unmarkAll();
