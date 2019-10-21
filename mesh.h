@@ -50,9 +50,6 @@ public:
     int getFaceIndex(int vertexes[3]) const;
     int getVertexID(const Vertex &m);
 
-    // Other func
-    double orientationTriangle(int triangleIndex);
-
     Iterator_on_faces     f_begin();
     Iterator_on_faces     f_pend();
     Iterator_on_vertices  v_begin();

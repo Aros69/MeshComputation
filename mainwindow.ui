@@ -169,7 +169,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>2</string>
+      <string>0.5</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="yInsert">
@@ -182,7 +182,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>2</string>
+      <string>0.5</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="zInsert">

@@ -691,7 +691,7 @@ void Mesh::naiveInsertion(Point newV){
         Face newFace;
         if (orientation(v, vertexTab[faceTab[bestFaceIndex][goodVertex.first]], vertexTab[faceTab[bestFaceIndex][goodVertex.second]]) > 0)
         {
-            newFace= Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex][goodVertex.second]);
+            newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex][goodVertex.second]);
         }
         else
         {
@@ -702,22 +702,14 @@ void Mesh::naiveInsertion(Point newV){
         vertexTab[vertexTab.size()-1].setFaceIndex(faceTab.size()-1);
         int indexNewFace = faceTab.size()-1;
         // Fin Nouvelle Face
-        // Mettre à jour voisin et laplacien
+        // Mettre à jour voisin
         defineNeighbourFaces();
 
         convexize(faceTab[indexNewFace].getVertex(2), faceTab[indexNewFace].getNeibFace(1));
         convexize(faceTab[indexNewFace].getVertex(1), faceTab[indexNewFace].getNeibFace(2));
        }
-
     }
-
     std::cout<<"Fin Insertion Naive"<<std::endl;
-}
-
-double Mesh::orientationTriangle(int triangleIndex){
-    return orientation(getVertex(getFace(triangleIndex).getVertex(0)),
-                        getVertex(getFace(triangleIndex).getVertex(1)),
-                        getVertex(getFace(triangleIndex).getVertex(2)));
 }
 
 void Mesh::convexize(int axisVertex, int infiniteTriangle)
@@ -735,8 +727,6 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
             if ((ori1 >0 && ori2 <0)
                     || (ori1<0 && ori2>0)){
                 flip(infiniteTriangle, getFaceIndex((*cf).getVertexes()));
-                std::cout<<ori1<<" "<<ori2<<std::endl;
-                std::cout<<"On recommence"<<std::endl;
                 convexize((*cf).getVertex((*cf).getDifferentVertex(getFace(infiniteTriangle))), getFaceIndex((*cf).getVertexes()));
             };
         }
