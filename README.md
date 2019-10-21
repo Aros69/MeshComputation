@@ -2,9 +2,11 @@
 
 - Ali 	Zahidi  p1713059
 - Robin Donnay	p1510329
+
 ## Tâches effectuées
     - Toutes les fonctions et prédicats (ainsi que les ajouts pour Voronoi) ont été implémenté.
-## Remarques
+
+## Fonctionnalités
 - Flip implementé  : 
     - Le bouton "Random Flip" feras automatiquement un flip sur les faces 9 et 10 (précoder pour la maillage)
     - On peut aussi choisir l'index de deux faces voisine et les flipper grâce au bouton "flip", dans le groupe de widget "Flipping"
@@ -15,3 +17,12 @@
     - Utilise un predicat EstDeDelaunayLocal appellé "isLocallyOfDelaunay()" dans Mesh.cpp
 - Visualisation de Voronoi
     - Dans l'onglet "Voronoi", il suffit de cocher la case "Show Voronoi" et d'appuyer sur "Compute Voronoi"
+
+## Amélioration et corections faites après la mini-démonstration
+- L'insertion naive gère l'insertion de points ne respectant pas l'enveloppe convexe (flip de face infinis pour recréer l'enveloppe convexe)
+
+## Tests intéressants et représentatifs 
+#### Pour bien voir l'impact de chaque test, il est conseillé de relancer l'application a chaque fois  
+- L'insertion naïve du point : x=0.5, y=0.5, z=0 montre l'insertion d'un point à l'interieur du maillage. Cela permet de voir aussi la bonne implémentation de la fonction de split d'un triangle (utilisant les prédicats d'appartenance à un triangle et d'orientation).
+- L'insertion naïve du point : x=3, y=3, z=0 montre 
+-
