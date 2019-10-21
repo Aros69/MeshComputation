@@ -725,7 +725,7 @@ bool Mesh::isInFace(int index, const Vertex &v)
 
 bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
 {
-    std::cout << "\n\n\n\n\nCheck delaunay for face n " << index << std::endl;
+    //std::cout << "\n\n\n\n\nCheck delaunay for face n " << index << std::endl;
     Face f = getFace(index);
     Vertex D;
     Vertex A = getVertex(f.getVertex(0));
@@ -736,22 +736,21 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
     for (int i = 0; i < 3; i++)
     {
         //Get the non adjacent vertex
-        std::cout << "Checking with face number " << f.getNeibFace(i) << std::endl;
+        //std::cout << "Checking with face number " << f.getNeibFace(i) << std::endl;
         int tmpIndex = (getFace(f.getNeibFace(i))).global2localIndexF(index);
-        std::cout << "Checking with vertex " << tmpIndex << std::endl;
+        //std::cout << "Checking with vertex " << tmpIndex << std::endl;
         // printFaces();
         D = getVertex( getFace(f.getNeibFace(i)).getVertex(tmpIndex) );
-        std::cout << "I am here bruh" << std::endl;
         if (isInCircle(A, B, C, D))
         {
-            std::cout << "Not delaunay with face n : " <<  f.getNeibFace(i) << std::endl;
+            //std::cout << "Not delaunay with face n : " <<  f.getNeibFace(i) << std::endl;
             if (debug)
                 markFace(f.getNeibFace(i));
             badFace = f.getNeibFace(i);
             return false;
         }
     }
-    std::cout << "Is delaunay, nothing to see here" << std::endl;
+    //std::cout << "Is delaunay, nothing to see here" << std::endl;
     //All the vertices are outside the circle so the triangle is locally of Delaunay
     return true;
 }
