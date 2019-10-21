@@ -804,7 +804,7 @@ void Mesh::delaunize()
             // Flip with bad face
             std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
             flip(i,badFaceID);
-            
+            i--;
         }
     }
 }
