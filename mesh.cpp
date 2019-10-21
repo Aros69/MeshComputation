@@ -89,7 +89,7 @@ void Mesh::drawMesh()
             // std::cout << "Voronoi Cell drawing" << std::endl;
             glColor3d(1, 1, 1);
             glBegin(GL_LINES);
-            // glVertexDraw(voronoiCells[0][0] + Vector(0,0,0.1));
+
             for (int j = 0; j < voronoiCells[i].size() - 1; j++)
             {
                 // printf("Drawing voronoi vertice [%f][%f][%f]\n",voronoiCells[i][j].x(),voronoiCells[i][j].y(),voronoiCells[i][j].z());
@@ -105,8 +105,8 @@ void Mesh::drawMeshWireFrame()
 {
     for (int i = 0; i < faceTab.size(); i++)
     {
-        if (!(vertexTab[faceTab[i][0]].z() == infiniteP.z() || vertexTab[faceTab[i][1]].z() == infiniteP.z() || vertexTab[faceTab[i][2]].z() == infiniteP.z()))
-        {
+        //if (!(vertexTab[faceTab[i][0]].z() == infiniteP.z() || vertexTab[faceTab[i][1]].z() == infiniteP.z() || vertexTab[faceTab[i][2]].z() == infiniteP.z()))
+        //{
             glBegin(GL_LINES);
             glVertexDraw(vertexTab[faceTab[i][0]]);
             glVertexDraw(vertexTab[faceTab[i][1]]);
@@ -115,7 +115,7 @@ void Mesh::drawMeshWireFrame()
             glVertexDraw(vertexTab[faceTab[i][1]]);
             glVertexDraw(vertexTab[faceTab[i][2]]);
             glEnd();
-        }
+        //}
     }
 }
 
@@ -560,8 +560,11 @@ void Mesh::flip(int index1, int index2)
     std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
     // markFace(index1);
     // markFace(index2);
-    if(isInfinite(index1) || isInfinite(index2))
-        return;
+
+    // Code commented to allow flip in non convex hull (convexize function)
+    /*if(isInfinite(index1) || isInfinite(index2))
+        return;*/
+
     Face fA = getFace(index1);
     Face fB = getFace(index2);
     int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)
@@ -697,16 +700,18 @@ void Mesh::naiveInsertion(Point newV){
         cleanInfinitePoints();
         faceTab.push_back(newFace);
         vertexTab[vertexTab.size()-1].setFaceIndex(faceTab.size()-1);
+        int indexNewFace = faceTab.size()-1;
         // Fin Nouvelle Face
         // Mettre à jour voisin et laplacien
         defineNeighbourFaces();
-        convexize(faceTab[bestFaceIndex][goodVertex.second], faceTab[bestFaceIndex].getNeibFace(goodVertex.first));
-        convexize(faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex].getNeibFace(goodVertex.second));
+
+        convexize(faceTab[indexNewFace].getVertex(2), faceTab[indexNewFace].getNeibFace(1));
+        convexize(faceTab[indexNewFace].getVertex(1), faceTab[indexNewFace].getNeibFace(2));
        }
 
     }
 
-    //std::cout<<"Fin Insertion Naive"<<std::endl;
+    std::cout<<"Fin Insertion Naive"<<std::endl;
 }
 
 double Mesh::orientationTriangle(int triangleIndex){
@@ -719,7 +724,6 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
 {
     Circulator_on_faces cfbegin = incident_f(getVertex(axisVertex));
     Circulator_on_faces cf = cfbegin;
-    std::cout<<"On entre dans le do while"<<std::endl;
     do{
         if(isInfinite(getFaceIndex((*cf).getVertexes()))
                 && getFaceIndex((*cf).getVertexes()) != infiniteTriangle)
@@ -728,8 +732,8 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
                                       getVertex((*cf).getVertex((*cf).getDifferentVertex(getFace(infiniteTriangle)))));
             double ori2 = orientation(Vertex(infiniteP), getVertex(axisVertex),
                                       getVertex(getFace(infiniteTriangle).getVertex(getFace(infiniteTriangle).getDifferentVertex((*cf)))));
-            if (((ori1 >0 && ori2 <0)
-                    || (ori1<0 && ori2>0)) && (ori1 + ori2<0)){
+            if ((ori1 >0 && ori2 <0)
+                    || (ori1<0 && ori2>0)){
                 flip(infiniteTriangle, getFaceIndex((*cf).getVertexes()));
                 std::cout<<ori1<<" "<<ori2<<std::endl;
                 std::cout<<"On recommence"<<std::endl;
@@ -738,7 +742,6 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
         }
         cf++;
     } while (cfbegin != cf);
-    std::cout<<"On sort du do while"<<std::endl;
 }
 
 bool Mesh::isInFace(int index, const Vertex &v)
@@ -791,14 +794,12 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
 
 void Mesh::delaunize()
 {
-    markFace(19);
-    markFace(11);
     int badFaceID = 0;
     //  For all triangles
     for (int i = 0 ; i < faceTab.size() ; i++)
     {
         //  Check if not deDelaunay
-        if(!isLocallyOfDelaunay(i,true,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
+        if(!isLocallyOfDelaunay(i,false,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
         {
             // Flip with bad face
             std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
@@ -824,6 +825,7 @@ void Mesh::delaunayInsert(Vertex v)
 void Mesh::computeVoronoi()
 {
     printf("Computing Voronoi...\n");
+    delaunize();
     Iterator_on_vertices its;
     Circulator_on_faces cf;
     Circulator_on_faces cfbegin;
@@ -834,29 +836,27 @@ void Mesh::computeVoronoi()
     for (its = v_begin(); its != v_pend(); ++its)
     {
         tmp.clear();
+
         cfbegin = incident_f(*its);
         cf = cfbegin;
-        tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
-                               getVertex((*cf).getVertex(1)),
-                               getVertex((*cf).getVertex(2)));
-
-        if(abs(tmpC.z()) < 100)
-            tmp.push_back(tmpC);
         //Circulate around all the adjacent faces
-        for (cf = cfbegin, ++cf; cf != cfbegin; cf++)
+        do
         {
             //add face's Circumcenter to the current Qvector<Vertex> reprensenting a cell
             tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
                                    getVertex((*cf).getVertex(1)),
                                    getVertex((*cf).getVertex(2)));
 
-            if(abs(tmpC.z()) < 100)
+            // if(abs(tmpC.z()) < 100)
             tmp.push_back(tmpC);
-            // else
-            //     tmp.push_back(tmpC);
-            // tmpV = tmpC;
-            // printf("Added voronoi vertex [%f][%f][%f]\n",tmpC.x(),tmpC.y(),tmpC.z());
-        }
+            cf++; 
+        } while (cf != cfbegin);
+
+        tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
+                               getVertex((*cf).getVertex(1)),
+                               getVertex((*cf).getVertex(2)));
+
+        tmp.push_back(tmpC);
         //Add all cells to the voronoiCells member variable
         voronoiCells.push_back(tmp);
         // printf("Added one voronoi cell\n");

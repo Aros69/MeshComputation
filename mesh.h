@@ -95,7 +95,8 @@ public:
       int index1 = rand()%faceTab.size();
       int index2 = getFace(index1).getNeibFace(rand()%3);
       std::cout<<"size : "<<faceTab.size()<<" Index 1 : " <<index1<<" Index 2 : "<<index2<<std::endl;
-      flip(index1,index2);
+      // TODO
+      flip(9,10);
     }
     void randomFHighlight(){
       markFace(rand()%faceTab.size());
