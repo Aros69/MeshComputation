@@ -50,6 +50,9 @@ public:
     int getFaceIndex(int vertexes[3]) const;
     int getVertexID(const Vertex &m);
 
+    // Other func
+    double orientationTriangle(int triangleIndex);
+
     Iterator_on_faces     f_begin();
     Iterator_on_faces     f_pend();
     Iterator_on_vertices  v_begin();
@@ -77,6 +80,7 @@ public:
     void naiveInsertion(Point newV);                      //  Naive Insertion
     void delaunayInsert(Vertex v);                        //  Delaunay Insertion
     void delaunize();
+    void convexize(int axisVertex, int infiniteTriangle);
 
     // Crust methods
     void crust2D(QVector<Point> points);

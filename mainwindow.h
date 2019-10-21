@@ -22,6 +22,7 @@ public slots:
     void onWireframe();
     void onPlain();
     void randomFlip();
+    void flip();
     void randomFHighlight();
     void unmarkAll();
     void circulate();
@@ -30,6 +31,7 @@ public slots:
     void computeVoronoi();
     void delaunize();
     void delaunayInsert();
+    void highLightFace();
 };
 
 #endif // MAINWINDOW_H

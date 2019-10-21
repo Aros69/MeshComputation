@@ -16,9 +16,9 @@ void Mesh::drawMesh()
     double t1, t2, t3;
     for (int i = 0; i < faceTab.size(); i++)
     {
-        if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
+        /*if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
              ||vertexTab[faceTab[i][1]].z()==infiniteP.z()
-             ||vertexTab[faceTab[i][2]].z()==infiniteP.z())){
+             ||vertexTab[faceTab[i][2]].z()==infiniteP.z())){*/
         if (faceDebugTab[i].debug)
         {
             glColor3d(faceDebugTab[i].debugColor.x, faceDebugTab[i].debugColor.y, faceDebugTab[i].debugColor.z);
@@ -78,7 +78,7 @@ void Mesh::drawMesh()
             glVertexDraw(vertexTab[faceTab[i][2]]);
             glEnd();
         }
-        }
+        //}
     }
     if (drawVoronoi)
     {
@@ -560,10 +560,8 @@ void Mesh::flip(int index1, int index2)
     std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
     // markFace(index1);
     // markFace(index2);
-    if (index1 > 6)
-        index1 = 6;
-    if (index2 > 6)
-        index2 = 6;
+    if(isInfinite(index1) || isInfinite(index2))
+        return;
     Face fA = getFace(index1);
     Face fB = getFace(index2);
     int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)
@@ -702,9 +700,45 @@ void Mesh::naiveInsertion(Point newV){
         // Fin Nouvelle Face
         // Mettre à jour voisin et laplacien
         defineNeighbourFaces();
+        convexize(faceTab[bestFaceIndex][goodVertex.second], faceTab[bestFaceIndex].getNeibFace(goodVertex.first));
+        convexize(faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex].getNeibFace(goodVertex.second));
        }
+
     }
+
     //std::cout<<"Fin Insertion Naive"<<std::endl;
+}
+
+double Mesh::orientationTriangle(int triangleIndex){
+    return orientation(getVertex(getFace(triangleIndex).getVertex(0)),
+                        getVertex(getFace(triangleIndex).getVertex(1)),
+                        getVertex(getFace(triangleIndex).getVertex(2)));
+}
+
+void Mesh::convexize(int axisVertex, int infiniteTriangle)
+{
+    Circulator_on_faces cfbegin = incident_f(getVertex(axisVertex));
+    Circulator_on_faces cf = cfbegin;
+    std::cout<<"On entre dans le do while"<<std::endl;
+    do{
+        if(isInfinite(getFaceIndex((*cf).getVertexes()))
+                && getFaceIndex((*cf).getVertexes()) != infiniteTriangle)
+        {
+            double ori1 = orientation(Vertex(infiniteP), getVertex(axisVertex),
+                                      getVertex((*cf).getVertex((*cf).getDifferentVertex(getFace(infiniteTriangle)))));
+            double ori2 = orientation(Vertex(infiniteP), getVertex(axisVertex),
+                                      getVertex(getFace(infiniteTriangle).getVertex(getFace(infiniteTriangle).getDifferentVertex((*cf)))));
+            if (((ori1 >0 && ori2 <0)
+                    || (ori1<0 && ori2>0)) && (ori1 + ori2<0)){
+                flip(infiniteTriangle, getFaceIndex((*cf).getVertexes()));
+                std::cout<<ori1<<" "<<ori2<<std::endl;
+                std::cout<<"On recommence"<<std::endl;
+                convexize((*cf).getVertex((*cf).getDifferentVertex(getFace(infiniteTriangle))), getFaceIndex((*cf).getVertexes()));
+            };
+        }
+        cf++;
+    } while (cfbegin != cf);
+    std::cout<<"On sort du do while"<<std::endl;
 }
 
 bool Mesh::isInFace(int index, const Vertex &v)
@@ -757,14 +791,17 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
 
 void Mesh::delaunize()
 {
+    markFace(19);
+    markFace(11);
     int badFaceID = 0;
     //  For all triangles
     for (int i = 0 ; i < faceTab.size() ; i++)
     {
         //  Check if not deDelaunay
-        if(!isLocallyOfDelaunay(i,true,badFaceID))
+        if(!isLocallyOfDelaunay(i,true,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
         {
-            // Flip with bad face 
+            // Flip with bad face
+            std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
             flip(i,badFaceID);
             
         }
