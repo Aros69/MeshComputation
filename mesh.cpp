@@ -16,9 +16,9 @@ void Mesh::drawMesh()
     double t1, t2, t3;
     for (int i = 0; i < faceTab.size(); i++)
     {
-        /*if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
+        if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
              ||vertexTab[faceTab[i][1]].z()==infiniteP.z()
-             ||vertexTab[faceTab[i][2]].z()==infiniteP.z())){*/
+             ||vertexTab[faceTab[i][2]].z()==infiniteP.z())){
         if (faceDebugTab[i].debug)
         {
             glColor3d(faceDebugTab[i].debugColor.x, faceDebugTab[i].debugColor.y, faceDebugTab[i].debugColor.z);
@@ -78,7 +78,7 @@ void Mesh::drawMesh()
             glVertexDraw(vertexTab[faceTab[i][2]]);
             glEnd();
         }
-        //}
+        }
     }
     if (drawVoronoi)
     {
@@ -608,10 +608,8 @@ void Mesh::flip(int index1, int index2)
 
 // Possible amélioration : Au lieu de cherche à minimiser la distance pour le nouveau triangle,
 // chercher les points permettant de former le triangle le plus equilateral possible (test sur les angles ?)
-void Mesh::naiveInsertion(Point newV)
-{
-    std::cout << "Debut Insertion Naive" << std::endl;
-    std::cout << "nb Vertex, nbFace : " << vertexTab.size() << " " << faceTab.size() << std::endl;
+void Mesh::naiveInsertion(Point newV){
+    //std::cout<<"Debut Insertion Naive"<<std::endl;
     Vertex v(newV.x(), newV.y(), newV.z());
     // Check if NewV is in mesh
     bool isInMesh = false;
@@ -628,119 +626,85 @@ void Mesh::naiveInsertion(Point newV)
     } while (!isInMesh && i < faceTab.size());
     // If it is it's like a split
     // Else... more complex
-    if (isInMesh)
-    {
-        //std::cout<<"Insertion facile, on split"<<std::endl;
+    if(isInMesh){
         triangleSplit(indexFace, newV);
-    }
-    else
-    {
-        std::cout << "Insertion pas facile, c'est la marde" << std::endl;
+    } else {
         // Chercher le vertex sur le bord de l'enveloppe du maillage le plus proche
-        // Chercher le point infinis
-        int indexInfinitePoint = -1;
-        for (int i = 0; i < vertexTab.size(); ++i)
-        {
-            if (vertexTab[i] == infiniteP)
-            {
-                indexInfinitePoint = i;
-            }
-        }
-        if (indexInfinitePoint == -1)
-        {
+            //1) Chercher le point infinis
+       int indexInfinitePoint=-1;
+       for(int i=0; i<vertexTab.size();++i){
+           if (vertexTab[i]==infiniteP){
+            indexInfinitePoint = i;
+           }
+       }
+       if(indexInfinitePoint==-1){
             EXIT_FAILURE;
         }
         else
         {
 
-            // Creer circulateur sur le point infinis
-            // Pour toutes les faces, calculer la distance vers le nouveau point (saut pour le point infinis
+            //2) Creer circulateur sur le point infinis
+                //2.1) Pour toutes les faces, calculer la distance vers le nouveau point (saut pour le point infinis
             Circulator_on_faces cf;
             Circulator_on_faces cfbegin = incident_f(*Iterator_on_vertices(indexInfinitePoint, this));
             int bestFaceIndex = 0;
             double minDeltaDistance = INT_MAX;
             double d1, d2;
-            std::cout << "Avant Circ" << std::endl;
-            for (cf = cfbegin, ++cf; cf != cfbegin; cf++)
-            {
-                d1 = 0;
-                d2 = 0;
-                for (int i = 0; i < 3; ++i)
-                {
-                    if (vertexTab[(*cf).getVertex(i)] != infiniteP)
-                    {
-                        if (d1 == 0)
-                        {
-                            d1 = distance(newV, vertexTab[(*cf).getVertex(i)].getPoint());
-                        }
-                        else if (d2 == 0)
-                        {
-                            d2 = distance(newV, vertexTab[(*cf).getVertex(i)].getPoint());
+            cf = cfbegin;
+            do{
+                d1=0;
+                d2=0;
+                for(int i=0;i<3;++i){
+                    if(vertexTab[(*cf).getVertex(i)]!=infiniteP){
+                        if(d1==0){
+                            d1 = norm(newV - vertexTab[(*cf).getVertex(i)]);
+                        } else if(d2==0){
+                            d2 = norm(newV - vertexTab[(*cf).getVertex(i)]);
                         }
                     }
                 }
-                // Garder la face formant le triangle plus plus isocèle possible
-                if (d1 - d2 < minDeltaDistance)
-                {
-                    minDeltaDistance = d1 - d2;
+                //2.2) Garder la face formant le triangle plus plus isocèle possible
+                if(abs(d1)+abs(d2)<minDeltaDistance){
+                    minDeltaDistance = abs(d1)+abs(d2);
                     bestFaceIndex = getFaceIndex((*cf).getVertexes());
                 }
-            }
-            std::cout << "Après Circ" << std::endl;
+                cf++;
+            }while(cf != cfbegin);
 
-            // Idée 1 pour rajouter le nouveau triangle dans le maillage
-            // Simplement ajouter le vertex et la face dans leur tableau
-            vertexTab.push_back(v);
+        // Idée 1 pour rajouter le nouveau triangle dans le maillage
+        // Simplement ajouter le vertex et la face dans leur tableau
+        vertexTab.push_back(v);
 
-            // Création de la nouvelle face
+        // Création de la nouvelle face
             // Selection des deux bon vertex (pas le point infinis)
-            std::pair<int, int> goodVertex(0, 0);
-            for (int i = 0; i < 3; ++i)
-            {
-                if (vertexTab[(*cf).getVertex(i)] != infiniteP)
-                {
-                    if (goodVertex.first == 0)
-                    {
-                        goodVertex.first = i;
-                    }
-                    else if (goodVertex.second == 0)
-                    {
-                        goodVertex.second = i;
-                    }
+        std::pair<int, int> goodVertex(0,0);
+        for(int i=0;i<3;++i){
+            if(vertexTab[(*cf).getVertex(i)]!=infiniteP){
+                if(goodVertex.first==0){
+                    goodVertex.first=i;
+                } else if(goodVertex.second==0){
+                    goodVertex.second=i;
                 }
             }
-            Face newFace;
-            if (orientation(v, vertexTab[faceTab[bestFaceIndex][goodVertex.first]], vertexTab[faceTab[bestFaceIndex][goodVertex.second]]) > 0)
-            {
-                newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex][goodVertex.second]);
-            }
-            else
-            {
-                newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.second], faceTab[bestFaceIndex][goodVertex.first]);
-            }
-            cleanInfinitePoints();
-            faceTab.push_back(newFace);
-            vertexTab[vertexTab.size() - 1].setFaceIndex(faceTab.size() - 1);
-            // Fin Nouvelle Face
-            // Supprimer la/les face(s) plus lié au point infini (globalement la face[bestFaceIndex])
-            // Mettre à jour voisin et laplacien
-            defineNeighbourFaces();
-
-            // Idée 2 pour rajouter le triangle dans le maillage
-            // Split un triangle contenant le point infini et le vertex proche avec le nouveau point
         }
-
-        /* A possible implementation using the
-        infinite vertex and the flip operation
-        – Split InfF, one of the infinite face to be
-        destroyed into 3
-        – Iteratively perform flips on the infinite edges
-        bounding that modified area if they are
-        incident to an other infinite face that should
-        disappear (starting from InfF) */
+        Face newFace;
+        if (orientation(v, vertexTab[faceTab[bestFaceIndex][goodVertex.first]], vertexTab[faceTab[bestFaceIndex][goodVertex.second]]) > 0)
+        {
+            newFace= Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex][goodVertex.second]);
+        }
+        else
+        {
+            newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.second], faceTab[bestFaceIndex][goodVertex.first]);
+        }
+        cleanInfinitePoints();
+        faceTab.push_back(newFace);
+        vertexTab[vertexTab.size()-1].setFaceIndex(faceTab.size()-1);
+        // Fin Nouvelle Face
+        // Mettre à jour voisin et laplacien
+        defineNeighbourFaces();
+       }
     }
-    std::cout << "nb Vertex, nbFace : " << vertexTab.size() << " " << faceTab.size() << std::endl;
-    std::cout << "Fin Insertion Naive" << std::endl;
+    //std::cout<<"Fin Insertion Naive"<<std::endl;
 }
 
 bool Mesh::isInFace(int index, const Vertex &v)
@@ -817,7 +781,7 @@ void Mesh::delaunayInsert(Vertex v)
     //  Stack of all impacted edges
     //  For each impacted edge
         // Check if triangles of the edge are locally of delaunay
-            //Flip if not 
+            //Flip if not
             //Add newly impacted edge to stack
 }
 
@@ -840,8 +804,8 @@ void Mesh::computeVoronoi()
                                getVertex((*cf).getVertex(1)),
                                getVertex((*cf).getVertex(2)));
 
-        // if(abs(tmpC.z()) < 100)
-        tmp.push_back(tmpC);
+        if(abs(tmpC.z()) < 100)
+            tmp.push_back(tmpC);
         //Circulate around all the adjacent faces
         for (cf = cfbegin, ++cf; cf != cfbegin; cf++)
         {
@@ -850,7 +814,7 @@ void Mesh::computeVoronoi()
                                    getVertex((*cf).getVertex(1)),
                                    getVertex((*cf).getVertex(2)));
 
-            // if(abs(tmpC.z()) < 100)
+            if(abs(tmpC.z()) < 100)
             tmp.push_back(tmpC);
             // else
             //     tmp.push_back(tmpC);
