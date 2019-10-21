@@ -783,6 +783,10 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug)
     return true;
 }
 
+void Mesh::delaunize()
+{
+    
+}
 void Mesh::delaunayInsert(Vertex v)
 {
     printf("Delaunay insertion of vertex [%f][%f][%f]\n", v.x(), v.y(), v.z());
@@ -860,4 +864,14 @@ void Mesh::unMarkAll()
     {
         vertexDebugTab[i].debug = false;
     }
+}
+bool Mesh::isInfinite(int index)
+{
+    Face f = getFace(index);
+    for(int i = 0;i < 3 ; i++)
+    {
+        if( (getVertex(f.getVertex(i))) == infiniteP )
+            return true;
+    }
+    return false;
 }
