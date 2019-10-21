@@ -827,6 +827,12 @@ void Mesh::computeVoronoi()
     // std::cout << "Voronoi computation ended..." << std::endl;
 }
 
+void Mesh::crust2D(QVector<Point> points){
+    // Help : cf. cours 7 slides 42
+    // Detruire toute arete de Delaunay traversant le squelette
+        // Trouver le squelette
+}
+
 void Mesh::updateDebugObj()
 {
     vertexDebugTab = QVector<DebugObj>(vertexTab.size());

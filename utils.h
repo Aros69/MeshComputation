@@ -153,13 +153,13 @@ public:
 }*/
 void   printFacesNeib(const QVector<Face> & f);
 
-double distance(const Point &p1, const Point &p2);
-double dot(const Vector& v1,const Vector& v2);
-Vector cross(const Vector& v1,const Vector& v2);
-double norm(const Vector& v);
-Vector normalize(const Vector& v);
-double getCos(const Vector& v1,const Vector& v2);
-double getSin(const Vector& v1,const Vector& v2);
+double  distance(const Point &p1, const Point &p2);
+double  dot(const Vector& v1,const Vector& v2);
+Vector  cross(const Vector& v1,const Vector& v2);
+double  norm(const Vector& v);
+Vector  normalize(const Vector& v);
+double  getCos(const Vector& v1,const Vector& v2);
+double  getSin(const Vector& v1,const Vector& v2);
 //Return a positive value if v1,v2,v3 are in a trigonometric order
 double  orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3);
 double  getArea(Vertex &vert1, Vertex &vert2, Vertex &vert3);

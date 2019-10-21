@@ -77,6 +77,10 @@ public:
     void naiveInsertion(Point newV);                      //  Naive Insertion
     void delaunayInsert(Vertex v);                        //  Delaunay Insertion
     void delaunize();
+
+    // Crust methods
+    void crust2D(QVector<Point> points);
+
     //Debugging Methods ===================================================================
     void updateDebugObj();
     void printFaces();
