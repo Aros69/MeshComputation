@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-Mesh::Mesh() {srand(time(NULL));}
+Mesh::Mesh() { srand(time(NULL)); }
 
 Mesh::~Mesh() {}
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
@@ -16,45 +16,51 @@ void Mesh::drawMesh()
     double t1, t2, t3;
     for (int i = 0; i < faceTab.size(); i++)
     {
-        /*if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
+        if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
              ||vertexTab[faceTab[i][1]].z()==infiniteP.z()
-             ||vertexTab[faceTab[i][2]].z()==infiniteP.z())){*/
-            if (faceDebugTab[i].debug)
+             ||vertexTab[faceTab[i][2]].z()==infiniteP.z())){
+        if (faceDebugTab[i].debug)
+        {
+            glColor3d(faceDebugTab[i].debugColor.x, faceDebugTab[i].debugColor.y, faceDebugTab[i].debugColor.z);
+            glBegin(GL_TRIANGLES);
+            glVertexDraw(vertexTab[faceTab[i][0]]);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glEnd();
+        }
+        else if (laplacianDone)
+        {
+            t1 = norm(Laplacien[faceTab[i][0]]) / maxNormLaplacian;
+            t2 = norm(Laplacien[faceTab[i][1]]) / maxNormLaplacian;
+            t3 = norm(Laplacien[faceTab[i][2]]) / maxNormLaplacian;
+
+            glBegin(GL_TRIANGLES);
+            glColor3d(t1 * colorA.x - (1 - t1) * colorB.x, t1 * colorA.y - (1 - t1) * colorB.y, t1 * colorA.z - (1 - t1) * colorB.z);
+            glVertexDraw(vertexTab[faceTab[i][0]]);
+
+            glColor3d(t2 * colorA.x - (1 - t2) * colorB.x, t2 * colorA.y - (1 - t2) * colorB.y, t2 * colorA.z - (1 - t2) * colorB.z);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+
+            glColor3d(t3 * colorA.x - (1 - t3) * colorB.x, t3 * colorA.y - (1 - t3) * colorB.y, t3 * colorA.z - (1 - t3) * colorB.z);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glEnd();
+        }
+        else
+        {
+
+            drawVoronoi ? glColor3d(0,0,0) : glColor3d(1, 1, 1);
+            glBegin(GL_LINE_STRIP);
+            glVertexDraw(vertexTab[faceTab[i][0]]);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glEnd();
+
+            if (drawVoronoi)
             {
-                glColor3d(faceDebugTab[i].debugColor.x, faceDebugTab[i].debugColor.y, faceDebugTab[i].debugColor.z);
-                glBegin(GL_TRIANGLES);
-                glVertexDraw(vertexTab[faceTab[i][0]]);
-                glVertexDraw(vertexTab[faceTab[i][1]]);
-                glVertexDraw(vertexTab[faceTab[i][2]]);
-                glEnd();
-            }
-            else if (laplacianDone)
-            {
-                t1 = norm(Laplacien[faceTab[i][0]]) / maxNormLaplacian;
-                t2 = norm(Laplacien[faceTab[i][1]]) / maxNormLaplacian;
-                t3 = norm(Laplacien[faceTab[i][2]]) / maxNormLaplacian;
-
-                glBegin(GL_TRIANGLES);
-                glColor3d(t1 * colorA.x - (1 - t1) * colorB.x, t1 * colorA.y - (1 - t1) * colorB.y, t1 * colorA.z - (1 - t1) * colorB.z);
-                glVertexDraw(vertexTab[faceTab[i][0]]);
-
-                glColor3d(t2 * colorA.x - (1 - t2) * colorB.x, t2 * colorA.y - (1 - t2) * colorB.y, t2 * colorA.z - (1 - t2) * colorB.z);
-                glVertexDraw(vertexTab[faceTab[i][1]]);
-
-                glColor3d(t3 * colorA.x - (1 - t3) * colorB.x, t3 * colorA.y - (1 - t3) * colorB.y, t3 * colorA.z - (1 - t3) * colorB.z);
-                glVertexDraw(vertexTab[faceTab[i][2]]);
-                glEnd();
+                glColor3d(0.5,0.5,0.5);
             }
             else
             {
-
-                glColor3d(1, 1, 1);
-                glBegin(GL_LINE_STRIP);
-                glVertexDraw(vertexTab[faceTab[i][0]]);
-                glVertexDraw(vertexTab[faceTab[i][1]]);
-                glVertexDraw(vertexTab[faceTab[i][2]]);
-                glEnd();
-
                 moduloI = i % 4;
                 if (moduloI == 0)
                     glColor3d(1, 0, 0);
@@ -64,24 +70,34 @@ void Mesh::drawMesh()
                     glColor3d(0, 0, 1);
                 else
                     glColor3d(1, 1, 0);
-
-                glBegin(GL_TRIANGLES);
-                glVertexDraw(vertexTab[faceTab[i][0]]);
-                glVertexDraw(vertexTab[faceTab[i][1]]);
-                glVertexDraw(vertexTab[faceTab[i][2]]);
-                glEnd();
             }
-        //}
-    }
-    for(int i = 0 ;  i < voronoiCells.size() ; i++)
-    {
-        //Draw a cell
-        glBegin(GL_LINE_LOOP);
-        for(int j = 0; j < voronoiCells[i].size() ; j++)
-        {
-            glVertexDraw(voronoiCells[i][j]);
+
+            glBegin(GL_TRIANGLES);
+            glVertexDraw(vertexTab[faceTab[i][0]]);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glEnd();
         }
-        glEnd();
+        }
+    }
+    if (drawVoronoi)
+    {
+        // std::cout << "\n\nVoronoi drawing\n\n" << std::endl;
+        for (int i = 0; i < voronoiCells.size(); i++)
+        {
+            //Draw a cell
+            // std::cout << "Voronoi Cell drawing" << std::endl;
+            glColor3d(1, 1, 1);
+            glBegin(GL_LINES);
+            // glVertexDraw(voronoiCells[0][0] + Vector(0,0,0.1));
+            for (int j = 0; j < voronoiCells[i].size() - 1; j++)
+            {
+                // printf("Drawing voronoi vertice [%f][%f][%f]\n",voronoiCells[i][j].x(),voronoiCells[i][j].y(),voronoiCells[i][j].z());
+                glVertexDraw(voronoiCells[i][j] + Vector(0, 0, 0.1));
+                glVertexDraw(voronoiCells[i][j + 1] + Vector(0, 0, 0.1));
+            }
+            glEnd();
+        }
     }
 }
 
@@ -89,18 +105,16 @@ void Mesh::drawMeshWireFrame()
 {
     for (int i = 0; i < faceTab.size(); i++)
     {
-        if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
-             ||vertexTab[faceTab[i][1]].z()==infiniteP.z()
-             ||vertexTab[faceTab[i][2]].z()==infiniteP.z()))
+        if (!(vertexTab[faceTab[i][0]].z() == infiniteP.z() || vertexTab[faceTab[i][1]].z() == infiniteP.z() || vertexTab[faceTab[i][2]].z() == infiniteP.z()))
         {
-        glBegin(GL_LINES);
-        glVertexDraw(vertexTab[faceTab[i][0]]);
-        glVertexDraw(vertexTab[faceTab[i][1]]);
-        glVertexDraw(vertexTab[faceTab[i][0]]);
-        glVertexDraw(vertexTab[faceTab[i][2]]);
-        glVertexDraw(vertexTab[faceTab[i][1]]);
-        glVertexDraw(vertexTab[faceTab[i][2]]);
-        glEnd();
+            glBegin(GL_LINES);
+            glVertexDraw(vertexTab[faceTab[i][0]]);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+            glVertexDraw(vertexTab[faceTab[i][0]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glVertexDraw(vertexTab[faceTab[i][1]]);
+            glVertexDraw(vertexTab[faceTab[i][2]]);
+            glEnd();
         }
     }
 }
@@ -194,20 +208,25 @@ void Mesh::defineNeighbourFaces()
         }
     }
     //printFacesNeib(faceTab);
-    if(!memory.isEmpty()){
+    if (!memory.isEmpty())
+    {
         // On crée le point infinis coordonées (0,0,INT_MIN)
-        Vertex infiniteV (infiniteP);
+        Vertex infiniteV(infiniteP);
         infiniteV.setFaceIndex(faceTab.size());
         vertexTab.push_back(infiniteV);
         // Pour tous les segments sans voisin on crée la face avec ce segment et le point infinis.
-        for(auto segment : memory.hashMap){
+        for (auto segment : memory.hashMap)
+        {
             SegmentMemory::SegmentMemoryKey tempKey = memory.hashMap.key(segment);
             SegmentMemory::SegmentMemoryData tempData = memory.hashMap.find(tempKey).value();
-            if(orientation(vertexTab[faceTab[tempData.faceIndex][tempData.vertexInFaceIndex]],
-                           vertexTab[tempKey.vertexIndex1], vertexTab[tempKey.vertexIndex2])>0){
-                faceTab.push_back(Face(vertexTab.size()-1, tempKey.vertexIndex2, tempKey.vertexIndex1));
-            } else {
-                faceTab.push_back(Face(vertexTab.size()-1, tempKey.vertexIndex1, tempKey.vertexIndex2));
+            if (orientation(vertexTab[faceTab[tempData.faceIndex][tempData.vertexInFaceIndex]],
+                            vertexTab[tempKey.vertexIndex1], vertexTab[tempKey.vertexIndex2]) > 0)
+            {
+                faceTab.push_back(Face(vertexTab.size() - 1, tempKey.vertexIndex2, tempKey.vertexIndex1));
+            }
+            else
+            {
+                faceTab.push_back(Face(vertexTab.size() - 1, tempKey.vertexIndex1, tempKey.vertexIndex2));
             }
         }
         defineNeighbourFaces();
@@ -216,24 +235,29 @@ void Mesh::defineNeighbourFaces()
     //memory.print();
 }
 
-void Mesh::cleanInfinitePoints(){
-    int i=0;
-    do{
-        if(vertexTab[faceTab[i].getVertex(0)]==infiniteP
-                || vertexTab[faceTab[i].getVertex(1)]==infiniteP
-                || vertexTab[faceTab[i].getVertex(2)]==infiniteP){
+void Mesh::cleanInfinitePoints()
+{
+    int i = 0;
+    do
+    {
+        if (vertexTab[faceTab[i].getVertex(0)] == infiniteP || vertexTab[faceTab[i].getVertex(1)] == infiniteP || vertexTab[faceTab[i].getVertex(2)] == infiniteP)
+        {
             faceTab.remove(i);
-        } else {
+        }
+        else
+        {
             i++;
         }
-    } while(i<faceTab.size());
-    i=0;
-    do{
-        if(vertexTab[i]==infiniteP){
+    } while (i < faceTab.size());
+    i = 0;
+    do
+    {
+        if (vertexTab[i] == infiniteP)
+        {
             vertexTab.remove(i);
         }
         i++;
-    } while (i<vertexTab.size());
+    } while (i < vertexTab.size());
 }
 
 Iterator_on_faces Mesh::f_begin() { return Iterator_on_faces(0, this); }
@@ -254,21 +278,22 @@ void Mesh::printFaces()
     }
 }
 
-int Mesh::getFaceIndex(int vertexes[3]) const{
+int Mesh::getFaceIndex(int vertexes[3]) const
+{
     //std::cout<<"nb Vertex, nbFace : "<<vertexTab.size()<<" "<<faceTab.size()<<std::endl;
     int res = -1;
-    int i   =  0;
-    do{
+    int i = 0;
+    do
+    {
         /*printf("On compare : (%d, %d, %d) et (%d, %d, %d)\n",
                vertexes[0], vertexes[1], vertexes[2],
                 faceTab[i].getVertex(0), faceTab[i].getVertex(1), faceTab[i].getVertex(2));*/
-        if(faceTab[i].getVertex(0) == vertexes[0]
-                && faceTab[i].getVertex(1) == vertexes[1]
-                && faceTab[i].getVertex(2) == vertexes[2]) {
+        if (faceTab[i].getVertex(0) == vertexes[0] && faceTab[i].getVertex(1) == vertexes[1] && faceTab[i].getVertex(2) == vertexes[2])
+        {
             res = i;
         }
         i++;
-    } while(res==-1 && i<faceTab.size());
+    } while (res == -1 && i < faceTab.size());
     return res;
 }
 
@@ -284,7 +309,6 @@ int Mesh::getVertexID(const Vertex &m)
     std::cout << "Invalid ID";
     return -1;
 }
-
 
 double Mesh::getFaceArea(int FaceIndex)
 {
@@ -471,63 +495,63 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
 
     Vertex v(newV.x(), newV.y(), newV.z());
     //if(isInFace(faceIndex, v)){
-        // Définition du nouveau Vertex
-        v.setFaceIndex(faceIndex);
-        vertexTab.push_back(v);
-        // Fin Définition
+    // Définition du nouveau Vertex
+    v.setFaceIndex(faceIndex);
+    vertexTab.push_back(v);
+    // Fin Définition
 
-        // Création des deux nouvelles faces
+    // Création des deux nouvelles faces
 
-        // Face 1
-        Face newFace1;
-        if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][1]]) > 0)
-        {
-            newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][1]);
-            newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceIndex, faceTab.size() + 1);
-        }
-        else
-        {
-            newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][1], faceTab[faceIndex][0]);
-            newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceTab.size() + 1, faceIndex);
-        }
-        faceTab.push_back(newFace1);
-        vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
-        vertexTab[faceTab[faceIndex][1]].setFaceIndex(faceTab.size());
-        // Fin Face 1
+    // Face 1
+    Face newFace1;
+    if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][1]]) > 0)
+    {
+        newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][1]);
+        newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceIndex, faceTab.size() + 1);
+    }
+    else
+    {
+        newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][1], faceTab[faceIndex][0]);
+        newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceTab.size() + 1, faceIndex);
+    }
+    faceTab.push_back(newFace1);
+    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
+    vertexTab[faceTab[faceIndex][1]].setFaceIndex(faceTab.size());
+    // Fin Face 1
 
-        // Face 2
-        Face newFace2;
-        if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][2]]) > 0)
-        {
-            newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][2]);
-            newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceIndex, faceTab.size() - 1);
-        }
-        else
-        {
-            newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][2], faceTab[faceIndex][0]);
-            newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceTab.size() - 1, faceIndex);
-        }
-        faceTab.push_back(newFace2);
-        vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
-        vertexTab[faceTab[faceIndex][2]].setFaceIndex(faceTab.size());
-        // Fin Face 2
-        // Fin création des deux nouvelles faces
+    // Face 2
+    Face newFace2;
+    if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][2]]) > 0)
+    {
+        newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][2]);
+        newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceIndex, faceTab.size() - 1);
+    }
+    else
+    {
+        newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][2], faceTab[faceIndex][0]);
+        newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceTab.size() - 1, faceIndex);
+    }
+    faceTab.push_back(newFace2);
+    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
+    vertexTab[faceTab[faceIndex][2]].setFaceIndex(faceTab.size());
+    // Fin Face 2
+    // Fin création des deux nouvelles faces
 
-        // Mise à jour de l'ancienne face
-        //Face oldFace = faceTab[faceIndex];
-        faceTab[faceIndex][0] = vertexTab.size() - 1;
-        faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size() - 1, faceTab.size() - 2);
-        // Fin mise à jour de l'ancienne face
+    // Mise à jour de l'ancienne face
+    //Face oldFace = faceTab[faceIndex];
+    faceTab[faceIndex][0] = vertexTab.size() - 1;
+    faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size() - 1, faceTab.size() - 2);
+    // Fin mise à jour de l'ancienne face
 
-        // Mise à jour des face voisine
-        defineNeighbourFaces();
+    // Mise à jour des face voisine
+    defineNeighbourFaces();
 
-        // Mise à jour du Laplacien
-        // TODO !!
-        // Fin mise à jour du Laplacien
+    // Mise à jour du Laplacien
+    // TODO !!
+    // Fin mise à jour du Laplacien
 
-        //Mise à jour des debugObj
-        updateDebugObj();
+    //Mise à jour des debugObj
+    updateDebugObj();
     //}
 }
 
@@ -536,8 +560,10 @@ void Mesh::flip(int index1, int index2)
     std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
     // markFace(index1);
     // markFace(index2);
-    if(index1 > 6) index1 = 6;
-    if(index2 > 6) index2 = 6;
+    if (index1 > 6)
+        index1 = 6;
+    if (index2 > 6)
+        index2 = 6;
     Face fA = getFace(index1);
     Face fB = getFace(index2);
     int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)
@@ -546,8 +572,8 @@ void Mesh::flip(int index1, int index2)
     int fB1ID = fB.getNeibFace((vB + 1) % 3);
     Face fA1 = getFace(fA1ID); // The face near fA
     Face fB1 = getFace(fB1ID); // The face near fB
-    
-    if(vA == -1 ||vB == -1 || fA1ID == -1 || fB1ID == -1 || fA1.getDifferentVertex(fA) == -1 ||fB1.getDifferentVertex(fB) == -1)
+
+    if (vA == -1 || vB == -1 || fA1ID == -1 || fB1ID == -1 || fA1.getDifferentVertex(fA) == -1 || fB1.getDifferentVertex(fB) == -1)
     {
         std::cout << "Bad indexes \n";
         return;
@@ -557,7 +583,7 @@ void Mesh::flip(int index1, int index2)
     //Set incident faces for triangles
     vertexTab[fA.getVertex((vA + 2) % 3)].setFaceIndex(fA1ID);
     vertexTab[fB.getVertex((vB + 2) % 3)].setFaceIndex(fB1ID);
-    
+
     //Set faces for neibghor's faces first
     std::cout << "Different vertex A: " << fA1.getDifferentVertex(fA) << std::endl;
     std::cout << "Different vertex B: " << fB1.getDifferentVertex(fB) << std::endl;
@@ -580,7 +606,6 @@ void Mesh::flip(int index1, int index2)
     faceTab[fB1ID] = fB1;
 }
 
-
 // Possible amélioration : Au lieu de cherche à minimiser la distance pour le nouveau triangle,
 // chercher les points permettant de former le triangle le plus equilateral possible (test sur les angles ?)
 void Mesh::naiveInsertion(Point newV){
@@ -589,14 +614,16 @@ void Mesh::naiveInsertion(Point newV){
     // Check if NewV is in mesh
     bool isInMesh = false;
     int indexFace = -1;
-    int i=0;
-    do {
-        if(isInFace(i, v)){
+    int i = 0;
+    do
+    {
+        if (isInFace(i, v))
+        {
             isInMesh = true;
             indexFace = i;
         }
         ++i;
-    } while (!isInMesh && i<faceTab.size());
+    } while (!isInMesh && i < faceTab.size());
     // If it is it's like a split
     // Else... more complex
     if(isInMesh){
@@ -612,13 +639,15 @@ void Mesh::naiveInsertion(Point newV){
        }
        if(indexInfinitePoint==-1){
             EXIT_FAILURE;
-       } else {
+        }
+        else
+        {
 
             //2) Creer circulateur sur le point infinis
                 //2.1) Pour toutes les faces, calculer la distance vers le nouveau point (saut pour le point infinis
             Circulator_on_faces cf;
             Circulator_on_faces cfbegin = incident_f(*Iterator_on_vertices(indexInfinitePoint, this));
-            int bestFaceIndex=0;
+            int bestFaceIndex = 0;
             double minDeltaDistance = INT_MAX;
             double d1, d2;
             cf = cfbegin;
@@ -694,7 +723,7 @@ bool Mesh::isInFace(int index, const Vertex &v)
     return true;
 }
 
-bool Mesh::isLocallyOfDelaunay(int index,bool debug)
+bool Mesh::isLocallyOfDelaunay(int index, bool debug)
 {
     Face f = getFace(index);
     Vertex D;
@@ -703,13 +732,13 @@ bool Mesh::isLocallyOfDelaunay(int index,bool debug)
     Vertex C = getVertex(f.getVertex(2));
 
     //Circulate on all neigbhor faces
-    for(int i = 0; i < 3;i++)
+    for (int i = 0; i < 3; i++)
     {
         //Get the non adjacent vertex
         D = getVertex(getFace(f.getNeibFace(i)).getVertex(index));
-        if (isInCircle(A,B,C,D))
+        if (isInCircle(A, B, C, D))
         {
-            if(debug)
+            if (debug)
                 markFace(f.getNeibFace(i));
             return false;
         }
@@ -718,9 +747,19 @@ bool Mesh::isLocallyOfDelaunay(int index,bool debug)
     return true;
 }
 
+void Mesh::delaunize()
+{
+
+}
 void Mesh::delaunayInsert(Vertex v)
 {
-    printf("Delaunay insertion of vertex [%f][%f][%f]\n",v.x(),v.y(),v.z());
+    printf("Delaunay insertion of vertex [%f][%f][%f]\n", v.x(), v.y(), v.z());
+    //  Naive insertion of a point
+    //  Stack of all impacted edges
+    //  For each impacted edge
+        // Check if triangles of the edge are locally of delaunay
+            //Flip if not
+            //Add newly impacted edge to stack
 }
 
 void Mesh::computeVoronoi()
@@ -729,25 +768,41 @@ void Mesh::computeVoronoi()
     Iterator_on_vertices its;
     Circulator_on_faces cf;
     Circulator_on_faces cfbegin;
+    Vertex tmpC, tmpV;
     voronoiCells.clear();
     QVector<Vertex> tmp;
     //For each vertex in a mesh
     for (its = v_begin(); its != v_pend(); ++its)
     {
+        tmp.clear();
         cfbegin = incident_f(*its);
+        cf = cfbegin;
+        tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
+                               getVertex((*cf).getVertex(1)),
+                               getVertex((*cf).getVertex(2)));
+
+        if(abs(tmpC.z()) < 100)
+            tmp.push_back(tmpC);
         //Circulate around all the adjacent faces
         for (cf = cfbegin, ++cf; cf != cfbegin; cf++)
         {
             //add face's Circumcenter to the current Qvector<Vertex> reprensenting a cell
-            tmp.push_back(getCircumCenter(  getVertex((*cf).getVertex(0)),
-                                            getVertex((*cf).getVertex(1)), 
-                                            getVertex((*cf).getVertex(2))) );
+            tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
+                                   getVertex((*cf).getVertex(1)),
+                                   getVertex((*cf).getVertex(2)));
+
+            if(abs(tmpC.z()) < 100)
+            tmp.push_back(tmpC);
+            // else
+            //     tmp.push_back(tmpC);
+            // tmpV = tmpC;
+            // printf("Added voronoi vertex [%f][%f][%f]\n",tmpC.x(),tmpC.y(),tmpC.z());
         }
         //Add all cells to the voronoiCells member variable
         voronoiCells.push_back(tmp);
-        printf("Added one voronoi cell\n");
+        // printf("Added one voronoi cell\n");
     }
-    printf("Voronoi computation ended...\n");
+    // std::cout << "Voronoi computation ended..." << std::endl;
 }
 
 void Mesh::updateDebugObj()
@@ -773,4 +828,14 @@ void Mesh::unMarkAll()
     {
         vertexDebugTab[i].debug = false;
     }
+}
+bool Mesh::isInfinite(int index)
+{
+    Face f = getFace(index);
+    for(int i = 0;i < 3 ; i++)
+    {
+        if( (getVertex(f.getVertex(i))) == infiniteP )
+            return true;
+    }
+    return false;
 }

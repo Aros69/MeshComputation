@@ -122,8 +122,7 @@ double getSin(const Vector& v1,const Vector& v2) {
 }
 
 double getTan(const Vector& v1,const Vector& v2) {
-
-  return norm(cross(v1,v2)) / dot(v1,v2);
+  return norm(cross(v1,v2)) / std::max(dot(v1,v2),0.1);
 }
 
 double orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
