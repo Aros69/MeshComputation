@@ -531,13 +531,13 @@ Highlights</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>50</y>
+        <y>40</y>
         <width>80</width>
-        <height>31</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
-       <string>Merge vertices</string>
+       <string>Merge Vertices</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_5">
@@ -551,6 +551,19 @@ Highlights</string>
       </property>
       <property name="text">
        <string>Vertex</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="simplifyMesh">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>70</y>
+        <width>80</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Simplify Mesh</string>
       </property>
      </widget>
     </widget>

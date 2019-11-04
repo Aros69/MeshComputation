@@ -78,6 +78,7 @@ public:
     void delaunayInsert(Vertex v);                        //  Delaunay Insertion
     void delaunize();
     void convexize(int axisVertex, int infiniteTriangle);
+    void simplify();
 
     // Crust methods
     void crust2D(QVector<Point> points);

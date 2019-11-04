@@ -32,6 +32,7 @@ public:
     double x() const { return point.x(); }
     double y() const { return point.y(); }
     double z() const { return point.z(); }
+    void set(Point p){point = p;}
     void setFaceIndex(int i) { faceIndex = i; }
     int getFaceIndex() { return faceIndex; }
     const Point &getPoint() { return point; }

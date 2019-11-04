@@ -346,3 +346,7 @@ void GLDisplayWidget::merge(int faceID, int vertexLocalID)
 {
     _mesh.edgeCollapse(faceID, vertexLocalID);
 }
+void GLDisplayWidget::simplify()
+{
+    _mesh.simplify();
+}

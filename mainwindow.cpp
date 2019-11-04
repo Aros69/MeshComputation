@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Delaunize,      SIGNAL(released()),     this, SLOT(delaunize()));
     connect(ui->delaunayInsert, SIGNAL(released()),     this, SLOT(delaunayInsert()));
     connect(ui->mergeVertices,  SIGNAL(released()),     this, SLOT(mergeVertices()));
+    connect(ui->simplifyMesh,   SIGNAL(released()),     this, SLOT(simplify()));
 }
 void MainWindow::onWireframe(){
     //std::cout <<"WireFrame Display Mode\n";
@@ -139,6 +140,11 @@ void MainWindow::splitVertex()
     {
 
     }
+}
+
+void MainWindow::simplify()
+{
+    ui->widget->simplify();
 }
 
 MainWindow::~MainWindow()

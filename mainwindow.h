@@ -34,6 +34,7 @@ public slots:
     void highLightFace();
     void mergeVertices();
     void splitVertex();
+    void simplify();
 };
 
 #endif // MAINWINDOW_H
