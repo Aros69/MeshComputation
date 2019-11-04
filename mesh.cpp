@@ -867,12 +867,31 @@ void Mesh::crust2D(QVector<Point> points){
         // Trouver le squelette
 }
 
-void Mesh::edgeCollapse(unsigned int indexFace, unsigned int relativeOppositeIndex){
-    Vertex v1 = getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+1)%3));
-    Vertex v2 = getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+2)%3));
-    std::cout<<v1.x()<<" "<<v1.y()<<" "<<v1.z()<<std::endl;
-    std::cout<<v2.x()<<" "<<v2.y()<<" "<<v2.z()<<std::endl;
-    Vertex newV((v1.x()+v2.x())/2, (v1.y()+v2.y())/2, (v1.z()+v2.z())/2);
+void Mesh::edgeCollapse(int indexFace, int relativeOppositeIndex){
+    int indexv1 = faceTab[indexFace].getVertex((relativeOppositeIndex+1)%3);
+    int indexv2 = faceTab[indexFace].getVertex((relativeOppositeIndex-1)%3);
+    Vertex v1 = getVertex(indexv1);
+    Vertex v2 = getVertex(indexv2);
+    int oppositeFaceIndex, oppositeIndexVertexOpposite;
+    Point newP((v1.x()+v2.x())/2, (v1.y()+v2.y())/2, (v1.z()+v2.z())/2);
+    //getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+1)%3)).setPoint(newP);
+
+    oppositeFaceIndex = getFace(indexFace).getNeibFace(relativeOppositeIndex);
+    oppositeIndexVertexOpposite = getFace(oppositeFaceIndex).getVertex(getFace(oppositeFaceIndex).global2localIndexF(indexFace));
+    Face* face = &getFace(indexFace);
+    Face* faceOpo = &getFace(oppositeIndexVertexOpposite);
+    std::cout<<"Face "<<oppositeIndexVertexOpposite<<" ("<<faceOpo->getNeibFace(0)
+            <<", "<<faceOpo->getNeibFace(1)<<", "<<faceOpo->getNeibFace(2)<<")"<<std::endl;
+    std::cout<<"Face "<<indexFace<<" ("<<face->getNeibFace(0)
+            <<", "<<face->getNeibFace(1)<<", "<<face->getNeibFace(2)<<")"<<std::endl;
+    faceOpo->setNeibFace(face->getNeibFace((relativeOppositeIndex+1)%3),(oppositeFaceIndex-1)%3);
+    faceOpo->setNeibFace(face->getNeibFace((relativeOppositeIndex-1)%3),(oppositeFaceIndex+1)%3);
+    face->setNeibFace(faceOpo->getNeibFace((oppositeFaceIndex-1)%3),(relativeOppositeIndex+1)%3);
+    face->setNeibFace(faceOpo->getNeibFace((oppositeFaceIndex+1)%3),(relativeOppositeIndex-1)%3);
+    std::cout<<"Face "<<oppositeIndexVertexOpposite<<" ("<<faceOpo->getNeibFace(0)
+            <<", "<<faceOpo->getNeibFace(1)<<", "<<faceOpo->getNeibFace(2)<<")"<<std::endl;
+    std::cout<<"Face "<<indexFace<<" ("<<face->getNeibFace(0)
+            <<", "<<face->getNeibFace(1)<<", "<<face->getNeibFace(2)<<")"<<std::endl;
 }
 
 void Mesh::updateDebugObj()
