@@ -342,3 +342,7 @@ void GLDisplayWidget::delaunayInsert(float x, float y, float z)
 {
     _mesh.delaunayInsert(Vertex(x,y,z));
 }
+void GLDisplayWidget::merge(int faceID, int vertexLocalID)
+{
+
+}

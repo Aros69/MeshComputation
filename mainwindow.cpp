@@ -106,6 +106,7 @@ void MainWindow::delaunize()
 {
     ui->widget->delaunize();
 }
+
 void MainWindow::delaunayInsert(){
     if(ui->xInsert->text().size() != 0 || ui->yInsert->text().size() != 0 || ui->zInsert->text().size() != 0)
     {
@@ -118,6 +119,22 @@ void MainWindow::delaunayInsert(){
         // TODO Changer la conversion pour vraiment obtenir des flottants
         std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
         ui->widget->delaunayInsert(x,y,z);
+    }
+}
+
+void MainWindow::mergeVertices()
+{
+    if(ui->fusionFaceID->text() != 0 && ui->fusionVertexID->text() != 0)
+    {
+
+    }
+}
+
+void MainWindow::splitVertex()
+{
+    if(ui->splitVertexID->text() != 0)
+    {
+
     }
 }
 
