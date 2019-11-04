@@ -82,6 +82,9 @@ public:
     // Crust methods
     void crust2D(QVector<Point> points);
 
+    // Edge Collapse
+    void edgeCollapse(unsigned int indexFace, unsigned int relativeOppositeIndex);
+
     //Debugging Methods ===================================================================
     void updateDebugObj();
     void printFaces();

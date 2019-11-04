@@ -860,6 +860,14 @@ void Mesh::crust2D(QVector<Point> points){
         // Trouver le squelette
 }
 
+void Mesh::edgeCollapse(unsigned int indexFace, unsigned int relativeOppositeIndex){
+    Vertex v1 = getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+1)%3));
+    Vertex v2 = getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+2)%3));
+    std::cout<<v1.x()<<" "<<v1.y()<<" "<<v1.z()<<std::endl;
+    std::cout<<v2.x()<<" "<<v2.y()<<" "<<v2.z()<<std::endl;
+    //Vertex newV((v1.x()+v2.x())/2, (v1), ());
+}
+
 void Mesh::updateDebugObj()
 {
     vertexDebugTab = QVector<DebugObj>(vertexTab.size());
