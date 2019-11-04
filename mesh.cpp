@@ -872,7 +872,7 @@ void Mesh::edgeCollapse(unsigned int indexFace, unsigned int relativeOppositeInd
     Vertex v2 = getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+2)%3));
     std::cout<<v1.x()<<" "<<v1.y()<<" "<<v1.z()<<std::endl;
     std::cout<<v2.x()<<" "<<v2.y()<<" "<<v2.z()<<std::endl;
-    //Vertex newV((v1.x()+v2.x())/2, (v1), ());
+    Vertex newV((v1.x()+v2.x())/2, (v1.y()+v2.y())/2, (v1.z()+v2.z())/2);
 }
 
 void Mesh::updateDebugObj()

@@ -345,4 +345,5 @@ void GLDisplayWidget::delaunayInsert(float x, float y, float z)
 void GLDisplayWidget::merge(int faceID, int vertexLocalID)
 {
     _mesh.edgeCollapse(faceID, vertexLocalID);
+    std::cout<<"cor"<<std::endl;
 }
