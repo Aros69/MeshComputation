@@ -346,3 +346,7 @@ void GLDisplayWidget::merge(int faceID, int vertexLocalID)
 {
 
 }
+void GLDisplayWidget::simplify()
+{
+    _mesh.simplify();
+}

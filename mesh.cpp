@@ -872,14 +872,17 @@ void Mesh::updateDebugObj()
     vertexDebugTab = QVector<DebugObj>(vertexTab.size());
     faceDebugTab = QVector<DebugObj>(faceTab.size());
 }
+
 void Mesh::markFace(int index)
 {
     faceDebugTab[index].debug = true;
 }
+
 void Mesh::markVertex(int index)
 {
     vertexDebugTab[index].debug = true;
 }
+
 void Mesh::unMarkAll()
 {
     for (int i = 0; i < faceDebugTab.size(); i++)
@@ -891,6 +894,7 @@ void Mesh::unMarkAll()
         vertexDebugTab[i].debug = false;
     }
 }
+
 bool Mesh::isInfinite(int index)
 {
     Face f = getFace(index);
@@ -900,4 +904,9 @@ bool Mesh::isInfinite(int index)
             return true;
     }
     return false;
+}
+
+void Mesh::simplify()
+{
+    std::cout << "Simplifying the mesh" << std::endl;
 }
