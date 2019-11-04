@@ -31,6 +31,7 @@ public:
     void toggleVoronoi();
     void delaunize();
     void delaunayInsert(float x, float y, float z);
+    void merge(int faceID, int vertexLocalID);
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);

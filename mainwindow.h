@@ -32,6 +32,8 @@ public slots:
     void delaunize();
     void delaunayInsert();
     void highLightFace();
+    void mergeVertices();
+    void splitVertex();
 };
 
 #endif // MAINWINDOW_H

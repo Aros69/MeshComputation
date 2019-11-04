@@ -4,7 +4,7 @@
 - Robin Donnay	p1510329
 
 ## Tâches effectuées
-    - Toutes les fonctions et prédicats (ainsi que les ajouts pour Voronoi) ont été implémenté.
+    - Toutes les fonctions et prédicats (ainsi que les ajouts pour Voronoi) ont été implémentées.
 
 ## Fonctionnalités
 - Flip implementé  : 
@@ -19,10 +19,10 @@
     - Dans l'onglet "Voronoi", il suffit de cocher la case "Show Voronoi" et d'appuyer sur "Compute Voronoi"
 
 ## Amélioration et corections faites après la mini-démonstration
-- L'insertion naive gère l'insertion de points ne respectant pas l'enveloppe convexe (flip de face infinis pour recréer l'enveloppe convexe) 
+- L'insertion naive gère l'insertion de points ne respectant pas l'enveloppe convexe (flip de face infinis pour recréer l'enveloppe convexe)
 
 ## Tests intéressants et représentatifs 
 #### Pour bien voir l'impact de chaque test, il est conseillé de relancer l'application a chaque fois  
 - L'insertion naïve ou de Delaunay du point : x=0.5, y=0.5, z=0 montre l'insertion d'un point à l'interieur du maillage. Cela permet de voir aussi la bonne implémentation de la fonction de split d'un triangle (tout en utilisant les prédicats d'appartenance à un triangle et d'orientation).
-- L'insertion naïve ou de Delaunay du point : x=3, y=3, z=0 montre l'insertion d'un point hors de l'enveloppe convexe. On voit bien que l'insertion naïve modifiel'enveloppe pour garder une enveloppe convexe 
+- L'insertion naïve ou de Delaunay du point : x=3, y=3, z=0 montre l'insertion d'un point hors de l'enveloppe convexe. On voit bien que l'insertion naïve modifie l'enveloppe pour garder une enveloppe convexe 
 

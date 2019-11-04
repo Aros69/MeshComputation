@@ -618,9 +618,9 @@ void Mesh::naiveInsertion(Point newV){
     int i = 0;
     do
     {
-        if (isInFace(i, v))
+        if ( isInFace(i, v) )
         {
-            isInMesh = true;
+            isInMesh  = true;
             indexFace = i;
         }
         ++i;
@@ -643,7 +643,6 @@ void Mesh::naiveInsertion(Point newV){
         }
         else
         {
-
             //2) Creer circulateur sur le point infinis
                 //2.1) Pour toutes les faces, calculer la distance vers le nouveau point (saut pour le point infinis
             Circulator_on_faces cf;
@@ -653,6 +652,7 @@ void Mesh::naiveInsertion(Point newV){
             double d1, d2;
             cf = cfbegin;
             do{
+                std::cout << "Checking for one face" << std::endl;
                 d1=0;
                 d2=0;
                 for(int i=0;i<3;++i){
@@ -688,7 +688,9 @@ void Mesh::naiveInsertion(Point newV){
                 }
             }
         }
+        
         Face newFace;
+
         if (orientation(v, vertexTab[faceTab[bestFaceIndex][goodVertex.first]], vertexTab[faceTab[bestFaceIndex][goodVertex.second]]) > 0)
         {
             newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex][goodVertex.second]);
@@ -697,16 +699,20 @@ void Mesh::naiveInsertion(Point newV){
         {
             newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.second], faceTab[bestFaceIndex][goodVertex.first]);
         }
+        
         cleanInfinitePoints();
         faceTab.push_back(newFace);
         vertexTab[vertexTab.size()-1].setFaceIndex(faceTab.size()-1);
         int indexNewFace = faceTab.size()-1;
         // Fin Nouvelle Face
         // Mettre à jour voisin
+        std::cout << "Just before defining Neibghours " << std::endl;
         defineNeighbourFaces();
 
         convexize(faceTab[indexNewFace].getVertex(2), faceTab[indexNewFace].getNeibFace(1));
         convexize(faceTab[indexNewFace].getVertex(1), faceTab[indexNewFace].getNeibFace(2));
+        
+        defineNeighbourFaces();
        }
     }
     std::cout<<"Fin Insertion Naive"<<std::endl;
@@ -716,6 +722,7 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
 {
     Circulator_on_faces cfbegin = incident_f(getVertex(axisVertex));
     Circulator_on_faces cf = cfbegin;
+
     do{
         if(isInfinite(getFaceIndex((*cf).getVertexes()))
                 && getFaceIndex((*cf).getVertexes()) != infiniteTriangle)
