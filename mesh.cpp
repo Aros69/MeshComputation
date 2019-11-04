@@ -909,4 +909,8 @@ bool Mesh::isInfinite(int index)
 void Mesh::simplify()
 {
     std::cout << "Simplifying the mesh" << std::endl;
+    // iterate on all faces
+    // Put all edges smaller than a specific size in a map (Don't add same edge twice)
+    // Iterate on the map and collapse edges
+        // 
 }
