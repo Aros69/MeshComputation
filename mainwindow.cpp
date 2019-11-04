@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->showVoronoi,    SIGNAL(toggled(bool)),  this, SLOT(toggleVoronoi()));
     connect(ui->Delaunize,      SIGNAL(released()),     this, SLOT(delaunize()));
     connect(ui->delaunayInsert, SIGNAL(released()),     this, SLOT(delaunayInsert()));
+    connect(ui->mergeVertices,  SIGNAL(released()),     this, SLOT(mergeVertices()));
 }
 void MainWindow::onWireframe(){
     //std::cout <<"WireFrame Display Mode\n";
