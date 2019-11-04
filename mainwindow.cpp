@@ -127,7 +127,9 @@ void MainWindow::mergeVertices()
 {
     if(ui->fusionFaceID->text() != 0 && ui->fusionVertexID->text() != 0)
     {
-
+        float f = ui->fusionFaceID->text().toFloat();
+        float v = ui->fusionVertexID->text().toFloat();
+        ui->widget->merge(f, v);
     }
 }
 
