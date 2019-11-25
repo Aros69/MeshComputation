@@ -10,15 +10,13 @@ void glVertexDraw(const Vertex &p)
     glVertex3f(p.x(), p.y(), p.z());
 }
 
+
 void Mesh::drawMesh()
 {
     int moduloI;
     double t1, t2, t3;
     for (int i = 0; i < faceTab.size(); i++)
     {
-        /*if(!(vertexTab[faceTab[i][0]].z()==infiniteP.z()
-             ||vertexTab[faceTab[i][1]].z()==infiniteP.z()
-             ||vertexTab[faceTab[i][2]].z()==infiniteP.z())){*/
         if (faceDebugTab[i].debug)
         {
             glColor3d(faceDebugTab[i].debugColor.x, faceDebugTab[i].debugColor.y, faceDebugTab[i].debugColor.z);
@@ -78,15 +76,14 @@ void Mesh::drawMesh()
             glVertexDraw(vertexTab[faceTab[i][2]]);
             glEnd();
         }
-        //}
     }
     if (drawVoronoi)
     {
         // std::cout << "\n\nVoronoi drawing\n\n" << std::endl;
         for (int i = 0; i < voronoiCells.size(); i++)
         {
-            //Draw a cell
-            // std::cout << "Voronoi Cell drawing" << std::endl;
+            //  Draw a cell
+            //  std::cout << "Voronoi Cell drawing" << std::endl;
             glColor3d(1, 1, 1);
             glBegin(GL_LINES);
 
@@ -100,6 +97,7 @@ void Mesh::drawMesh()
         }
     }
 }
+
 
 void Mesh::drawMeshWireFrame()
 {
@@ -489,6 +487,58 @@ void Mesh::clampLamplacian(int clamp)
     }
 }
 
+void Mesh::flip(int index1, int index2)
+{
+    std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
+    // markFace(index1);
+    // markFace(index2);
+
+    // Code commented to allow flip in non convex hull (convexize function)
+    /*if(isInfinite(index1) || isInfinite(index2))
+        return;*/
+
+    Face fA = getFace(index1);
+    Face fB = getFace(index2);
+    int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)
+    int vB = fB.getDifferentVertex(fA); // The index of the opposite vertex on fB (-1 if disjointed triangles)
+    int fA1ID = fA.getNeibFace((vA + 1) % 3);
+    int fB1ID = fB.getNeibFace((vB + 1) % 3);
+    Face fA1 = getFace(fA1ID); // The face near fA
+    Face fB1 = getFace(fB1ID); // The face near fB
+
+    if (vA == -1 || vB == -1 || fA1ID == -1 || fB1ID == -1 || fA1.getDifferentVertex(fA) == -1 || fB1.getDifferentVertex(fB) == -1)
+    {
+        std::cout << "Bad indexes \n";
+        return;
+    }
+    std::cout << "Data : fA1 = " << fA.getNeibFace((vA + 1) % 3) << "\nfB1 = " << fB.getNeibFace((vB + 1) % 3) << std::endl;
+
+    //Set incident faces for triangles
+    vertexTab[fA.getVertex((vA + 2) % 3)].setFaceIndex(fA1ID);
+    vertexTab[fB.getVertex((vB + 2) % 3)].setFaceIndex(fB1ID);
+
+    //Set faces for neibghor's faces first
+    std::cout << "Different vertex A: " << fA1.getDifferentVertex(fA) << std::endl;
+    std::cout << "Different vertex B: " << fB1.getDifferentVertex(fB) << std::endl;
+    fA1.setNeibFace(index2, fA1.getDifferentVertex(fA));
+    fB1.setNeibFace(index1, fB1.getDifferentVertex(fB));
+
+    //Set faces for fA / fB
+    fA.setNeibFace(fB.getNeibFace((vB + 1) % 3), vA);
+    fB.setNeibFace(fA.getNeibFace((vA + 1) % 3), vB);
+    fA.setNeibFace(index2, (vA + 1) % 3);
+    fB.setNeibFace(index1, (vB + 1) % 3);
+
+    //Set vertices
+    fA.setVertex((vA + 2) % 3, fB.getVertex(vB));
+    fB.setVertex((vB + 2) % 3, fA.getVertex(vA));
+
+    faceTab[index1] = fA;
+    faceTab[index2] = fB;
+    faceTab[fA1ID] = fA1;
+    faceTab[fB1ID] = fB1;
+}
+
 void Mesh::triangleSplit(int faceIndex, Point newV)
 {
     //std::cout<<"Begining of triangleSplit"<<std::endl;
@@ -553,58 +603,6 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
     //Mise à jour des debugObj
     updateDebugObj();
     //}
-}
-
-void Mesh::flip(int index1, int index2)
-{
-    std::cout << "Flipping Face " << index1 << "\t and Face " << index2 << std::endl;
-    // markFace(index1);
-    // markFace(index2);
-
-    // Code commented to allow flip in non convex hull (convexize function)
-    /*if(isInfinite(index1) || isInfinite(index2))
-        return;*/
-
-    Face fA = getFace(index1);
-    Face fB = getFace(index2);
-    int vA = fA.getDifferentVertex(fB); // The index of the opposite vertex on fA (-1 if disjointed triangles)
-    int vB = fB.getDifferentVertex(fA); // The index of the opposite vertex on fB (-1 if disjointed triangles)
-    int fA1ID = fA.getNeibFace((vA + 1) % 3);
-    int fB1ID = fB.getNeibFace((vB + 1) % 3);
-    Face fA1 = getFace(fA1ID); // The face near fA
-    Face fB1 = getFace(fB1ID); // The face near fB
-
-    if (vA == -1 || vB == -1 || fA1ID == -1 || fB1ID == -1 || fA1.getDifferentVertex(fA) == -1 || fB1.getDifferentVertex(fB) == -1)
-    {
-        std::cout << "Bad indexes \n";
-        return;
-    }
-    std::cout << "Data : fA1 = " << fA.getNeibFace((vA + 1) % 3) << "\nfB1 = " << fB.getNeibFace((vB + 1) % 3) << std::endl;
-
-    //Set incident faces for triangles
-    vertexTab[fA.getVertex((vA + 2) % 3)].setFaceIndex(fA1ID);
-    vertexTab[fB.getVertex((vB + 2) % 3)].setFaceIndex(fB1ID);
-
-    //Set faces for neibghor's faces first
-    std::cout << "Different vertex A: " << fA1.getDifferentVertex(fA) << std::endl;
-    std::cout << "Different vertex B: " << fB1.getDifferentVertex(fB) << std::endl;
-    fA1.setNeibFace(index2, fA1.getDifferentVertex(fA));
-    fB1.setNeibFace(index1, fB1.getDifferentVertex(fB));
-
-    //Set faces for fA / fB
-    fA.setNeibFace(fB.getNeibFace((vB + 1) % 3), vA);
-    fB.setNeibFace(fA.getNeibFace((vA + 1) % 3), vB);
-    fA.setNeibFace(index2, (vA + 1) % 3);
-    fB.setNeibFace(index1, (vB + 1) % 3);
-
-    //Set vertices
-    fA.setVertex((vA + 2) % 3, fB.getVertex(vB));
-    fB.setVertex((vB + 2) % 3, fA.getVertex(vA));
-
-    faceTab[index1] = fA;
-    faceTab[index2] = fB;
-    faceTab[fA1ID] = fA1;
-    faceTab[fB1ID] = fB1;
 }
 
 // Possible amélioration : Au lieu de cherche à minimiser la distance pour le nouveau triangle,
@@ -718,6 +716,36 @@ void Mesh::naiveInsertion(Point newV){
     std::cout<<"Fin Insertion Naive"<<std::endl;
 }
 
+void Mesh::delaunize()
+{
+    int badFaceID = 0;
+    //  For all triangles
+    for (int i = 0 ; i < faceTab.size() ; i++)
+    {
+        //  Check if not deDelaunay
+        if(!isLocallyOfDelaunay(i,false,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
+        {
+            // Flip with bad face
+            std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
+            flip(i,badFaceID);
+            i--;
+        }
+    }
+}
+
+void Mesh::delaunayInsert(Vertex v)
+{
+    printf("Delaunay insertion of vertex [%f][%f][%f]\n", v.x(), v.y(), v.z());
+    naiveInsertion(v.getPoint());
+    delaunize();
+    //  Naive insertion of a point
+    //  Stack of all impacted edges
+    //  For each impacted edge
+        // Check if triangles of the edge are locally of delaunay
+            //Flip if not
+            //Add newly impacted edge to stack
+}
+
 void Mesh::convexize(int axisVertex, int infiniteTriangle)
 {
     Circulator_on_faces cfbegin = incident_f(getVertex(axisVertex));
@@ -789,36 +817,6 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
     return true;
 }
 
-void Mesh::delaunize()
-{
-    int badFaceID = 0;
-    //  For all triangles
-    for (int i = 0 ; i < faceTab.size() ; i++)
-    {
-        //  Check if not deDelaunay
-        if(!isLocallyOfDelaunay(i,false,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
-        {
-            // Flip with bad face
-            std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
-            flip(i,badFaceID);
-            i--;
-        }
-    }
-}
-
-void Mesh::delaunayInsert(Vertex v)
-{
-    printf("Delaunay insertion of vertex [%f][%f][%f]\n", v.x(), v.y(), v.z());
-    naiveInsertion(v.getPoint());
-    delaunize();
-    //  Naive insertion of a point
-    //  Stack of all impacted edges
-    //  For each impacted edge
-        // Check if triangles of the edge are locally of delaunay
-            //Flip if not
-            //Add newly impacted edge to stack
-}
-
 void Mesh::computeVoronoi()
 {
     printf("Computing Voronoi...\n");
@@ -861,6 +859,15 @@ void Mesh::computeVoronoi()
     // std::cout << "Voronoi computation ended..." << std::endl;
 }
 
+void Mesh::simplify()
+{
+    std::cout << "Simplifying the mesh" << std::endl;
+    // iterate on all faces
+    // Put all edges smaller than a specific size in a map (Don't add same edge twice)
+    // Iterate on the map and collapse edges
+        // 
+}
+
 void Mesh::crust2D(QVector<Point> points){
     // Help : cf. cours 7 slides 42
     // Detruire toute arete de Delaunay traversant le squelette
@@ -877,6 +884,7 @@ void Mesh::markFace(int index)
 {
     faceDebugTab[index].debug = true;
 }
+
 
 void Mesh::markVertex(int index)
 {
@@ -904,13 +912,4 @@ bool Mesh::isInfinite(int index)
             return true;
     }
     return false;
-}
-
-void Mesh::simplify()
-{
-    std::cout << "Simplifying the mesh" << std::endl;
-    // iterate on all faces
-    // Put all edges smaller than a specific size in a map (Don't add same edge twice)
-    // Iterate on the map and collapse edges
-        // 
 }
