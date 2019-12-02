@@ -874,7 +874,8 @@ void Mesh::edgeCollapse(int indexFace, int relativeOppositeIndex){
     Vertex v2 = getVertex(indexv2);
     int oppositeFaceIndex, oppositeIndexVertexOpposite;
     Point newP((v1.x()+v2.x())/2, (v1.y()+v2.y())/2, (v1.z()+v2.z())/2);
-    //getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+1)%3)).setPoint(newP);
+    getVertex(faceTab[indexFace].getVertex((relativeOppositeIndex+1)%3)).set(newP);
+    // TODO delete V2
 
     oppositeFaceIndex = getFace(indexFace).getNeibFace(relativeOppositeIndex);
     oppositeIndexVertexOpposite = getFace(oppositeFaceIndex).getVertex(getFace(oppositeFaceIndex).global2localIndexF(indexFace));
