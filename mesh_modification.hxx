@@ -281,3 +281,18 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
         cf++;
     } while (cfbegin != cf);
 }
+
+void Mesh::simplify()
+{
+    std::cout << "Simplifying the mesh" << std::endl;
+    // iterate on all faces
+    // Put all edges smaller than a specific size in a map (Don't add same edge twice)
+    // Iterate on the map and collapse edges
+        // 
+}
+
+void Mesh::crust2D(QVector<Point> points){
+    // Help : cf. cours 7 slides 42
+    // Detruire toute arete de Delaunay traversant le squelette
+        // Trouver le squelette
+}

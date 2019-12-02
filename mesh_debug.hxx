@@ -28,3 +28,14 @@ void Mesh::unMarkAll()
         vertexDebugTab[i].debug = false;
     }
 }
+
+void Mesh::printFaces()
+{
+    Iterator_on_faces itf;
+    int i = 0;
+    for (itf = f_begin(); itf != f_pend(); itf++)
+    {
+        (*itf).print(i);
+        i++;
+    }
+}
