@@ -33,6 +33,7 @@ public:
     void delaunayInsert(float x, float y, float z);
     void merge(int faceID, int vertexLocalID);
     void simplify();
+    void crust2D();
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);

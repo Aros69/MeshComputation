@@ -33,7 +33,7 @@ public slots:
     void delaunayInsert();
     void highLightFace();
     void mergeVertices();
-    void splitVertex();
+    void crust2D();
     void simplify();
 };
 

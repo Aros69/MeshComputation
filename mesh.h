@@ -24,6 +24,7 @@ private:
     QVector<Face>             faceTab;
     QVector<DebugObj>         faceDebugTab;
     QVector<QVector<Vertex>>  voronoiCells;                     // Buffer for drawing voronoi
+    QVector<Vertex>           crustCurve;
     QVector<Vector>           Laplacien;
     bool                      laplacianDone = false;
     Vector                    colorA = Vector(0.75,0.75,0.75);
@@ -42,7 +43,7 @@ public:
      * faces of the mesh
      */
     void setMesh(QVector<Vertex>, QVector<Face>);
-    
+
     /** 
      * Draw the mesh / Voronoi cells / Highlighted face
      */
@@ -112,6 +113,10 @@ public:
     void    computeVoronoi();
 
     /**
+     * Return
+     */
+    QVector<Vertex>    getVoronoiVertices();
+    /**
      * Compute the laplacian array
      */ 
     void    computeLaplacian();
@@ -154,10 +159,14 @@ public:
     bool    isLocallyOfDelaunay(int index,bool debug, int& badFace);
 
     /**
-     * True if the vertex is infinite
+     * True if the face contains an infinite vertex
      */
     bool    isInfinite(int index);
 
+    /**
+     * True if the face contains an infinite vertex
+     */
+    bool    isInfinite(Face f);
     /**
      * Call this function to toggle ON/OFF the voronoi visualization
      */ 
@@ -211,7 +220,7 @@ public:
     /**
      * Crust algorithm for mesh generation from points cloud
      */
-    void crust2D(QVector<Point> points);
+    void crust2D();
 
     // Edge Collapse
     void edgeCollapse(int indexFace, int relativeOppositeIndex);

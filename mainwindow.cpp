@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->delaunayInsert, SIGNAL(released()),     this, SLOT(delaunayInsert()));
     connect(ui->mergeVertices,  SIGNAL(released()),     this, SLOT(mergeVertices()));
     connect(ui->simplifyMesh,   SIGNAL(released()),     this, SLOT(simplify()));
+    connect(ui->crust2DButton,   SIGNAL(released()),    this, SLOT(crust2D()));
 }
 void MainWindow::onWireframe(){
     //std::cout <<"WireFrame Display Mode\n";
@@ -134,12 +135,9 @@ void MainWindow::mergeVertices()
     }
 }
 
-void MainWindow::splitVertex()
+void MainWindow::crust2D()
 {
-    if(ui->splitVertexID->text() != 0)
-    {
-
-    }
+    ui->widget->crust2D();
 }
 
 void MainWindow::simplify()

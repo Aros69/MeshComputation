@@ -25,16 +25,16 @@ void Mesh::computeVoronoi()
                                    getVertex((*cf).getVertex(1)),
                                    getVertex((*cf).getVertex(2)));
 
-            // if(abs(tmpC.z()) < 100)
-            tmp.push_back(tmpC);
+            if(!isInfinite(*cf))
+                tmp.push_back(tmpC);
             cf++; 
         } while (cf != cfbegin);
 
         tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
                                getVertex((*cf).getVertex(1)),
                                getVertex((*cf).getVertex(2)));
-
-        tmp.push_back(tmpC);
+        if(!isInfinite(*cf))
+            tmp.push_back(tmpC);
         //Add all cells to the voronoiCells member variable
         voronoiCells.push_back(tmp);
         // printf("Added one voronoi cell\n");
@@ -42,6 +42,19 @@ void Mesh::computeVoronoi()
     // std::cout << "Voronoi computation ended..." << std::endl;
 }
 
+QVector<Vertex> Mesh::getVoronoiVertices()
+{
+    QVector<Vertex> v;
+    for(int i = 0; i < voronoiCells.size(); i++) // For each cell
+    {
+        for(int j = 0; j < voronoiCells[i].size(); j++)//For each vertex in a cell
+        {
+            // TODO check if it's an infinit Vertex
+            v.push_back(voronoiCells[i][j]);
+        }
+    }
+    return v;
+}
 void Mesh::toggleVoronoi()
 {
     drawVoronoi = !drawVoronoi;

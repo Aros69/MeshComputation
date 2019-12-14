@@ -350,3 +350,7 @@ void GLDisplayWidget::simplify()
 {
     _mesh.simplify();
 }
+void GLDisplayWidget::crust2D()
+{
+    _mesh.crust2D();
+}

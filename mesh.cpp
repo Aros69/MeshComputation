@@ -101,6 +101,16 @@ void Mesh::drawMesh()
             glEnd();
         }
     }
+    // Drawing crustCurve
+    for (int i = 0; i < crustCurve.size()-1; i++)
+    {
+        glColor3d(1, 1, 1);
+        glBegin(GL_LINES);
+        glVertexDraw(crustCurve[i] + Vector(0, 0, 0.2));
+        glVertexDraw(crustCurve[i+1] + Vector(0, 0, 0.2));
+        glEnd();
+    }
+
 }
 
 void Mesh::drawMeshWireFrame()

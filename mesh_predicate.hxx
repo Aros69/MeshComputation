@@ -58,3 +58,13 @@ bool Mesh::isInfinite(int index)
     }
     return false;
 }
+
+bool Mesh::isInfinite(Face f)
+{
+    for(int i = 0;i < 3 ; i++)
+    {
+        if( (getVertex(f.getVertex(i))) == infiniteP )
+            return true;
+    }
+    return false;
+}

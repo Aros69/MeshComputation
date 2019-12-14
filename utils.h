@@ -24,16 +24,19 @@ class Vertex
 {
     Point point;
     int faceIndex;
+    bool flag;
 
 public:
     Vertex() : point() {}
-    Vertex(Point p) : point(p.x(), p.y(), p.z()) {}
+    Vertex(Point p) : point(p.x(), p.y(), p.z()), flag(false) {}
     Vertex(double x_, double y_, double z_) : point(x_, y_, z_) {}
     double x() const { return point.x(); }
     double y() const { return point.y(); }
     double z() const { return point.z(); }
     void set(Point p){point = p;}
+    void setFlag(bool b){flag = b;}
     void setFaceIndex(int i) { faceIndex = i; }
+    bool getFlag(){return flag;}
     int getFaceIndex() { return faceIndex; }
     const Point &getPoint() { return point; }
     bool equals(const Vertex &m) const

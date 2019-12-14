@@ -291,8 +291,30 @@ void Mesh::simplify()
         // 
 }
 
-void Mesh::crust2D(QVector<Point> points){
+void Mesh::crust2D(){
     // Help : cf. cours 7 slides 42
-    // Detruire toute arete de Delaunay traversant le squelette
-        // Trouver le squelette
+    
+    printf("Crust2D computing...");
+    computeVoronoi();
+    QVector<Vertex> cells = getVoronoiVertices();
+    crustCurve = QVector<Vertex>();
+    // Inserer tout les centres de voronoi
+    for(int i = 0; i < cells.size(); i++)
+    {
+        // naiveInsertion(cells[i].getPoint());
+        delaunayInsert(cells[i]); 
+        vertexTab[vertexTab.size()-1].setFlag(true);
+    }
+    // Pour tout les faces, prendre les aretes qui n'ont pas un vertex marqué
+    for(int i = 0; i < faceTab.size(); i++)
+    {
+        for( int v = 0; v < 3;v++)
+        {
+            if(!vertexTab[(faceTab[i].getVertex(v))].getFlag())
+                crustCurve.push_back(vertexTab[faceTab[i].getVertex(v)]);
+        }
+    }
+
+    // Garder les edges entre deux sommets de bases
+
 }
