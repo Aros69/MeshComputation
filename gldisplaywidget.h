@@ -26,11 +26,11 @@ public:
     void randomFHighlight();
     void unmarkAll();
     void circulate(int i);
-    void naiveInsert(float x, float y, float z);
+    void naiveInsert(double x, double y, double z);
     void computeVoronoi();
     void toggleVoronoi();
     void delaunize();
-    void delaunayInsert(float x, float y, float z);
+    void delaunayInsert(double x, double y, double z);
     void merge(int faceID, int vertexLocalID);
     void simplify();
 protected:
@@ -42,7 +42,7 @@ protected:
 private:
 
     QTimer _timer; // To update the scene
-    float _X, _Y ,_Z; // Translation
+    double _X, _Y ,_Z; // Translation
     float _angle; // Rotation
 
     QPoint _lastPosMouse; // To keep the last position of the mouse

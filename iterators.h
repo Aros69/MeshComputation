@@ -61,6 +61,8 @@ public:
     }
 
     Vertex& operator*() { return m->getVertex(currentFaceIndex); }
+
+    int getCurrentFaceIndex() const {return currentAdjacentVertex;}
 };
 
 
@@ -98,8 +100,9 @@ class Circulator_on_faces : public std::iterator<std::input_iterator_tag, Face>
 {
     int currentFaceIndex;
     int axisVertexIndex;
-    bool debug;
     Mesh *m;
+    bool debug;
+
 
 public:
     Circulator_on_faces():currentFaceIndex(-1),axisVertexIndex(-1),debug(false){}
@@ -138,6 +141,10 @@ public:
     
     int getAxisIndex(){
       return axisVertexIndex;
+    }
+
+    int getCurrentFaceIndex(){
+      return currentFaceIndex;
     }
 
     void print(){

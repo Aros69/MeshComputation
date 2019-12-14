@@ -24,7 +24,13 @@ HEADERS  += mainwindow.h \
     segmentMemory.h \
     iterators.h \
     utils.h \
-    testUtil.h
+    testUtil.h \
+    mesh_creation.hxx \
+    mesh_debug.hxx \
+    mesh_iterators.hxx \
+    mesh_modification.hxx \
+    mesh_predicate.hxx \
+    mesh_statistics.hxx
 
 FORMS    += mainwindow.ui
 
