@@ -164,7 +164,7 @@ void GLDisplayWidget::initializeGL()
     TestUtil testingUnit;
     testingUnit.run();
     // background color
-    glClearColor(0.2, 0.2, 0.2, 1);
+    glClearColor(0.2f, 0.2f, 0.2f, 1);
 
     // Shader
     glEnable(GL_DEPTH_TEST);
@@ -224,7 +224,7 @@ void GLDisplayWidget::resizeGL(int width, int height)
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0f, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
+    gluPerspective(45.0, static_cast<GLdouble>(width) / static_cast<GLdouble>(height), 0.1, 100.0);
 
     updateGL();
 }
@@ -233,7 +233,7 @@ void GLDisplayWidget::resizeGL(int width, int height)
 // When you click, the position of your mouse is saved
 void GLDisplayWidget::mousePressEvent(QMouseEvent *event)
 {
-    if (event != NULL)
+    if (event != nullptr)
         _lastPosMouse = event->pos();
 }
 
@@ -243,7 +243,7 @@ void GLDisplayWidget::mouseMoveEvent(QMouseEvent *event)
     int dx = event->x() - _lastPosMouse.x();
     // int dy = event->y() - lastPosMouse.y();
 
-    if (event != NULL)
+    if (event != nullptr)
     {
         _angle += dx;
         _lastPosMouse = event->pos();
@@ -318,7 +318,7 @@ void GLDisplayWidget::circulate(int i)
         debugCf = Circulator_on_faces(i,&_mesh,true);
 }
 
-void GLDisplayWidget::naiveInsert(float x, float y, float z)
+void GLDisplayWidget::naiveInsert(double x, double y, double z)
 {
     Point v(x,y,z);
     _mesh.naiveInsertion(v);
@@ -338,7 +338,7 @@ void GLDisplayWidget::delaunize()
 {
     _mesh.delaunize();
 }
-void GLDisplayWidget::delaunayInsert(float x, float y, float z)
+void GLDisplayWidget::delaunayInsert(double x, double y, double z)
 {
     _mesh.delaunayInsert(Vertex(x,y,z));
 }
@@ -348,7 +348,7 @@ void GLDisplayWidget::merge(int faceID, int vertexLocalID)
 }
 void GLDisplayWidget::simplify()
 {
-    _mesh.simplify();
+    _mesh.simplify(100);
 }
 void GLDisplayWidget::crust2D()
 {

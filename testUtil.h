@@ -21,26 +21,26 @@ class TestUtil{
             //=========Basic Operations Tests
             //norm tests
             std::cout << "Norm testing..." << std::endl;
-            assert( norm(oX) == 1 );
+            assert( norm(oX) == 1. );
             std::cout << "Norm tests passed" << std::endl;
             //dot tests
             std::cout << "Dot product testing..." << std::endl;
-            assert( dot(oX,oY) == 0 );
-            assert( dot(oXY,oY) == 1);
+            assert( dot(oX,oY) == 0. );
+            assert( dot(oXY,oY) == 1.);
             std::cout << "Dot product tests passed" << std::endl;
             //Vector Creation test
             std::cout << "Vector operators testing..." << std::endl;
             Vector vec = pXYZ - p;
-            assert(vec.x == 1 && vec.y == 1 && vec.z == 1);
+            assert(vec.x == 1. && vec.y == 1. && vec.z == 1.);
             std::cout << "Vector operators tests passed" << std::endl;
             //cross tests
             std::cout << "Cross product testing..." << std::endl;
-            assert( cross(oX,oY).z == 1 );
+            assert( cross(oX,oY).z == 1. );
             std::cout << "Cross product test passed" << std::endl;
             //cosine testing
             std::cout << "getCos / getSin testing..." << std::endl;
-            assert( getCos(oX,oY) == 0 );
-            assert( getSin(oX,oY) == 1 );
+            assert( getCos(oX,oY) == 0. );
+            assert( getSin(oX,oY) == 1. );
             std::cout << "getCos / getSin tests passed" << std::endl;
             //orientation Tests
             std::cout << "Orientation testing..." << std::endl;
@@ -54,7 +54,7 @@ class TestUtil{
             //Barycentric operators
             std::cout << "Barycentric operators testing..." << std::endl;
             Vertex bar = 0.5 * p + 0.5 * pX;
-            assert(bar.x() == 0.5 && bar.y() == 0 && bar.z() == 0); 
+            assert(bar.x() == 0.5 && bar.y() == 0. && bar.z() == 0.);
             bar = 0.5 * p + pXYZ * 0.5;
             assert(bar.x() == 0.5 && bar.y() == 0.5 && bar.z() == 0.5); 
             std::cout << "Barycentric operators tests passed..." << std::endl;
@@ -64,7 +64,7 @@ class TestUtil{
             //Found center to be visually correct at [1.25][1.0][0.0]
             // assert(norm(2*pX - delCenter) == norm(2*pXY - delCenter) && norm(2*pX - delCenter) == norm(pY - delCenter));
             assert(isInCircle(2*pX, pXY*2,pY,pXY));
-            assert(!isInCircle(2*pX, pXY*2,pY,2.1*pXY));
+            assert(!isInCircle(2*pX, pXY*2,pY,pXY*2.1));
             std::cout << "Delaunay functions test passed" << std::endl;
             
         }

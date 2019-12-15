@@ -150,7 +150,7 @@ void Mesh::naiveInsertion(Point newV){
            }
        }
        if(indexInfinitePoint==-1){
-            EXIT_FAILURE;
+            exit(-1);
         }
         else
         {
@@ -168,9 +168,9 @@ void Mesh::naiveInsertion(Point newV){
                 d2=0;
                 for(int i=0;i<3;++i){
                     if(vertexTab[(*cf).getVertex(i)]!=infiniteP){
-                        if(d1==0){
+                        if(d1==0.){
                             d1 = norm(newV - vertexTab[(*cf).getVertex(i)]);
-                        } else if(d2==0){
+                        } else if(d2==0.){
                             d2 = norm(newV - vertexTab[(*cf).getVertex(i)]);
                         }
                     }
@@ -282,13 +282,93 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
     } while (cfbegin != cf);
 }
 
-void Mesh::simplify()
+void Mesh::mergeVertices(int vertexId1, int vertexId2, int faceId1, int faceId2){
+    if(vertexId1==-1 || vertexId2==-1|| faceId1==-1 || faceId2==-1){
+        fprintf(stderr, "Erreur dans les parametre de la fonction mergeVertices :" "vertexId1 = %d, vertxid2 = %d, faceId1 =%d, faceId2 = %d\n",
+                vertexId1, vertexId2, faceId1, faceId2);
+        exit(-1);
+    }
+}
+
+void Mesh::simplify(int nbOfVerticesWanted)
 {
     std::cout << "Simplifying the mesh" << std::endl;
-    // iterate on all faces
-    // Put all edges smaller than a specific size in a map (Don't add same edge twice)
+    int vertexId1, vertexId2, faceId1, faceId2;
+    // TODO remove the varibale bellow and the second bellow it
+    int tempAgainstWarning = nbOfVerticesWanted+1;
+    tempAgainstWarning++;
+    //while(vertexTab.size()>nbOfVerticesWanted){
+        // iterate on all faces
+        SegmentMapSimplify segmentMap;
+        for(auto face : faceTab){
+            // Pour chacun des segments
+            for(int i=0;i<3;++i){
+                vertexId1 = face.getVertex(i);
+                vertexId2 = face.getVertex((i+1)%3);
+                faceId1 = getFaceIndex(face.getVertexes());
+                faceId2 = face.getNeibFace((i+2)%3);
+                double dist = distance(vertexTab[vertexId1].getPoint(), vertexTab[vertexId2].getPoint());
+                if(!segmentMap.hashMap.contains(SegmentMapKey(vertexId1, vertexId2))){
+                    // On recupère tout les voisin du vertex 1
+                    std::vector<int> neighborIndexes(0);
+                    Circulator_on_faces circulatorVertex1(faceId1, vertexId1, this);
+                    do{
+
+                        //std::cout<<(*circulatorVertex1).getFaceIndex()<<std::endl;
+                        //std::cout<<faceTab.size()<<std::endl;
+                        neighborIndexes.push_back(faceTab[circulatorVertex1.getCurrentFaceIndex()].getVertex((i+1)%3));
+                        ++circulatorVertex1;
+                    } while(circulatorVertex1.getCurrentFaceIndex()!=faceId1);
+                    // On compare avec les voisins du second vertex (si on croise un meme voisin on arrete l'ajout de ce segment)
+                    Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
+                    bool hasOneCommonNeighbor = false;
+                    std::cout<<"Taille du voisinage : "<<neighborIndexes.size()<<std::endl;
+                    do{
+                        int neighbor = faceTab[circulatorVertex2.getCurrentFaceIndex()].getVertex((i+1)%3);
+                        for(int neib : neighborIndexes){
+                            printf("On compare %d et %d\n", neighbor, neib);
+                            fflush(stdout);
+                            if(neighbor == neib){
+                                std::cout<<"Yo dog"<<std::endl;
+                                hasOneCommonNeighbor=true;
+                            }
+                        }
+                        ++circulatorVertex2;
+                    } while(!hasOneCommonNeighbor && circulatorVertex2.getCurrentFaceIndex()!=faceId1);
+
+                    // Pas de voisin commun, on ajoute a la map
+                    if(hasOneCommonNeighbor){
+                        std::cout<<"On insert"<<std::endl;
+                        segmentMap.hashMap.insert(SegmentMapKey(vertexId1, vertexId2),
+                                                  SegmentMapSimplify::SegmentMapSimplifyData(dist, faceId1, faceId2));
+                    }
+                }
+            }
+        }
+
+        std::cout<<"Hello "<< segmentMap.hashMap.size()<<std::endl;
     // Iterate on the map and collapse edges
-        // 
+        faceId1 = -1;
+        faceId2 = -1;
+        vertexId1 = -1;
+        vertexId2 = -1;
+        double minDist = segmentMap.hashMap.first().dist;
+        QList<SegmentMapKey> keys = segmentMap.hashMap.keys();
+        int i=0;
+        for(auto dataSegment : segmentMap.hashMap){
+            if(dataSegment.dist<=minDist){
+                minDist = dataSegment.dist;
+                faceId1 = dataSegment.faceId1;
+                faceId2 = dataSegment.faceId2;
+                vertexId1 = keys[i].vertexIndex1;
+                vertexId2 = keys[i].vertexIndex2;
+            }    
+            i++;
+        }
+        //segmentMap.print();
+        mergeVertices(vertexId1, vertexId2, faceId1, faceId2);
+    //}
+    std::cout<<"End of simplify"<<std::endl;
 }
 
 void Mesh::crust2D(){

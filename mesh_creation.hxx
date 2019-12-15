@@ -47,7 +47,7 @@ void Mesh::meshWithFile(std::string filePath)
 
 void Mesh::defineNeighbourFaces()
 {
-    SegmentMemory memory;
+    SegmentMapNeighbor memory;
 
     for (int i = 0; i < faceTab.size(); ++i)
     {
@@ -98,8 +98,8 @@ void Mesh::defineNeighbourFaces()
         // Pour tous les segments sans voisin on crée la face avec ce segment et le point infinis.
         for (auto segment : memory.hashMap)
         {
-            SegmentMemory::SegmentMemoryKey tempKey = memory.hashMap.key(segment);
-            SegmentMemory::SegmentMemoryData tempData = memory.hashMap.find(tempKey).value();
+            SegmentMapKey tempKey = memory.hashMap.key(segment);
+            SegmentMapNeighbor::SegmentMapNeighborData tempData = memory.hashMap.find(tempKey).value();
             if (orientation(vertexTab[faceTab[tempData.faceIndex][tempData.vertexInFaceIndex]],
                             vertexTab[tempKey.vertexIndex1], vertexTab[tempKey.vertexIndex2]) > 0)
             {

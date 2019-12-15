@@ -71,8 +71,8 @@ struct Vector
     //Init a vector going FROM v1 TO v2
     Vector(const Vertex &v1, const Vertex &v2) : x(v2.x() - v1.x()), y(v2.y() - v1.y()), z(v2.z() - v1.z()) {}
 };
-Vertex operator*(float f, const Vertex &v);
-Vertex operator*(const Vertex &v, float f);
+Vertex operator*(double f, const Vertex &v);
+Vertex operator*(const Vertex &v, double f);
 Vertex operator+(const Vertex &v1, const Vertex &v2);
 Vertex operator+(const Vertex &v1, const Vector &vec);
 Vertex operator+(const Vector &vec, const Vertex &v1);
