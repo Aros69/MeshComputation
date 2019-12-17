@@ -30,18 +30,16 @@ HEADERS  += mainwindow.h \
     segmentMemory.h \
     iterators.h \
     utils.h \
-    testUtil.h \
-    mesh_creation.hxx \
-    mesh_debug.hxx \
-    mesh_iterators.hxx \
-    mesh_modification.hxx \
-    mesh_predicate.hxx \
-    mesh_statistics.hxx
+    testUtil.h
 
 
 FORMS    += mainwindow.ui
 
 #---- Comment the following line on MacOS
-LIBS = -lOpengl32 -lglu32
+win32 {
+    LIBS = -lOpengl32 -lglu32
+} else {
+    LIBS = -lGLU
+}
 CONFIG += c++11
 

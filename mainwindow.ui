@@ -516,6 +516,9 @@ Highlights</string>
         <height>16</height>
        </rect>
       </property>
+      <property name="text">
+       <string>1</string>
+      </property>
      </widget>
      <widget class="QLineEdit" name="fusionVertexID">
       <property name="geometry">
@@ -525,6 +528,9 @@ Highlights</string>
         <width>21</width>
         <height>16</height>
        </rect>
+      </property>
+      <property name="text">
+       <string>2</string>
       </property>
      </widget>
      <widget class="QPushButton" name="mergeVertices">
