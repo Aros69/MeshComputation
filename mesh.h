@@ -1,6 +1,7 @@
 #ifndef MESH_H
 #define MESH_H
 
+#include <QVector3D>
 #include <QGLWidget>
 #include <QMap>
 #include <QtAlgorithms>
@@ -68,9 +69,11 @@ public:
      *  Remove the Infinite points
      */ 
     void cleanInfinitePoints();
-
     // Getters ==============================================================================
     Vertex& getVertex(int index) { return vertexTab[index]; }
+    QVector3D getVertexQVector3D(int index) const {
+        return QVector3D(float(vertexTab[index].x()), float(vertexTab[index].y()), float(vertexTab[index].z()));
+    }
     Face& getFace(int index) { return faceTab[index]; }
     int getFaceIndex(int vertexes[3]) const;
     int getVertexID(const Vertex &m);
