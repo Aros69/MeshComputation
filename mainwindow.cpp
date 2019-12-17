@@ -150,7 +150,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
 void MainWindow::on_refresh_clicked()
 {
     ui->vertexCount->setText(QString::number(ui->widget->getVertexCount()));
@@ -160,4 +159,18 @@ void MainWindow::on_refresh_clicked()
 void MainWindow::on_CrustCurve_toggled(bool checked)
 {
     ui->widget->showCrust(checked);
+}
+
+void MainWindow::on_meshFile_currentIndexChanged(const QString &arg1)
+{
+    if(arg1!="Mesh File"){
+        ui->widget->setMeshFile(arg1.toStdString());
+    }
+}
+
+
+void MainWindow::on_Change_Mesh_released()
+{
+    ui->widget->loadMesh();
+    //std::cout<<ui->widget->getMeshFile()<<std::endl;
 }

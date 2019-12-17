@@ -38,6 +38,8 @@ public slots:
 private slots:
     void on_refresh_clicked();
     void on_CrustCurve_toggled(bool checked);
+    void on_meshFile_currentIndexChanged(const QString &arg1);
+    void on_Change_Mesh_released();
 };
 
 #endif // MAINWINDOW_H

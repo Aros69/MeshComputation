@@ -37,6 +37,9 @@ public:
     void showCrust(bool show);
     int  getVertexCount();
     int  getFaceCount();
+    std::string getMeshFile() const;
+    void setMeshFile(std::string file);
+    void loadMesh();
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);
@@ -53,6 +56,7 @@ private:
 
     Mesh _mesh; // The object to be displayed, may be replaced by a scene if there are several objects....
     int displayMode = 0; // 0 : Plain Mode 1 : WireFrame
+    std::string meshFile = "flat02.off"; // File used for save and load mesh
 
     QOpenGLShaderProgram program;
     QOpenGLShader *shader;

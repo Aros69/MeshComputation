@@ -113,28 +113,6 @@ void GLDisplayWidget::init2DBBox()
     _mesh.defineNeighbourFaces();
 }
 
-void GLDisplayWidget::initQueenMesh()
-{
-    // If you are in qtCreator
-    _mesh.meshWithFile("../meshcomputation/data/queen.off");
-    // If you are at the root of the project
-    //_mesh.meshWithFile("data/queen.off");
-}
-
-void GLDisplayWidget::initCubeMesh()
-{
-    // If you are in qtCreator
-    _mesh.meshWithFile("../meshcomputation/data/cube.off");
-    // If you are at the root of the project
-    //_mesh.meshWithFile("data/cube.off");
-}
-void GLDisplayWidget::initFlatMesh()
-{
-    // If you are in qtCreator
-    _mesh.meshWithFile("../meshcomputation/data/flat02.off");
-    // If you are at the root of the project
-    //_mesh.meshWithFile("data/cube.off");
-}
 //Test the iterators on a mesh
 void testIterators(Mesh mesh){
   /*Mesh titi;
@@ -187,10 +165,7 @@ void GLDisplayWidget::initializeGL()
 
 
     // Construction of the mesh before it is displayed
-    // To add....
-    // initCubeMesh();
-    initFlatMesh();
-    // initQueenMesh();
+    loadMesh();
 
     // Proof for triangle split on FlatMesh()
     //_mesh.triangleSplit(1, Point(-1.3, 0.6, 0));
@@ -361,8 +336,23 @@ void GLDisplayWidget::showCrust(bool show)
 int  GLDisplayWidget::getVertexCount()
 {
     _mesh.getVertexCount();
+    return _mesh.getVertexCount();
 }
 int  GLDisplayWidget::getFaceCount()
 {
     _mesh.getFaceCount();
+    return _mesh.getFaceCount();
+}
+
+std::string GLDisplayWidget::getMeshFile() const {
+    return meshFile;
+}
+
+void GLDisplayWidget::setMeshFile(std::string file){
+    meshFile = file;
+    //std::cout<<meshFile<<std::endl;
+}
+void GLDisplayWidget::loadMesh(){
+    std::string realFilePath = "../meshcomputation/data/"+meshFile;
+    _mesh.meshWithFile(realFilePath);
 }
