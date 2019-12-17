@@ -342,9 +342,9 @@ void GLDisplayWidget::delaunayInsert(double x, double y, double z)
 {
     _mesh.delaunayInsert(Vertex(x,y,z));
 }
-void GLDisplayWidget::merge(int faceID, int vertexLocalID)
+void GLDisplayWidget::merge(int vertexId1, int vertexId2)
 {
-    //_mesh.edgeCollapse(faceID, vertexLocalID);
+    _mesh.edgeCollapse(vertexId1, vertexId2);
 }
 void GLDisplayWidget::simplify()
 {

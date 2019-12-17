@@ -16,7 +16,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     gldisplaywidget.cpp \
     mesh.cpp \
-    utils.cpp
+    utils.cpp \
+    mesh_creation.hxx \
+    mesh_debug.hxx \
+    mesh_iterators.hxx \
+    mesh_modification.hxx \
+    mesh_predicate.hxx \
+    mesh_statistics.hxx
 
 HEADERS  += mainwindow.h \
     gldisplaywidget.h \
@@ -25,6 +31,7 @@ HEADERS  += mainwindow.h \
     iterators.h \
     utils.h \
     testUtil.h
+
 
 FORMS    += mainwindow.ui
 

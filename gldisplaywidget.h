@@ -31,7 +31,7 @@ public:
     void toggleVoronoi();
     void delaunize();
     void delaunayInsert(double x, double y, double z);
-    void merge(int faceID, int vertexLocalID);
+    void merge(int vertexId1, int vertexId2);
     void simplify();
     void crust2D();
 protected:

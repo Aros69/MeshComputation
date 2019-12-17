@@ -89,6 +89,8 @@ public:
     friend bool operator!=(Iterator_on_faces f1,Iterator_on_faces f2);
 
     Face& operator*() { return m->getFace(index); }
+
+    int getIndex()const{return index;}
 };
 inline bool operator!=(Iterator_on_faces f1,Iterator_on_faces f2){
     return f1.index != f2.index;

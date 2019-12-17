@@ -20,6 +20,7 @@ public:
     double z() const { return _z; }
 };
 
+
 class Vertex
 {
     Point point;
@@ -56,6 +57,8 @@ public:
     {
         return !(*this == p);
     }
+
+
 };
 
 struct Vector
@@ -70,6 +73,10 @@ struct Vector
     Vector(const Point &p1, const Point &p2) : x(p2.x() - p1.x()), y(p2.y() - p1.y()), z(p2.z() - p1.z()) {}
     //Init a vector going FROM v1 TO v2
     Vector(const Vertex &v1, const Vertex &v2) : x(v2.x() - v1.x()), y(v2.y() - v1.y()), z(v2.z() - v1.z()) {}
+
+    Point getPoint(){
+        return Point(x,y,z);
+    }
 };
 Vertex operator*(double f, const Vertex &v);
 Vertex operator*(const Vertex &v, double f);
@@ -122,6 +129,15 @@ public:
     int getVertex(int index) const { return verticesIndex[index]; }
 
     int *getVertexes() { return verticesIndex; }
+
+    /**
+     * @brief isVertex Check if indexVertex is one of the faces Vertex
+     * @param idVertex the id vertex checked
+     * @return true if idVertex is vertex of the face
+     */
+    bool isVertex(int idVertex){
+        return idVertex==verticesIndex[0]||idVertex==verticesIndex[1]||idVertex==verticesIndex[2];
+    }
 
     //Return the local index of the different vertex
     int getDifferentVertex(Face f)

@@ -215,10 +215,8 @@ public:
       * Merge 2 vertices to simplify the mesh
       * vertexId1   : Vertex 1 id
       * vertexId1   : Vertex 2 id
-      * faceId1     : Face 1 id
-      * faceId2     : Face 2 id
       */
-    void mergeVertices(int vertexId1, int vertexId2, int faceId1, int faceId2);
+    void mergeVertices(int vertexId1, int vertexId2);
 
     /**
      * Simplify the mesh

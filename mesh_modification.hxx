@@ -282,12 +282,47 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
     } while (cfbegin != cf);
 }
 
-void Mesh::mergeVertices(int vertexId1, int vertexId2, int faceId1, int faceId2){
-    if(vertexId1==-1 || vertexId2==-1|| faceId1==-1 || faceId2==-1){
-        fprintf(stderr, "Erreur dans les parametre de la fonction mergeVertices :" "vertexId1 = %d, vertxid2 = %d, faceId1 =%d, faceId2 = %d\n",
-                vertexId1, vertexId2, faceId1, faceId2);
+void Mesh::mergeVertices(int vertexId1, int vertexId2){
+    if(vertexId1==-1 || vertexId2==-1){
+        fprintf(stderr, "Erreur dans les parametre de la fonction mergeVertices :" "vertexId1 = %d, vertxid2 = %d\n",
+                vertexId1, vertexId2);
         exit(-1);
     }
+    int faceId1 = -1, faceId2 = -1;
+
+    Iterator_on_faces ite = f_begin();
+    bool facesFound = false;
+    do{
+        facesFound = ((*ite).isVertex(vertexId1))&&((*ite).isVertex(vertexId2));
+        if(facesFound){
+            faceId1 = ite.getIndex();
+            if((*ite).getVertex(0)==vertexId1||(*ite).getVertex(0)==vertexId2){
+                if((*ite).getVertex(1)==vertexId1||(*ite).getVertex(1)==vertexId2){
+                    faceId2 = (*ite).getNeibFace(1);
+                } else {
+                    faceId2 = (*ite).getNeibFace(2);
+                }
+            } else {
+                faceId2 = (*ite).getNeibFace(0);
+            }
+        }
+        ++ite;
+    }while(ite!=f_pend() && !facesFound);
+    if(faceId1==-1||faceId2==-1){exit(-1);}
+
+    // Definiion du nouveau vertex au milieu
+    vertexTab[vertexId1].set((vertexTab[vertexId1]+0.5*vertexTab[vertexId2]-0.5*vertexTab[vertexId1]).getPoint());
+    //printf("(%f, %f, %f)\n", vertexTab[vertexId1].x(), vertexTab[vertexId1].y(), vertexTab[vertexId1].z());
+    //fflush(stdout);
+
+    // Mise des triangles du Vertex 2 sur le Vertex 1
+    Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
+    do{
+        int localIndexVertex2 = faceTab[circulatorVertex2.getCurrentFaceIndex()].global2localIndex(vertexId2);
+        faceTab[circulatorVertex2.getCurrentFaceIndex()].setVertex(localIndexVertex2, vertexId1);
+        ++circulatorVertex2;
+    } while(circulatorVertex2.getCurrentFaceIndex()!=faceId2);
+
 }
 
 void Mesh::simplify(int nbOfVerticesWanted)
@@ -313,43 +348,31 @@ void Mesh::simplify(int nbOfVerticesWanted)
                     std::vector<int> neighborIndexes(0);
                     Circulator_on_faces circulatorVertex1(faceId1, vertexId1, this);
                     do{
-
-                        //std::cout<<(*circulatorVertex1).getFaceIndex()<<std::endl;
-                        //std::cout<<faceTab.size()<<std::endl;
                         neighborIndexes.push_back(faceTab[circulatorVertex1.getCurrentFaceIndex()].getVertex((i+1)%3));
                         ++circulatorVertex1;
                     } while(circulatorVertex1.getCurrentFaceIndex()!=faceId1);
                     // On compare avec les voisins du second vertex (si on croise un meme voisin on arrete l'ajout de ce segment)
                     Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
                     bool hasOneCommonNeighbor = false;
-                    std::cout<<"Taille du voisinage : "<<neighborIndexes.size()<<std::endl;
                     do{
                         int neighbor = faceTab[circulatorVertex2.getCurrentFaceIndex()].getVertex((i+1)%3);
                         for(int neib : neighborIndexes){
-                            printf("On compare %d et %d\n", neighbor, neib);
-                            fflush(stdout);
                             if(neighbor == neib){
-                                std::cout<<"Yo dog"<<std::endl;
                                 hasOneCommonNeighbor=true;
                             }
                         }
                         ++circulatorVertex2;
-                    } while(!hasOneCommonNeighbor && circulatorVertex2.getCurrentFaceIndex()!=faceId1);
+                    } while(!hasOneCommonNeighbor && circulatorVertex2.getCurrentFaceIndex()!=faceId2);
 
                     // Pas de voisin commun, on ajoute a la map
                     if(hasOneCommonNeighbor){
-                        std::cout<<"On insert"<<std::endl;
                         segmentMap.hashMap.insert(SegmentMapKey(vertexId1, vertexId2),
                                                   SegmentMapSimplify::SegmentMapSimplifyData(dist, faceId1, faceId2));
                     }
                 }
             }
         }
-
-        std::cout<<"Hello "<< segmentMap.hashMap.size()<<std::endl;
-    // Iterate on the map and collapse edges
-        faceId1 = -1;
-        faceId2 = -1;
+        // Iterate on the map and collapse edges
         vertexId1 = -1;
         vertexId2 = -1;
         double minDist = segmentMap.hashMap.first().dist;
@@ -358,15 +381,13 @@ void Mesh::simplify(int nbOfVerticesWanted)
         for(auto dataSegment : segmentMap.hashMap){
             if(dataSegment.dist<=minDist){
                 minDist = dataSegment.dist;
-                faceId1 = dataSegment.faceId1;
-                faceId2 = dataSegment.faceId2;
                 vertexId1 = keys[i].vertexIndex1;
                 vertexId2 = keys[i].vertexIndex2;
             }    
             i++;
         }
         //segmentMap.print();
-        mergeVertices(vertexId1, vertexId2, faceId1, faceId2);
+        mergeVertices(vertexId1, vertexId2);
     //}
     std::cout<<"End of simplify"<<std::endl;
 }
