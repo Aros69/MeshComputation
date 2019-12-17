@@ -34,6 +34,7 @@ private:
     double                    maxNormLaplacian;
     double                    minNormLaplacian;
     bool                      drawVoronoi = false;
+    bool                      drawCrust = false;
 
 public:
     Mesh();
@@ -73,7 +74,8 @@ public:
     Face& getFace(int index) { return faceTab[index]; }
     int getFaceIndex(int vertexes[3]) const;
     int getVertexID(const Vertex &m);
-
+    int getVertexCount();
+    int getFaceCount();
     // Iterators ============================================================================
     /**
      * Get an iterator pointing on the first face in the mesh's face Array
@@ -161,17 +163,29 @@ public:
     /**
      * True if the face contains an infinite vertex
      */
-    bool    isInfinite(int index);
+    bool    isFaceInfinite(int index);
 
     /**
      * True if the face contains an infinite vertex
      */
-    bool    isInfinite(Face f);
+    bool    isFaceInfinite(Face f);
+    /**
+     * True if the face contains an infinite vertex
+     */
+    bool    isVertexInfinite(int index);
+
+    /**
+     * True if the face contains an infinite vertex
+     */
+    bool    isVertexInfinite(Vertex v);
     /**
      * Call this function to toggle ON/OFF the voronoi visualization
      */ 
     void    toggleVoronoi();
-
+    /**
+     * Call this function to toggle ON/OFF the crust visualization
+     */
+    void    toggleCrust(bool shows);
     // Mesh Modification methods ================================================================
     /**
      * Flip two NEIGHBORING triangles together

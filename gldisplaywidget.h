@@ -34,6 +34,9 @@ public:
     void merge(int faceID, int vertexLocalID);
     void simplify();
     void crust2D();
+    void showCrust(bool show);
+    int  getVertexCount();
+    int  getFaceCount();
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);

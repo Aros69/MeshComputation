@@ -1,5 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
+#define EPS 0.01
 
 #include <iostream>
 #include <cmath>
@@ -18,6 +19,14 @@ public:
     double x() const { return _x; }
     double y() const { return _y; }
     double z() const { return _z; }
+    bool approximateEquals(const Point &p) const
+    {
+        if(     _x > p.x() - EPS && _x < p.x() + EPS &&
+                _y > p.y() - EPS && _y < p.y() + EPS &&
+                _z > p.z() - EPS && _z < p.z() + EPS)
+            return true;
+        return false;
+    }
 };
 
 class Vertex
@@ -38,16 +47,16 @@ public:
     void setFaceIndex(int i) { faceIndex = i; }
     bool getFlag(){return flag;}
     int getFaceIndex() { return faceIndex; }
-    const Point &getPoint() { return point; }
+    const Point &getPoint() const { return point; }
     bool equals(const Vertex &m) const
     {
-        if (m.x() == this->x() && m.y() == this->y() && m.z() == this->z())
-        {
-            return true;
-        }
-        return false;
+        Point p = m.getPoint();
+        return point.approximateEquals(p);
     }
-
+    bool operator==(const Vertex &m)
+    {
+        return equals(m);
+    }
     bool operator==(const Point &p)
     {
         return this->x() == p.x() && this->y() == p.y() && this->z() == p.z();
@@ -123,6 +132,12 @@ public:
 
     int *getVertexes() { return verticesIndex; }
 
+    /**
+     * @brief getSegment Return the segment that does not include the specified vertex as one of its extremities
+     * @param nonIncludedVertex
+     * @return
+     */
+    std::pair<int, int> getSegment(int nonIncludedVertex);
     //Return the local index of the different vertex
     int getDifferentVertex(Face f)
     {
@@ -159,7 +174,6 @@ public:
     std::cout<<"("<<p.x()<<", "<<p.y()<<", "<<p.z()<<")"<<std::endl;
 }*/
 void printFacesNeib(const QVector<Face> &f);
-
 double distance(const Point &p1, const Point &p2);
 double dot(const Vector &v1, const Vector &v2);
 Vector cross(const Vector &v1, const Vector &v2);
@@ -169,6 +183,7 @@ double getCos(const Vector &v1, const Vector &v2);
 double getSin(const Vector &v1, const Vector &v2);
 //Return a positive value if v1,v2,v3 are in a trigonometric order
 double orientation(const Vertex &v1, const Vertex &v2, const Vertex &v3);
+bool isTrigo(const Vertex &v1, const Vertex &v2, const Vertex &v3);
 double getArea(Vertex &vert1, Vertex &vert2, Vertex &vert3);
 Vertex getCircumCenter(Vertex A, Vertex B, Vertex C);
 bool isInCircle(Vertex A, Vertex B, Vertex C, Vertex D);

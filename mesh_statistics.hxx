@@ -24,8 +24,7 @@ void Mesh::computeVoronoi()
             tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
                                    getVertex((*cf).getVertex(1)),
                                    getVertex((*cf).getVertex(2)));
-
-            if(!isInfinite(*cf))
+            if(!isFaceInfinite(*cf))
                 tmp.push_back(tmpC);
             cf++; 
         } while (cf != cfbegin);
@@ -33,7 +32,7 @@ void Mesh::computeVoronoi()
         tmpC = getCircumCenter(getVertex((*cf).getVertex(0)),
                                getVertex((*cf).getVertex(1)),
                                getVertex((*cf).getVertex(2)));
-        if(!isInfinite(*cf))
+        if(!isFaceInfinite(*cf))
             tmp.push_back(tmpC);
         //Add all cells to the voronoiCells member variable
         voronoiCells.push_back(tmp);
@@ -45,21 +44,35 @@ void Mesh::computeVoronoi()
 QVector<Vertex> Mesh::getVoronoiVertices()
 {
     QVector<Vertex> v;
+    bool exists = false;
     for(int i = 0; i < voronoiCells.size(); i++) // For each cell
     {
         for(int j = 0; j < voronoiCells[i].size(); j++)//For each vertex in a cell
         {
             // TODO check if it's an infinit Vertex
-            v.push_back(voronoiCells[i][j]);
+            // If it doesn't already exist
+            for(int k = 0; k < v.size() ; k++)
+            {
+                if(v[k] == voronoiCells[i][j])
+                    exists = true;
+            }
+            if(!exists)
+                v.push_back(voronoiCells[i][j]);
+
+            exists = false;
         }
     }
     return v;
 }
+
 void Mesh::toggleVoronoi()
 {
     drawVoronoi = !drawVoronoi;
 }
-
+void Mesh::toggleCrust(bool show)
+{
+    drawCrust = show;
+}
 void Mesh::computeLaplacian()
 {
     //std::cout << "Computing Laplacian ===================================================================\n";

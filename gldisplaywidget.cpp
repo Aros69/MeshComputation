@@ -354,3 +354,15 @@ void GLDisplayWidget::crust2D()
 {
     _mesh.crust2D();
 }
+void GLDisplayWidget::showCrust(bool show)
+{
+    _mesh.toggleCrust(show);
+}
+int  GLDisplayWidget::getVertexCount()
+{
+    _mesh.getVertexCount();
+}
+int  GLDisplayWidget::getFaceCount()
+{
+    _mesh.getFaceCount();
+}

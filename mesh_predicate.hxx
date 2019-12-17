@@ -48,7 +48,7 @@ bool Mesh::isLocallyOfDelaunay(int index, bool debug, int& badFace)
     return true;
 }
 
-bool Mesh::isInfinite(int index)
+bool Mesh::isFaceInfinite(int index)
 {
     Face f = getFace(index);
     for(int i = 0;i < 3 ; i++)
@@ -59,7 +59,7 @@ bool Mesh::isInfinite(int index)
     return false;
 }
 
-bool Mesh::isInfinite(Face f)
+bool Mesh::isFaceInfinite(Face f)
 {
     for(int i = 0;i < 3 ; i++)
     {
@@ -67,4 +67,26 @@ bool Mesh::isInfinite(Face f)
             return true;
     }
     return false;
+}
+
+//bool Mesh::isFaceBordering(Face f)
+//{
+//    for(int i = 0;i < 3 ; i++)
+//    {
+//        if( (getVertex(f.getVertex(i))) == infiniteP )
+//            return true;
+//    }
+//    return false;
+//}
+
+bool Mesh::isVertexInfinite(Vertex v)
+{
+    if(v == infiniteP)
+        return true;
+    return false;
+}
+
+bool Mesh::isVertexInfinite(int index)
+{
+    return isVertexInfinite(getVertex(index));
 }

@@ -62,47 +62,48 @@ void Mesh::triangleSplit(int faceIndex, Point newV)
     v.setFaceIndex(faceIndex);
     vertexTab.push_back(v);
     // Fin Définition
-
+    cleanInfinitePoints();
+    int newVertexID = getVertexID(v);
     // Création des deux nouvelles faces
 
     // Face 1
     Face newFace1;
     if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][1]]) > 0)
     {
-        newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][1]);
+        newFace1 = Face(newVertexID, faceTab[faceIndex][0], faceTab[faceIndex][1]);
         newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceIndex, faceTab.size() + 1);
     }
     else
     {
-        newFace1 = Face(vertexTab.size() - 1, faceTab[faceIndex][1], faceTab[faceIndex][0]);
+        newFace1 = Face(newVertexID, faceTab[faceIndex][1], faceTab[faceIndex][0]);
         newFace1.setNeibFace(faceTab[faceIndex].getNeibFace(2), faceTab.size() + 1, faceIndex);
     }
     faceTab.push_back(newFace1);
-    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
-    vertexTab[faceTab[faceIndex][1]].setFaceIndex(faceTab.size());
+    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size()-1);
+    vertexTab[faceTab[faceIndex][1]].setFaceIndex(faceTab.size()-1);
     // Fin Face 1
 
     // Face 2
     Face newFace2;
     if (orientation(v, vertexTab[faceTab[faceIndex][0]], vertexTab[faceTab[faceIndex][2]]) > 0)
     {
-        newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][0], faceTab[faceIndex][2]);
+        newFace2 = Face(newVertexID, faceTab[faceIndex][0], faceTab[faceIndex][2]);
         newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceIndex, faceTab.size() - 1);
     }
     else
     {
-        newFace2 = Face(vertexTab.size() - 1, faceTab[faceIndex][2], faceTab[faceIndex][0]);
+        newFace2 = Face(newVertexID, faceTab[faceIndex][2], faceTab[faceIndex][0]);
         newFace2.setNeibFace(faceTab[faceIndex].getNeibFace(1), faceTab.size() - 1, faceIndex);
     }
     faceTab.push_back(newFace2);
-    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size());
-    vertexTab[faceTab[faceIndex][2]].setFaceIndex(faceTab.size());
+    vertexTab[faceTab[faceIndex][0]].setFaceIndex(faceTab.size()-1);
+    vertexTab[faceTab[faceIndex][2]].setFaceIndex(faceTab.size()-1);
     // Fin Face 2
     // Fin création des deux nouvelles faces
 
     // Mise à jour de l'ancienne face
     //Face oldFace = faceTab[faceIndex];
-    faceTab[faceIndex][0] = vertexTab.size() - 1;
+    faceTab[faceIndex][0] = newVertexID;
     faceTab[faceIndex].setNeibFace(faceTab[faceIndex].getNeibFace(0), faceTab.size() - 1, faceTab.size() - 2);
     // Fin mise à jour de l'ancienne face
 
@@ -141,91 +142,128 @@ void Mesh::naiveInsertion(Point newV){
     if(isInMesh){
         triangleSplit(indexFace, newV);
     } else {
-        // Chercher le vertex sur le bord de l'enveloppe du maillage le plus proche
-            //1) Chercher le point infinis
-       int indexInfinitePoint=-1;
-       for(int i=0; i<vertexTab.size();++i){
-           if (vertexTab[i]==infiniteP){
-            indexInfinitePoint = i;
-           }
-       }
-       if(indexInfinitePoint==-1){
-            exit(-1);
-        }
-        else
-        {
+//        // Chercher le vertex sur le bord de l'enveloppe du maillage le plus proche
+//            //1) Chercher le point infinis
+//       int indexInfinitePoint=-1;
+//       for(int i=0; i<vertexTab.size();++i){
+//           if (vertexTab[i]==infiniteP){
+//            indexInfinitePoint = i;
+//           }
+//       }
+//       if(indexInfinitePoint==-1){
+//            exit(-1);
+//        }
+//        else
+//        {
+           // Second method
+        // Add the new vertex
+        vertexTab.push_back(v);
+           QVector<Face> newFaces;
+           int newVertexID = vertexTab.size() - 2;
+           Circulator_on_faces cf;
+           Circulator_on_faces cfbegin = incident_f(*Iterator_on_vertices(getVertexID(infiniteP), this));
+           cf = cfbegin;
+           printf("Infinite Vertex ID : %d\n", getVertexID(infiniteP));
+           // Get a list of all the triangles needed to be added
+           do{
+               std::cout << "Checking for one face" << std::endl;
+               // get the non infinite segment
+               std::pair<int, int> segment;
+               segment = (*cf).getSegment(getVertexID(infiniteP));
+               printf("Segment is (%d, %d)\n", segment.first, segment.second);
+               printf("InfiniteID is %d\n", getVertexID(infiniteP));
+               // If the new vertices is in front of the segment
+               if(isTrigo(getVertex(segment.first), getVertex(segment.second), v))
+               {
+                   printf("Added a face\n");
+                   fflush(stdout);
+                    // Create the new Face and push it back
+                   newFaces.push_back(Face(segment.first, segment.second, newVertexID));
+               }
+               cf++;
+           }while(cf != cfbegin);
             //2) Creer circulateur sur le point infinis
                 //2.1) Pour toutes les faces, calculer la distance vers le nouveau point (saut pour le point infinis
-            Circulator_on_faces cf;
-            Circulator_on_faces cfbegin = incident_f(*Iterator_on_vertices(indexInfinitePoint, this));
-            int bestFaceIndex = 0;
-            double minDeltaDistance = INT_MAX;
-            double d1, d2;
-            cf = cfbegin;
-            do{
-                std::cout << "Checking for one face" << std::endl;
-                d1=0;
-                d2=0;
-                for(int i=0;i<3;++i){
-                    if(vertexTab[(*cf).getVertex(i)]!=infiniteP){
-                        if(d1==0.){
-                            d1 = norm(newV - vertexTab[(*cf).getVertex(i)]);
-                        } else if(d2==0.){
-                            d2 = norm(newV - vertexTab[(*cf).getVertex(i)]);
-                        }
-                    }
-                }
-                //2.2) Garder la face formant le triangle plus plus isocèle possible
-                if(abs(d1)+abs(d2)<minDeltaDistance){
-                    minDeltaDistance = abs(d1)+abs(d2);
-                    bestFaceIndex = getFaceIndex((*cf).getVertexes());
-                }
-                cf++;
-            }while(cf != cfbegin);
+//            Circulator_on_faces cf;
+//            Circulator_on_faces cfbegin = incident_f(*Iterator_on_vertices(indexInfinitePoint, this));
+//            int bestFaceIndex = 0;
+//            double minDeltaDistance = INT_MAX;
+//            double d1, d2;
+//            cf = cfbegin;
+//            do{
+//                std::cout << "Checking for one face" << std::endl;
+//                d1=0;
+//                d2=0;
+//                for(int i=0;i<3;++i){
+//                    if(vertexTab[(*cf).getVertex(i)]!=infiniteP){
+//                        if(d1==0.){
+//                            d1 = norm(newV - vertexTab[(*cf).getVertex(i)]);
+//                        } else if(d2==0.){
+//                            d2 = norm(newV - vertexTab[(*cf).getVertex(i)]);
+//                        }
+//                    }
+//                }
+//                //2.2) Garder la face formant le triangle plus plus isocèle possible
+//                if(abs(d1)+abs(d2)<minDeltaDistance){
+//                    minDeltaDistance = abs(d1)+abs(d2);
+//                    bestFaceIndex = getFaceIndex((*cf).getVertexes());
+//                }
+//                cf++;
+//            }while(cf != cfbegin);
 
         // Idée 1 pour rajouter le nouveau triangle dans le maillage
         // Simplement ajouter le vertex et la face dans leur tableau
-        vertexTab.push_back(v);
+//        vertexTab.push_back(v);
 
-        // Création de la nouvelle face
-            // Selection des deux bon vertex (pas le point infinis)
-        std::pair<int, int> goodVertex(0,0);
-        for(int i=0;i<3;++i){
-            if(vertexTab[(*cf).getVertex(i)]!=infiniteP){
-                if(goodVertex.first==0){
-                    goodVertex.first=i;
-                } else if(goodVertex.second==0){
-                    goodVertex.second=i;
-                }
-            }
-        }
+//        // Création de la nouvelle face
+//            // Selection des deux bon vertex (pas le point infinis)
+//        std::pair<int, int> goodVertex(0,0);
+//        for(int i=0;i<3;++i){
+//            if(vertexTab[(*cf).getVertex(i)]!=infiniteP){
+//                if(goodVertex.first==0){
+//                    goodVertex.first=i;
+//                } else if(goodVertex.second==0){
+//                    goodVertex.second=i;
+//                }
+//            }
+//        }
         
-        Face newFace;
+//        Face newFace;
 
-        if (orientation(v, vertexTab[faceTab[bestFaceIndex][goodVertex.first]], vertexTab[faceTab[bestFaceIndex][goodVertex.second]]) > 0)
-        {
-            newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex][goodVertex.second]);
-        }
-        else
-        {
-            newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.second], faceTab[bestFaceIndex][goodVertex.first]);
-        }
+//        if (orientation(v, vertexTab[faceTab[bestFaceIndex][goodVertex.first]], vertexTab[faceTab[bestFaceIndex][goodVertex.second]]) > 0)
+//        {
+//            newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.first], faceTab[bestFaceIndex][goodVertex.second]);
+//        }
+//        else
+//        {
+//            newFace = Face(vertexTab.size() - 2, faceTab[bestFaceIndex][goodVertex.second], faceTab[bestFaceIndex][goodVertex.first]);
+//        }
         
+//        cleanInfinitePoints();
+//        faceTab.push_back(newFace);
+//        vertexTab[vertexTab.size()-1].setFaceIndex(faceTab.size()-1);
+//        int indexNewFace = faceTab.size()-1;
+//        // Fin Nouvelle Face
+//        // Mettre à jour voisin
+//        std::cout << "Just before defining Neibghours " << std::endl;
+//        defineNeighbourFaces();
+
+//        convexize(faceTab[indexNewFace].getVertex(2), faceTab[indexNewFace].getNeibFace(1));
+//        convexize(faceTab[indexNewFace].getVertex(1), faceTab[indexNewFace].getNeibFace(2));
+        
+//        defineNeighbourFaces();
+//       }
         cleanInfinitePoints();
-        faceTab.push_back(newFace);
-        vertexTab[vertexTab.size()-1].setFaceIndex(faceTab.size()-1);
-        int indexNewFace = faceTab.size()-1;
-        // Fin Nouvelle Face
-        // Mettre à jour voisin
-        std::cout << "Just before defining Neibghours " << std::endl;
+        for(int i = 0; i < newFaces.size(); i++)
+        {
+            faceTab.push_back(newFaces[i]);
+        }
+        // Set the incident face to one of the faces added
+        getVertex(getVertexID(v)).setFaceIndex(faceTab.size()-1);
         defineNeighbourFaces();
-
-        convexize(faceTab[indexNewFace].getVertex(2), faceTab[indexNewFace].getNeibFace(1));
-        convexize(faceTab[indexNewFace].getVertex(1), faceTab[indexNewFace].getNeibFace(2));
-        
-        defineNeighbourFaces();
-       }
     }
+
+    updateDebugObj();
     std::cout<<"Fin Insertion Naive"<<std::endl;
 }
 
@@ -236,12 +274,13 @@ void Mesh::delaunize()
     for (int i = 0 ; i < faceTab.size() ; i++)
     {
         //  Check if not deDelaunay
-        if(!isLocallyOfDelaunay(i,false,badFaceID) && !isInfinite(i) && !isInfinite(badFaceID))
+        if(!isLocallyOfDelaunay(i,false,badFaceID) && !isFaceInfinite(i) && !isFaceInfinite(badFaceID))
         {
             // Flip with bad face
             std::cout << "Flipping the faces ("<< i <<","<< badFaceID<<")" << std::endl;
             flip(i,badFaceID);
             i--;
+//            return;
         }
     }
 }
@@ -265,7 +304,7 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
     Circulator_on_faces cf = cfbegin;
 
     do{
-        if(isInfinite(getFaceIndex((*cf).getVertexes()))
+        if(isFaceInfinite(getFaceIndex((*cf).getVertexes()))
                 && getFaceIndex((*cf).getVertexes()) != infiniteTriangle)
         {
             double ori1 = orientation(Vertex(infiniteP), getVertex(axisVertex),
@@ -276,7 +315,8 @@ void Mesh::convexize(int axisVertex, int infiniteTriangle)
                     || (ori1<0 && ori2>0)){
                 flip(infiniteTriangle, getFaceIndex((*cf).getVertexes()));
                 convexize((*cf).getVertex((*cf).getDifferentVertex(getFace(infiniteTriangle))), getFaceIndex((*cf).getVertexes()));
-            };
+                break;
+            }
         }
         cf++;
     } while (cfbegin != cf);
@@ -376,22 +416,27 @@ void Mesh::crust2D(){
     
     printf("Crust2D computing...");
     computeVoronoi();
-    QVector<Vertex> cells = getVoronoiVertices();
     crustCurve = QVector<Vertex>();
     // Inserer tout les centres de voronoi
+    QVector<Vertex> cells = getVoronoiVertices();
     for(int i = 0; i < cells.size(); i++)
     {
-        // naiveInsertion(cells[i].getPoint());
-        delaunayInsert(cells[i]); 
-        vertexTab[vertexTab.size()-1].setFlag(true);
+        //naiveInsertion(cells[i].getPoint());
+        delaunayInsert(cells[i]);
+        vertexTab[getVertexID(cells[i])].setFlag(true);
     }
     // Pour tout les faces, prendre les aretes qui n'ont pas un vertex marqué
     for(int i = 0; i < faceTab.size(); i++)
     {
-        for( int v = 0; v < 3;v++)
-        {
-            if(!vertexTab[(faceTab[i].getVertex(v))].getFlag())
-                crustCurve.push_back(vertexTab[faceTab[i].getVertex(v)]);
+        if(!isFaceInfinite(i)){
+            for( int v = 0; v < 3;v++)
+            {
+                if(!vertexTab[(faceTab[i].getVertex(v))].getFlag() && !vertexTab[(faceTab[i].getVertex((v+1)%3))].getFlag())
+                 {
+                    crustCurve.push_back(vertexTab[faceTab[i].getVertex(v)]);
+                    crustCurve.push_back(vertexTab[faceTab[i].getVertex((v+1) %3)]);
+                }
+            }
         }
     }
 

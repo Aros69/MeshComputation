@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>803</width>
-    <height>563</height>
+    <width>1040</width>
+    <height>636</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
       <x>150</x>
       <y>10</y>
       <width>601</width>
-      <height>361</height>
+      <height>401</height>
      </rect>
     </property>
    </widget>
@@ -34,9 +34,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>520</y>
+      <y>570</y>
       <width>80</width>
-      <height>16</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -49,7 +49,7 @@
       <x>10</x>
       <y>10</y>
       <width>120</width>
-      <height>81</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="title">
@@ -89,7 +89,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>120</y>
       <width>121</width>
       <height>20</height>
      </rect>
@@ -102,7 +102,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>310</y>
+      <y>330</y>
       <width>120</width>
       <height>91</height>
      </rect>
@@ -150,9 +150,9 @@
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>380</y>
-      <width>120</width>
+      <x>180</x>
+      <y>420</y>
+      <width>131</width>
       <height>121</height>
      </rect>
     </property>
@@ -164,12 +164,12 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>21</width>
+       <width>31</width>
        <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>0.5</string>
+      <string>2</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="yInsert">
@@ -177,12 +177,12 @@
       <rect>
        <x>50</x>
        <y>20</y>
-       <width>21</width>
+       <width>31</width>
        <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>0.5</string>
+      <string>2</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="zInsert">
@@ -190,7 +190,7 @@
       <rect>
        <x>90</x>
        <y>20</y>
-       <width>21</width>
+       <width>31</width>
        <height>20</height>
       </rect>
      </property>
@@ -203,7 +203,7 @@
       <rect>
        <x>10</x>
        <y>40</y>
-       <width>16</width>
+       <width>31</width>
        <height>16</height>
       </rect>
      </property>
@@ -216,7 +216,7 @@
       <rect>
        <x>50</x>
        <y>40</y>
-       <width>16</width>
+       <width>31</width>
        <height>16</height>
       </rect>
      </property>
@@ -229,7 +229,7 @@
       <rect>
        <x>90</x>
        <y>40</y>
-       <width>16</width>
+       <width>31</width>
        <height>16</height>
       </rect>
      </property>
@@ -240,9 +240,9 @@
     <widget class="QPushButton" name="naiveInsert">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>60</y>
-       <width>80</width>
+       <width>111</width>
        <height>21</height>
       </rect>
      </property>
@@ -253,9 +253,9 @@
     <widget class="QPushButton" name="delaunayInsert">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>90</y>
-       <width>80</width>
+       <width>111</width>
        <height>21</height>
       </rect>
      </property>
@@ -267,8 +267,8 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>380</y>
+      <x>320</x>
+      <y>420</y>
       <width>211</width>
       <height>121</height>
      </rect>
@@ -301,9 +301,9 @@
      <widget class="QPushButton" name="computeVoronoi">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>40</x>
         <y>50</y>
-        <width>91</width>
+        <width>121</width>
         <height>31</height>
        </rect>
       </property>
@@ -330,7 +330,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>130</y>
+      <y>150</y>
       <width>120</width>
       <height>171</height>
      </rect>
@@ -358,7 +358,7 @@ Highlight</string>
        <x>10</x>
        <y>110</y>
        <width>101</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -410,7 +410,7 @@ Highlights</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>410</y>
+      <y>430</y>
       <width>120</width>
       <height>101</height>
      </rect>
@@ -470,7 +470,7 @@ Highlights</string>
        <x>20</x>
        <y>60</y>
        <width>80</width>
-       <height>16</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
@@ -481,9 +481,9 @@ Highlights</string>
    <widget class="QTabWidget" name="tabWidget_2">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>380</y>
-      <width>151</width>
+      <x>540</x>
+      <y>420</y>
+      <width>171</width>
       <height>121</height>
      </rect>
     </property>
@@ -530,9 +530,9 @@ Highlights</string>
      <widget class="QPushButton" name="mergeVertices">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>19</x>
         <y>40</y>
-        <width>80</width>
+        <width>111</width>
         <height>21</height>
        </rect>
       </property>
@@ -556,9 +556,9 @@ Highlights</string>
      <widget class="QPushButton" name="simplifyMesh">
       <property name="geometry">
        <rect>
-        <x>30</x>
+        <x>19</x>
         <y>70</y>
-        <width>80</width>
+        <width>111</width>
         <height>21</height>
        </rect>
       </property>
@@ -575,7 +575,7 @@ Highlights</string>
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>20</y>
+        <y>50</y>
         <width>80</width>
         <height>31</height>
        </rect>
@@ -584,6 +584,97 @@ Highlights</string>
        <string>Crust2D</string>
       </property>
      </widget>
+     <widget class="QCheckBox" name="CrustCurve">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>131</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Show crust curve</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_6">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>10</y>
+      <width>271</width>
+      <height>151</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Stats</string>
+    </property>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Vertex count :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>101</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Face count :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="vertexCount">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>30</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="faceCount">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>60</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="refresh">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>100</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>refresh</string>
+     </property>
     </widget>
    </widget>
   </widget>
