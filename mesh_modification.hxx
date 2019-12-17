@@ -348,7 +348,10 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
         }
         ++ite;
     }while(ite!=f_pend() && !facesFound);
-    if(faceId1==-1||faceId2==-1){exit(-1);}
+    if(faceId1==-1||faceId2==-1){return;}
+
+    printf("On fusionne les vertex n°%d et n°%d donc on supprime les face n°%d et n°%d\n", vertexId1, vertexId2, faceId1, faceId2);
+    fflush(stdout);
 
     // Modification des faces incidentes
     for(int i=0;i<3;++i){
@@ -405,16 +408,19 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
     //printf("Face impact : %d, %d, %d, %d\n", vertex1Face1OppositeFace, vertex2Face1OppositeFace, vertex1Face2OppositeFace, vertex2Face2OppositeFace);
     //printf("Vertex impacte : %d, %d, %d, %d\n", vertex1Face1OppositeVertexGlobal, vertex2Face1OppositeVertexGlobal, vertex1Face2OppositeVertexGlobal, vertex2Face2OppositeVertexGlobal);
     //fflush(stdout);
+
+    eraseVertex(vertexId2);
+    eraseFace(faceId1);
+    if(faceId1<faceId2){eraseFace(faceId2-1);}
+    else {eraseFace(faceId2);}
 }
 
-void Mesh::simplify(int nbOfVerticesWanted)
+void Mesh::simplify(int nbIterations)
 {
     std::cout << "Simplifying the mesh" << std::endl;
     int vertexId1, vertexId2, faceId1, faceId2;
-    // TODO remove the varibale bellow and the second bellow it
-    int tempAgainstWarning = nbOfVerticesWanted+1;
-    tempAgainstWarning++;
-    //while(vertexTab.size()>nbOfVerticesWanted){
+    for(int j = nbIterations; j > 0; --j){
+        std::cout<<j<<std::endl;
         // iterate on all faces
         SegmentMapSimplify segmentMap;
         for(auto face : faceTab){
@@ -468,9 +474,9 @@ void Mesh::simplify(int nbOfVerticesWanted)
             }    
             i++;
         }
-        //segmentMap.print();
+        segmentMap.print();
         mergeVertices(vertexId1, vertexId2);
-    //}
+    }
     std::cout<<"End of simplify"<<std::endl;
 }
 

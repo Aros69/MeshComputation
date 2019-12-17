@@ -20,7 +20,6 @@ void glVertexDraw(const Vertex &p)
 
 void Mesh::drawMesh()
 {
-    //glDrawArrays(GL_TRIANGLES, 0, vertexTab.size());
     int moduloI;
     double t1, t2, t3;
     for (int i = 0; i < faceTab.size(); i++)
@@ -170,3 +169,54 @@ int Mesh::getVertexID(const Vertex &m)
 }
 int Mesh::getVertexCount(){return vertexTab.size();}
 int Mesh::getFaceCount(){return faceTab.size();}
+
+int Mesh::oppositeVertexGlobal(int localVertexId, int faceId){
+    int opppositeFace = faceTab[faceId].getNeibFace(localVertexId);
+    for(int i=0;i<3;++i){
+        if(faceTab[opppositeFace].getNeibFace(i)==faceId){return faceTab[opppositeFace].getVertex(i);}
+    }
+    return -1;
+}
+
+int Mesh::oppositeVertexLocal(int localVertexId, int faceId){
+    int opppositeFace = faceTab[faceId].getNeibFace(localVertexId);
+    for(int i=0;i<3;++i){
+        if(faceTab[opppositeFace].getNeibFace(i)==faceId){return i;}
+    }
+    return -1;
+}
+
+void Mesh::eraseVertex(int vertexId){
+    vertexTab.remove(vertexId);
+    vertexDebugTab.remove(vertexId);
+    for (int j=0;j<faceTab.size();++j) {
+        for(int i=0;i<3;++i){
+            if(faceTab[j].getVertex(i)>=vertexId){
+                faceTab[j].setVertex(i, faceTab[j].getVertex(i)-1);
+            } else if(faceTab[j].getVertex(i)==vertexId){
+                fprintf(stderr, "Il y a encore des liens vers le vertex que l'on veut supprimer... Bonne chance\n");
+            }
+        }
+    }
+}
+void Mesh::eraseFace(int faceId){
+    faceTab.remove(faceId);
+    faceDebugTab.remove(faceId);
+    for (int i=0;i<faceTab.size();++i) {
+        for(int i=0;i<3;++i){
+            if(faceTab[i].getNeibFace(i)>faceId){
+                faceTab[i].setNeibFace(faceTab[i].getVertex(i)-1, i);
+            } else if(faceTab[i].getVertex(i)==faceId){
+                fprintf(stderr, "Il y a encore des liens face à face vers la face que l'on veut supprimer... Bonne chance\n");
+            }
+
+        }
+    }
+    for(int i=0;i<vertexTab.size();++i){
+        if(vertexTab[i].getFaceIndex()>faceId){
+            vertexTab[i].setFaceIndex(vertexTab[i].getFaceIndex()-1);
+        } else if(vertexTab[i].getFaceIndex()==faceId){
+            fprintf(stderr, "Il y a encore des liens vertex a face vers la face que l'on veut supprimer... Bonne chance\n");
+        }
+    }
+}

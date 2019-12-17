@@ -250,20 +250,33 @@ public:
     // Edge Collapse
     void edgeCollapse(int indexFace, int relativeOppositeIndex);
 
-    int oppositeVertexGlobal(int localVertexId, int faceId){
-        int opppositeFace = faceTab[faceId].getNeibFace(localVertexId);
-        for(int i=0;i<3;++i){
-            if(faceTab[opppositeFace].getNeibFace(i)==faceId){return faceTab[opppositeFace].getVertex(i);}
-        }
-        return -1;
-    }
-    int oppositeVertexLocal(int localVertexId, int faceId){
-        int opppositeFace = faceTab[faceId].getNeibFace(localVertexId);
-        for(int i=0;i<3;++i){
-            if(faceTab[opppositeFace].getNeibFace(i)==faceId){return i;}
-        }
-        return -1;
-    }
+    /**
+     * @brief oppositeVertexGlobal return the global index of the vertex wich is facing localVertexId based ond the faceId
+     * @param localVertexId the index of the vertex we want the opposite unsing the face refered by faceId
+     * @param faceId the index of the face we use as referenced
+     * @return the global id of the vertex searched
+     */
+    int oppositeVertexGlobal(int localVertexId, int faceId);
+    /**
+     * @brief oppositeVertexLocal return the local index of the vertex wich is facing localVertexId based ond the faceId
+     * @param localVertexId the index of the vertex we want the opposite unsing the face refered by faceId
+     * @param faceId the index of the face we use as referenced
+     * @return the local id of the vertex searched (it's usefull to also have the face by using "getNeibFace" on the faceId ans the localVertexId)
+     */
+    int oppositeVertexLocal(int localVertexId, int faceId);
+
+    /**
+     * @brief eraseVertex modify the mesh to delete the vertex refered by vertexId (we supposed that links beetween face concerned by this delete are already done)
+     * so it simply decrement index impacted by the supression and print an error if links are stil on these vertex
+     * @param vertexId the index of the vertex we want to erase
+     */
+    void eraseVertex(int vertexId);
+    /**
+     * @brief eraseFace modify the mesh to delete the face refered by vertexId (we supposed that links beetween face concerned by this delete are already done)
+     * so it simply decrement index impacted by the supression and print an error if links are still on these face
+     * @param faceId the index of the face we want to erase
+     */
+    void eraseFace(int faceId);
 
     //Debugging Methods ===================================================================
     /**
