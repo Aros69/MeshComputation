@@ -89,26 +89,30 @@ void Mesh::drawMesh()
         {
             //  Draw a cell
             //  std::cout << "Voronoi Cell drawing" << std::endl;
-            glColor3d(1, 1, 1);
+            glColor3d(1, 0, 1);
+            glLineWidth(3);
             glBegin(GL_LINES);
 
             for (int j = 0; j < voronoiCells[i].size() - 1; j++)
             {
                 // printf("Drawing voronoi vertice [%f][%f][%f]\n",voronoiCells[i][j].x(),voronoiCells[i][j].y(),voronoiCells[i][j].z());
-                glVertexDraw(voronoiCells[i][j] + Vector(0, 0, 0.1));
-                glVertexDraw(voronoiCells[i][j + 1] + Vector(0, 0, 0.1));
+                glVertexDraw(voronoiCells[i][j] + Vector(0, 0, 0.4));
+                glVertexDraw(voronoiCells[i][j + 1] + Vector(0, 0, 0.4));
             }
             glEnd();
         }
     }
     // Drawing crustCurve
-    for (int i = 0; i < crustCurve.size()-1; i++)
-    {
-        glColor3d(1, 1, 1);
-        glBegin(GL_LINES);
-        glVertexDraw(crustCurve[i] + Vector(0, 0, 0.2));
-        glVertexDraw(crustCurve[i+1] + Vector(0, 0, 0.2));
-        glEnd();
+    if(drawCrust){
+        for (int i = 0; i < crustCurve.size()-1; i = i+2)
+        {
+            glColor3d(1, 1, 1);
+            glLineWidth(1);
+            glBegin(GL_LINES);
+            glVertexDraw(crustCurve[i] + Vector(0, 0, 0.9));
+            glVertexDraw(crustCurve[i+1] + Vector(0, 0, 0.9));
+            glEnd();
+        }
     }
 
 }
@@ -162,3 +166,5 @@ int Mesh::getVertexID(const Vertex &m)
     std::cout << "Invalid ID";
     return -1;
 }
+int Mesh::getVertexCount(){return vertexTab.size();}
+int Mesh::getFaceCount(){return faceTab.size();}

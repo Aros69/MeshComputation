@@ -150,3 +150,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_refresh_clicked()
+{
+    ui->vertexCount->setText(QString::number(ui->widget->getVertexCount()));
+    ui->faceCount->setText(QString::number(ui->widget->getFaceCount()));
+}
+
+void MainWindow::on_CrustCurve_toggled(bool checked)
+{
+    ui->widget->showCrust(checked);
+}

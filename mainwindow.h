@@ -35,6 +35,9 @@ public slots:
     void mergeVertices();
     void crust2D();
     void simplify();
+private slots:
+    void on_refresh_clicked();
+    void on_CrustCurve_toggled(bool checked);
 };
 
 #endif // MAINWINDOW_H

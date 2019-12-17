@@ -344,7 +344,7 @@ void GLDisplayWidget::delaunayInsert(double x, double y, double z)
 }
 void GLDisplayWidget::merge(int vertexId1, int vertexId2)
 {
-    _mesh.edgeCollapse(vertexId1, vertexId2);
+    _mesh.mergeVertices(vertexId1, vertexId2);
 }
 void GLDisplayWidget::simplify()
 {
@@ -353,4 +353,16 @@ void GLDisplayWidget::simplify()
 void GLDisplayWidget::crust2D()
 {
     _mesh.crust2D();
+}
+void GLDisplayWidget::showCrust(bool show)
+{
+    _mesh.toggleCrust(show);
+}
+int  GLDisplayWidget::getVertexCount()
+{
+    _mesh.getVertexCount();
+}
+int  GLDisplayWidget::getFaceCount()
+{
+    _mesh.getFaceCount();
 }

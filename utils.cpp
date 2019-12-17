@@ -52,6 +52,15 @@ int Face::global2localIndexF(int globalIndex){
     return -1;
 }
 
+std::pair<int, int> Face::getSegment(int nonIncludedVertex)
+{
+    for(int i = 0; i < 3; i++)
+    {
+        if(verticesIndex[i] != nonIncludedVertex && verticesIndex[(i+1) %3] != nonIncludedVertex)
+            return std::pair<int, int>(verticesIndex[i], verticesIndex[(i+1) %3]);
+    }
+}
+
 void Face::print(int ID){
     std::cout << "Face ["<< ID <<"] : \n";
     std::cout << "Vertices Index :\n 1 :\t ["<< verticesIndex [0] <<"]\t 2 : ["<< verticesIndex[1]
@@ -143,6 +152,11 @@ double orientation(const Vertex& v1,const Vertex& v2,const Vertex& v3) {
   Vector vec2(v1,v3);
   Vector oz(0,0,1);
   return dot(cross(normalize(vec1),normalize(vec2)),oz);
+}
+
+bool isTrigo(const Vertex& v1,const Vertex& v2,const Vertex& v3)
+{
+    return orientation(v1, v2, v3) > 0;
 }
 
 double getArea(Vertex &vert1, Vertex &vert2, Vertex &vert3)
