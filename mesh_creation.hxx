@@ -17,6 +17,9 @@ void Mesh::meshWithFile(std::string filePath)
     voronoiCells.clear();
     crustCurve.clear();
     Laplacien.clear();
+    laplacianDone = false;
+    drawVoronoi = false;
+    drawCrust = false;
     std::ifstream file(filePath.c_str());
     if (!file.is_open())
     {

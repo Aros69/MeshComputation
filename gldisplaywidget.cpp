@@ -18,10 +18,10 @@ GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
 
 GLDisplayWidget::~GLDisplayWidget(){
     // TODO maybe disable shader program before destroy shader
-    delete vertexShader;
+    /*delete vertexShader;
     vertexShader = nullptr;
     delete fragmentShader;
-    fragmentShader = nullptr;
+    fragmentShader = nullptr;*/
 }
 
 void GLDisplayWidget::initThetrahedron()
@@ -173,10 +173,10 @@ void GLDisplayWidget::initializeGL()
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
 
-    vertexShader = new QOpenGLShader(QOpenGLShader::Vertex);
-    fragmentShader = new QOpenGLShader(QOpenGLShader::Fragment);
+    //vertexShader = new QOpenGLShader(QOpenGLShader::Vertex);
+    //fragmentShader = new QOpenGLShader(QOpenGLShader::Fragment);
 
-    if( vertexShader->compileSourceFile("../meshcomputation/data/shaders/vertex_shader.glsl")
+    /*if( vertexShader->compileSourceFile("../meshcomputation/data/shaders/vertex_shader.glsl")
         && fragmentShader->compileSourceFile("../meshcomputation/data/shaders/mesh_color.glsl")){
         //std::cout<<"Youpi le shader compile\n";
         //program.addShader(vertexShader);
@@ -188,7 +188,7 @@ void GLDisplayWidget::initializeGL()
         //std::cout<<"Nope pas de shader\n";
         std::cout<<vertexShader->log().toStdString()<<std::endl;
         std::cout<<fragmentShader->log().toStdString()<<std::endl;
-    }
+    }*/
 
 
     // Construction of the mesh before it is displayed

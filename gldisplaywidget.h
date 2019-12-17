@@ -58,9 +58,13 @@ private:
     int displayMode = 0; // 0 : Plain Mode 1 : WireFrame
     std::string meshFile = "flat02.off"; // File used for save and load mesh
 
-    QOpenGLShaderProgram program;
+    /*QOpenGLShaderProgram program;
     QOpenGLShader *fragmentShader;
-    QOpenGLShader *vertexShader;
+    QOpenGLShader *vertexShader;*/
+    // Used for shaderDrawing (win performance)
+    GLuint                    shaderProgram;
+    GLuint                    vertexShader;
+    GLuint                    fragmentShader;
 
     Circulator_on_faces debugCf;
     int axis;

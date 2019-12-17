@@ -250,6 +250,21 @@ public:
     // Edge Collapse
     void edgeCollapse(int indexFace, int relativeOppositeIndex);
 
+    int oppositeVertexGlobal(int localVertexId, int faceId){
+        int opppositeFace = faceTab[faceId].getNeibFace(localVertexId);
+        for(int i=0;i<3;++i){
+            if(faceTab[opppositeFace].getNeibFace(i)==faceId){return faceTab[opppositeFace].getVertex(i);}
+        }
+        return -1;
+    }
+    int oppositeVertexLocal(int localVertexId, int faceId){
+        int opppositeFace = faceTab[faceId].getNeibFace(localVertexId);
+        for(int i=0;i<3;++i){
+            if(faceTab[opppositeFace].getNeibFace(i)==faceId){return i;}
+        }
+        return -1;
+    }
+
     //Debugging Methods ===================================================================
     /**
      * Update the debug objects that are used to highlight specific faces / vertices

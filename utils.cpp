@@ -34,7 +34,7 @@ int Face::global2localIndex(int globalIndex)
         }
     }
     std::cout << "vertex not part of this triangle\n";
-    std::cout << "indexes are ["<< verticesIndex [0] <<"] ["<< verticesIndex[1] <<"] and ["<< verticesIndex[2]<<"\n";
+    std::cout << "indexes are ["<< verticesIndex [0] <<"] ["<< verticesIndex[1] <<"] and ["<< verticesIndex[2]<<"]\n";
     std::cout << " Provided was " << globalIndex << "\n";
     return -1;
 }
