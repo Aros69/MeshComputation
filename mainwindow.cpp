@@ -142,7 +142,11 @@ void MainWindow::crust2D()
 
 void MainWindow::simplify()
 {
-    ui->widget->simplify();
+    if(ui->simplificationIterationsNumber->text().size() != 0)
+    {
+        float k = ui->simplificationIterationsNumber->text().toFloat();
+        ui->widget->simplify(k);
+    }
 }
 
 MainWindow::~MainWindow()
