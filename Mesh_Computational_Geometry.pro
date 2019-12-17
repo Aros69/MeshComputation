@@ -42,6 +42,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 #---- Comment the following line on MacOS
-LIBS = -lGLU
+LIBS = -lOpengl32 -lglu32
 CONFIG += c++11
 
