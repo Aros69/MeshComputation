@@ -348,8 +348,9 @@ void GLDisplayWidget::merge(int vertexId1, int vertexId2)
 {
     _mesh.mergeVertices(vertexId1, vertexId2);
 }
-void GLDisplayWidget::simplify()
+void GLDisplayWidget::simplify(int k)
 {
+    // k = Iterations number
     _mesh.simplify(100);
 }
 void GLDisplayWidget::crust2D()

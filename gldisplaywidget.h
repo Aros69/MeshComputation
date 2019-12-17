@@ -32,7 +32,7 @@ public:
     void delaunize();
     void delaunayInsert(double x, double y, double z);
     void merge(int vertexId1, int vertexId2);
-    void simplify();
+    void simplify(int k);
     void crust2D();
     void showCrust(bool show);
     int  getVertexCount();
