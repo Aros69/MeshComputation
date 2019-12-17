@@ -36,7 +36,7 @@ void MainWindow::onPlain(){
 
 void MainWindow::flip()
 {
-    if(ui->facetoFlip1->text() != 0 && ui->facetoFlip2->text() != 0)
+    if(ui->facetoFlip1->text() != nullptr && ui->facetoFlip2->text() != nullptr)
     {
         int faceIndex1 = std::stoi(ui->facetoFlip1->text().toLocal8Bit().constData());
         int faceIndex2 = std::stoi(ui->facetoFlip2->text().toLocal8Bit().constData());
@@ -52,7 +52,7 @@ void MainWindow::randomFlip(){
 
 void MainWindow::highLightFace()
 {
-    if(ui->faceHLID->text() != 0)
+    if(ui->faceHLID->text() != nullptr)
     {
         int faceIndex = std::stoi(ui->faceHLID->text().toLocal8Bit().constData());
         std::cout << "Highlighting face : "<< faceIndex<< std::endl;
@@ -71,7 +71,7 @@ void MainWindow::unmarkAll(){
 }
 
 void MainWindow::circulate(){
-    if(ui->axisIndex->text() != 0)
+    if(ui->axisIndex->text() != nullptr)
     {
         int axis = std::stoi(ui->axisIndex->text().toLocal8Bit().constData());
         std::cout << "Circulating around : "<< axis << std::endl;
@@ -85,9 +85,9 @@ void MainWindow::naiveInsert(){
         /*float x = std::stof(ui->xInsert->text().toLocal8Bit().constData());
         float y = std::stof(ui->yInsert->text().toLocal8Bit().constData());
         float z = std::stof(ui->zInsert->text().toLocal8Bit().constData());*/
-        float x = ui->xInsert->text().toFloat();
-        float y = ui->yInsert->text().toFloat();
-        float z = ui->zInsert->text().toFloat();
+        double x = ui->xInsert->text().toDouble();
+        double y = ui->yInsert->text().toDouble();
+        double z = ui->zInsert->text().toDouble();
         // TODO Changer la conversion pour vraiment obtenir des flottants
         std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
         ui->widget->naiveInsert(x,y,z);
@@ -116,9 +116,9 @@ void MainWindow::delaunayInsert(){
         /*float x = std::stof(ui->xInsert->text().toLocal8Bit().constData());
         float y = std::stof(ui->yInsert->text().toLocal8Bit().constData());
         float z = std::stof(ui->zInsert->text().toLocal8Bit().constData());*/
-        float x = ui->xInsert->text().toFloat();
-        float y = ui->yInsert->text().toFloat();
-        float z = ui->zInsert->text().toFloat();
+        double x = ui->xInsert->text().toDouble();
+        double y = ui->yInsert->text().toDouble();
+        double z = ui->zInsert->text().toDouble();
         // TODO Changer la conversion pour vraiment obtenir des flottants
         std::cout << "Inserting vertex V("<< x <<","<< y <<","<< z <<") "<< std::endl;
         ui->widget->delaunayInsert(x,y,z);
@@ -127,10 +127,10 @@ void MainWindow::delaunayInsert(){
 
 void MainWindow::mergeVertices()
 {
-    if(ui->fusionFaceID->text() != 0 && ui->fusionVertexID->text() != 0)
+    if(ui->fusionFaceID->text() != nullptr && ui->fusionVertexID->text() != nullptr)
     {
-        float f = ui->fusionFaceID->text().toFloat();
-        float v = ui->fusionVertexID->text().toFloat();
+        int f = ui->fusionFaceID->text().toInt();
+        int v = ui->fusionVertexID->text().toInt();
         ui->widget->merge(f, v);
     }
 }

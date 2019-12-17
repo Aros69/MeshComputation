@@ -6,7 +6,9 @@
 #include "mesh_modification.hxx"
 #include "mesh_debug.hxx"
 
-Mesh::Mesh() { srand(time(NULL)); }
+Mesh::Mesh() {
+    srand(time(NULL));
+}
 
 Mesh::~Mesh() {}
 // The following functions could be displaced into a module OpenGLDisplayMesh that would include Mesh
@@ -18,6 +20,7 @@ void glVertexDraw(const Vertex &p)
 
 void Mesh::drawMesh()
 {
+    //glDrawArrays(GL_TRIANGLES, 0, vertexTab.size());
     int moduloI;
     double t1, t2, t3;
     for (int i = 0; i < faceTab.size(); i++)
@@ -114,7 +117,6 @@ void Mesh::drawMesh()
             glEnd();
         }
     }
-
 }
 
 void Mesh::drawMeshWireFrame()

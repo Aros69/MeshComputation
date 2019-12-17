@@ -18,8 +18,10 @@ GLDisplayWidget::GLDisplayWidget(QWidget *parent) : QGLWidget(parent)
 
 GLDisplayWidget::~GLDisplayWidget(){
     // TODO maybe disable shader program before destroy shader
-    delete shader;
-    shader = nullptr;
+    delete vertexShader;
+    vertexShader = nullptr;
+    delete fragmentShader;
+    fragmentShader = nullptr;
 }
 
 void GLDisplayWidget::initThetrahedron()
@@ -113,6 +115,28 @@ void GLDisplayWidget::init2DBBox()
     _mesh.defineNeighbourFaces();
 }
 
+void GLDisplayWidget::initQueenMesh()
+{
+    // If you are in qtCreator
+    _mesh.meshWithFile("../meshcomputation/data/queen.off");
+    // If you are at the root of the project
+    //_mesh.meshWithFile("data/queen.off");
+}
+
+void GLDisplayWidget::initCubeMesh()
+{
+    // If you are in qtCreator
+    _mesh.meshWithFile("../meshcomputation/data/cube.off");
+    // If you are at the root of the project
+    //_mesh.meshWithFile("data/cube.off");
+}
+void GLDisplayWidget::initFlatMesh()
+{
+    // If you are in qtCreator
+    _mesh.meshWithFile("../meshcomputation/data/flat02.off");
+    // If you are at the root of the project
+    //_mesh.meshWithFile("data/cube.off");
+}
 //Test the iterators on a mesh
 void testIterators(Mesh mesh){
   /*Mesh titi;
@@ -149,18 +173,21 @@ void GLDisplayWidget::initializeGL()
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
 
-    shader = new QOpenGLShader(QOpenGLShader::Fragment);
-    if(shader->compileSourceFile("../meshcomputation/data/shaders/mesh_color.glsl")){
+    vertexShader = new QOpenGLShader(QOpenGLShader::Vertex);
+    fragmentShader = new QOpenGLShader(QOpenGLShader::Fragment);
+
+    if( vertexShader->compileSourceFile("../meshcomputation/data/shaders/vertex_shader.glsl")
+        && fragmentShader->compileSourceFile("../meshcomputation/data/shaders/mesh_color.glsl")){
         //std::cout<<"Youpi le shader compile\n";
-        program.addShader(shader);
+        //program.addShader(vertexShader);
+        program.addShader(fragmentShader);
         program.link();
         //program.bind(); // Uncomment to use the shader
 
-        // init buffer et vao ?
-
     } else {
         //std::cout<<"Nope pas de shader\n";
-        qDebug(qUtf8Printable(shader->log()));
+        std::cout<<vertexShader->log().toStdString()<<std::endl;
+        std::cout<<fragmentShader->log().toStdString()<<std::endl;
     }
 
 
@@ -356,4 +383,12 @@ void GLDisplayWidget::setMeshFile(std::string file){
 void GLDisplayWidget::loadMesh(){
     std::string realFilePath = "../meshcomputation/data/"+meshFile;
     _mesh.meshWithFile(realFilePath);
+
+    QVector3D* positions = new QVector3D[_mesh.getVertexCount()];
+    for(int i=0;i<_mesh.getVertexCount();++i){
+        positions[0]=_mesh.getVertexQVector3D(i);
+    }
+    /*program.setAttributeBuffer("position", GL_FLOAT, 0,3, 0);
+    program.setAttributeArray("position", positions, 0);
+    program.enableAttributeArray("position");*/
 }

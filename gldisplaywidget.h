@@ -59,7 +59,8 @@ private:
     std::string meshFile = "flat02.off"; // File used for save and load mesh
 
     QOpenGLShaderProgram program;
-    QOpenGLShader *shader;
+    QOpenGLShader *fragmentShader;
+    QOpenGLShader *vertexShader;
 
     Circulator_on_faces debugCf;
     int axis;

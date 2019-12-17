@@ -10,6 +10,13 @@ void Mesh::setMesh(QVector<Vertex> vertices, QVector<Face> faces)
 void Mesh::meshWithFile(std::string filePath)
 {
     //std::cout<<"Begin of creating a mesh with .off file\n";
+    vertexTab.clear();
+    vertexDebugTab.clear();
+    faceTab.clear();
+    faceDebugTab.clear();
+    voronoiCells.clear();
+    crustCurve.clear();
+    Laplacien.clear();
     std::ifstream file(filePath.c_str());
     if (!file.is_open())
     {
