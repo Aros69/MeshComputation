@@ -366,34 +366,19 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
         }
     }
 
-    // Couture des faces impactee par le merge
-
+    // Sauvegarde de variables pour la couture
     int vertex1Face1OppositeFace = faceTab[faceId1].getNeibFace(faceTab[faceId1].global2localIndex(vertexId1));
     int vertex1Face1OppositeVertexLocal = oppositeVertexLocal(faceTab[faceId1].global2localIndex(vertexId1), faceId1);
     //int vertex1Face1OppositeVertexGlobal = oppositeVertexGlobal(faceTab[faceId1].global2localIndex(vertexId1), faceId1);
-
     int vertex2Face1OppositeFace = faceTab[faceId1].getNeibFace(faceTab[faceId1].global2localIndex(vertexId2));
     int vertex2Face1OppositeVertexLocal = oppositeVertexLocal(faceTab[faceId1].global2localIndex(vertexId2), faceId1);
     //int vertex2Face1OppositeVertexGlobal = oppositeVertexGlobal(faceTab[faceId1].global2localIndex(vertexId2), faceId1);
-
-    faceTab[vertex1Face1OppositeFace].setNeibFace(vertex2Face1OppositeFace, vertex1Face1OppositeVertexLocal);
-    faceTab[vertex2Face1OppositeFace].setNeibFace(vertex1Face1OppositeFace, vertex2Face1OppositeVertexLocal);
-
     int vertex1Face2OppositeFace = faceTab[faceId2].getNeibFace(faceTab[faceId2].global2localIndex(vertexId1));
     int vertex1Face2OppositeVertexLocal = oppositeVertexLocal(faceTab[faceId2].global2localIndex(vertexId1), faceId2);
     //int vertex1Face2OppositeVertexGlobal = oppositeVertexGlobal(faceTab[faceId2].global2localIndex(vertexId1), faceId2);
-
     int vertex2Face2OppositeFace = faceTab[faceId2].getNeibFace(faceTab[faceId2].global2localIndex(vertexId2));
     int vertex2Face2OppositeVertexLocal = oppositeVertexLocal(faceTab[faceId2].global2localIndex(vertexId2), faceId2);
     //int vertex2Face2OppositeVertexGlobal = oppositeVertexGlobal(faceTab[faceId2].global2localIndex(vertexId2), faceId2);
-
-    faceTab[vertex1Face2OppositeFace].setNeibFace(vertex2Face2OppositeFace, vertex1Face2OppositeVertexLocal);
-    faceTab[vertex2Face2OppositeFace].setNeibFace(vertex1Face2OppositeFace, vertex2Face2OppositeVertexLocal);
-
-    //printf("Face impact : %d, %d, %d, %d\n", vertex1Face1OppositeFace, vertex2Face1OppositeFace, vertex1Face2OppositeFace, vertex2Face2OppositeFace);
-    //printf("Vertex impacte : %d, %d, %d, %d\n", vertex1Face1OppositeVertexGlobal, vertex2Face1OppositeVertexGlobal, vertex1Face2OppositeVertexGlobal, vertex2Face2OppositeVertexGlobal);
-    //fflush(stdout);
-
 
     // Definiion du nouveau vertex au milieu
     vertexTab[vertexId1].set((vertexTab[vertexId1]+0.5*vertexTab[vertexId2]-0.5*vertexTab[vertexId1]).getPoint());
@@ -401,13 +386,25 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
 
 
     // Mise des triangles du Vertex 2 sur le Vertex 1
-    /*Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
+    Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
     do{
         int faceAvant = circulatorVertex2.getCurrentFaceIndex();
         int localIndexVertex2 = faceTab[circulatorVertex2.getCurrentFaceIndex()].global2localIndex(vertexId2);
         ++circulatorVertex2;
         faceTab[faceAvant].setVertex(localIndexVertex2, vertexId1);
-    } while(circulatorVertex2.getCurrentFaceIndex()!=faceId2);*/
+    } while(circulatorVertex2.getCurrentFaceIndex()!=faceId2);
+
+    // Couture des faces impactee par le merge
+    //Face 1
+    faceTab[vertex1Face1OppositeFace].setNeibFace(vertex2Face1OppositeFace, vertex1Face1OppositeVertexLocal);
+    faceTab[vertex2Face1OppositeFace].setNeibFace(vertex1Face1OppositeFace, vertex2Face1OppositeVertexLocal);
+    //Face 2
+    faceTab[vertex1Face2OppositeFace].setNeibFace(vertex2Face2OppositeFace, vertex1Face2OppositeVertexLocal);
+    faceTab[vertex2Face2OppositeFace].setNeibFace(vertex1Face2OppositeFace, vertex2Face2OppositeVertexLocal);
+
+    //printf("Face impact : %d, %d, %d, %d\n", vertex1Face1OppositeFace, vertex2Face1OppositeFace, vertex1Face2OppositeFace, vertex2Face2OppositeFace);
+    //printf("Vertex impacte : %d, %d, %d, %d\n", vertex1Face1OppositeVertexGlobal, vertex2Face1OppositeVertexGlobal, vertex1Face2OppositeVertexGlobal, vertex2Face2OppositeVertexGlobal);
+    //fflush(stdout);
 }
 
 void Mesh::simplify(int nbOfVerticesWanted)
