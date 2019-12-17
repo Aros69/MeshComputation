@@ -2,6 +2,7 @@ Mesh_Computational_Geometry.pro.user.*
 cmake-build-debug/
 .idea
 Mesh_Computational_Geometry.pro.user
+
 *.pro*
 
 *.user
