@@ -750,6 +750,11 @@ Highlights</string>
      </item>
      <item>
       <property name="text">
+       <string>fence.off</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>human.off</string>
       </property>
      </item>
@@ -830,6 +835,11 @@ Highlights</string>
      <item>
       <property name="text">
        <string>curve_01.cv</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>curve_02.cv</string>
       </property>
      </item>
     </widget>
