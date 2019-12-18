@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1040</width>
-    <height>663</height>
+    <width>1136</width>
+    <height>766</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,9 +24,9 @@
     <property name="geometry">
      <rect>
       <x>150</x>
-      <y>80</y>
-      <width>601</width>
-      <height>401</height>
+      <y>120</y>
+      <width>681</width>
+      <height>481</height>
      </rect>
     </property>
    </widget>
@@ -34,7 +34,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>570</y>
+      <y>680</y>
       <width>80</width>
       <height>31</height>
      </rect>
@@ -102,7 +102,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>330</y>
+      <y>370</y>
       <width>120</width>
       <height>91</height>
      </rect>
@@ -150,8 +150,8 @@
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>490</y>
+      <x>150</x>
+      <y>610</y>
       <width>131</width>
       <height>121</height>
      </rect>
@@ -267,8 +267,8 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>490</y>
+      <x>290</x>
+      <y>610</y>
       <width>211</width>
       <height>121</height>
      </rect>
@@ -330,7 +330,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>150</y>
+      <y>170</y>
       <width>131</width>
       <height>181</height>
      </rect>
@@ -410,7 +410,7 @@ Highlights</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>440</y>
+      <y>510</y>
       <width>121</width>
       <height>111</height>
      </rect>
@@ -481,8 +481,8 @@ Highlights</string>
    <widget class="QTabWidget" name="tabWidget_2">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>490</y>
+      <x>520</x>
+      <y>610</y>
       <width>361</width>
       <height>141</height>
      </rect>
@@ -634,7 +634,7 @@ Highlights</string>
    <widget class="QGroupBox" name="groupBox_6">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>840</x>
       <y>10</y>
       <width>271</width>
       <height>151</height>
@@ -714,8 +714,8 @@ Highlights</string>
      <rect>
       <x>150</x>
       <y>0</y>
-      <width>601</width>
-      <height>71</height>
+      <width>671</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -787,14 +787,63 @@ Highlights</string>
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>20</x>
        <y>30</y>
-       <width>111</width>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
       <string>Mesh chosen :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>70</y>
+       <width>91</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Curve chosen :</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="curveFile">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>70</y>
+       <width>171</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="currentText">
+      <string>Curve File</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Curve File</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>curve_01.cv</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QPushButton" name="change_Curve">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>70</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Change Curve</string>
      </property>
     </widget>
    </widget>

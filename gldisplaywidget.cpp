@@ -392,3 +392,8 @@ void GLDisplayWidget::loadMesh(){
     program.setAttributeArray("position", positions, 0);
     program.enableAttributeArray("position");*/
 }
+void GLDisplayWidget::loadCurve()
+{
+    std::string realFilePath = "../meshcomputation/data/"+meshFile;
+    _mesh.meshWithPtFile(realFilePath);
+}

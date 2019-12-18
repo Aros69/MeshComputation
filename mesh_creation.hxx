@@ -1,15 +1,7 @@
 #include "mesh.h"
 
-void Mesh::setMesh(QVector<Vertex> vertices, QVector<Face> faces)
+void Mesh::clearMesh()
 {
-    vertexTab = vertices;
-    faceTab = faces;
-    updateDebugObj();
-}
-
-void Mesh::meshWithFile(std::string filePath)
-{
-    //std::cout<<"Begin of creating a mesh with .off file\n";
     vertexTab.clear();
     vertexDebugTab.clear();
     faceTab.clear();
@@ -20,6 +12,20 @@ void Mesh::meshWithFile(std::string filePath)
     laplacianDone = false;
     drawVoronoi = false;
     drawCrust = false;
+}
+void Mesh::setMesh(QVector<Vertex> vertices, QVector<Face> faces)
+{
+    clearMesh();
+    vertexTab = vertices;
+    faceTab = faces;
+    defineNeighbourFaces();
+    updateDebugObj();
+}
+
+void Mesh::meshWithFile(std::string filePath)
+{
+    //std::cout<<"Begin of creating a mesh with .off file\n";
+    clearMesh();
     std::ifstream file(filePath.c_str());
     if (!file.is_open())
     {
@@ -55,6 +61,54 @@ void Mesh::meshWithFile(std::string filePath)
     updateDebugObj();
 }
 
+void Mesh::meshWithPtFile(std::string filePath)
+{
+    std::cout<<"Begin of creating a mesh with .cv file\n";
+    clearMesh();
+    std::ifstream file(filePath.c_str());
+    if (!file.is_open())
+    {
+        std::cout << "ERROR : Unable to open file : \"" << filePath << "\"\n";
+    }
+    else
+    {
+        int nbVertices;
+        double x, y, z;
+        std::string temp;
+        file >> nbVertices;
+        if (nbVertices < 3)
+        {
+            std::cout << "ERROR : Not enough vertices \n";
+            return;
+        }
+
+        for (int i = 0; i < 3; ++i)
+        {
+            file >> x >> y >> z;
+            vertexTab.push_back(Vertex(x, y, z));
+        }
+        // Create first face
+        faceTab.push_back(Face(0, 1, 2));
+        vertexTab[0].setFaceIndex(0);
+        vertexTab[1].setFaceIndex(0);
+        vertexTab[2].setFaceIndex(0);
+        defineNeighbourFaces();
+        printFaces();
+        for (int i = 3; i < nbVertices; ++i)
+        {
+            file >> x >> y >> z;
+            printf("Inserting vertex %f %f %f\n",x, y, z);
+            fflush(stdout);
+            naiveInsertion(Point(x, y, z));
+            updateDebugObj();
+        }
+        defineNeighbourFaces();
+        //delaunize();
+        file.close();
+    }
+    std::cout<<"End of creating a mesh with .off file\n";
+    updateDebugObj();
+}
 void Mesh::defineNeighbourFaces()
 {
     SegmentMapNeighbor memory;

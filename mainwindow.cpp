@@ -172,9 +172,20 @@ void MainWindow::on_meshFile_currentIndexChanged(const QString &arg1)
     }
 }
 
+void MainWindow::on_curveFile_currentIndexChanged(const QString &arg1)
+{
+    if(arg1!="Curve File"){
+        ui->widget->setMeshFile(arg1.toStdString());
+    }
+}
 
 void MainWindow::on_Change_Mesh_released()
 {
     ui->widget->loadMesh();
     //std::cout<<ui->widget->getMeshFile()<<std::endl;
+}
+
+void MainWindow::on_change_Curve_clicked()
+{
+    ui->widget->loadCurve();
 }

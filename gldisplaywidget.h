@@ -40,6 +40,7 @@ public:
     std::string getMeshFile() const;
     void setMeshFile(std::string file);
     void loadMesh();
+    void loadCurve();
 protected:
     // Mouse Management
     void mousePressEvent(QMouseEvent *event);
