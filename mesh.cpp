@@ -116,7 +116,13 @@ void Mesh::drawMesh()
     if(drawCrust){
         for (int i = 0; i < crustCurve.size()-1; i = i+2)
         {
-            glColor3d(1, 1, 1);
+            switch((i/2)%2)
+            {
+                case 0 : glColor3d(1, 0.467, 0);
+                break;
+                case 1 : glColor3d(0, 0.169, 1);
+                break;
+            }
             glLineWidth(1);
             glBegin(GL_LINES);
             glVertexDraw(crustCurve[i] + Vector(0, 0, 0.9));
