@@ -397,8 +397,6 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
 
     // Mise des triangles du Vertex 2 sur le Vertex 1
     Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
-    faceTab[faceId2].print(faceId2);
-    fflush(stdout);
     do{
         int faceAvant = circulatorVertex2.getCurrentFaceIndex();
         int localIndexVertex2 = faceTab[circulatorVertex2.getCurrentFaceIndex()].global2localIndex(vertexId2);
@@ -431,7 +429,8 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
         eraseFace(faceId2);
         eraseFace(faceId1);
     }
-    isStable();
+    // Uncomment for debug
+    //isStable();
     updateDebugObj();
 }
 
@@ -440,61 +439,68 @@ void Mesh::simplify(int nbIterations)
     std::cout << "Simplifying the mesh" << std::endl;
     int vertexId1, vertexId2, faceId1, faceId2;
     for(int j = nbIterations; j > 0; --j){
-        std::cout<<j<<std::endl;
-        // iterate on all faces
-        SegmentMapSimplify segmentMap;
-        for(auto face : faceTab){
-            // Pour chacun des segments
-            for(int i=0;i<3;++i){
-                vertexId1 = face.getVertex(i);
-                vertexId2 = face.getVertex((i+1)%3);
-                faceId1 = getFaceIndex(face.getVertexes());
-                faceId2 = face.getNeibFace((i+2)%3);
-                double dist = distance(vertexTab[vertexId1].getPoint(), vertexTab[vertexId2].getPoint());
-                if(!segmentMap.hashMap.contains(SegmentMapKey(vertexId1, vertexId2))){
-                    // On recupère tout les voisin du vertex 1
-                    std::vector<int> neighborIndexes(0);
-                    Circulator_on_faces circulatorVertex1(faceId1, vertexId1, this);
-                    do{
-                        neighborIndexes.push_back(faceTab[circulatorVertex1.getCurrentFaceIndex()].getVertex((i+1)%3));
-                        ++circulatorVertex1;
-                    } while(circulatorVertex1.getCurrentFaceIndex()!=faceId1);
-                    // On compare avec les voisins du second vertex (si on croise un meme voisin on arrete l'ajout de ce segment)
-                    Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
-                    bool hasOneCommonNeighbor = false;
-                    do{
-                        int neighbor = faceTab[circulatorVertex2.getCurrentFaceIndex()].getVertex((i+1)%3);
-                        for(int neib : neighborIndexes){
-                            if(neighbor == neib){
-                                hasOneCommonNeighbor=true;
+        if(faceTab.size()<100){
+            //std::cout<<j<<std::endl;
+            // iterate on all faces
+            SegmentMapSimplify segmentMap;
+            for(auto face : faceTab){
+                // Pour chacun des segments
+                for(int i=0;i<3;++i){
+                    vertexId1 = face.getVertex(i);
+                    vertexId2 = face.getVertex((i+1)%3);
+                    faceId1 = getFaceIndex(face.getVertexes());
+                    faceId2 = face.getNeibFace((i+2)%3);
+                    double dist = distance(vertexTab[vertexId1].getPoint(), vertexTab[vertexId2].getPoint());
+                    if(!segmentMap.hashMap.contains(SegmentMapKey(vertexId1, vertexId2))){
+                        // On recupère tout les voisin du vertex 1
+                        std::vector<int> neighborIndexes(0);
+                        Circulator_on_faces circulatorVertex1(faceId1, vertexId1, this);
+                        do{
+                            neighborIndexes.push_back(faceTab[circulatorVertex1.getCurrentFaceIndex()].getVertex((i+1)%3));
+                            ++circulatorVertex1;
+                        } while(circulatorVertex1.getCurrentFaceIndex()!=faceId1);
+                        // On compare avec les voisins du second vertex (si on croise un meme voisin on arrete l'ajout de ce segment)
+                        Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
+                        bool hasOneCommonNeighbor = false;
+                        do{
+                            int neighbor = faceTab[circulatorVertex2.getCurrentFaceIndex()].getVertex((i+1)%3);
+                            for(int neib : neighborIndexes){
+                                if(neighbor == neib){
+                                    hasOneCommonNeighbor=true;
+                                }
                             }
-                        }
-                        ++circulatorVertex2;
-                    } while(!hasOneCommonNeighbor && circulatorVertex2.getCurrentFaceIndex()!=faceId2);
+                            ++circulatorVertex2;
+                        } while(!hasOneCommonNeighbor && circulatorVertex2.getCurrentFaceIndex()!=faceId2);
 
-                    // Pas de voisin commun, on ajoute a la map
-                    if(hasOneCommonNeighbor){
-                        segmentMap.hashMap.insert(SegmentMapKey(vertexId1, vertexId2),
-                                                  SegmentMapSimplify::SegmentMapSimplifyData(dist, faceId1, faceId2));
+                        // Pas de voisin commun, on ajoute a la map
+                        if(hasOneCommonNeighbor){
+                            segmentMap.hashMap.insert(SegmentMapKey(vertexId1, vertexId2),
+                                                      SegmentMapSimplify::SegmentMapSimplifyData(dist, faceId1, faceId2));
+                        }
                     }
                 }
             }
+            // Iterate on the map and collapse edges
+            vertexId1 = -1;
+            vertexId2 = -1;
+            double minDist = segmentMap.hashMap.first().dist;
+            QList<SegmentMapKey> keys = segmentMap.hashMap.keys();
+            int i=0;
+            for(auto dataSegment : segmentMap.hashMap){
+                if(dataSegment.dist<=minDist){
+                    minDist = dataSegment.dist;
+                    vertexId1 = keys[i].vertexIndex1;
+                    vertexId2 = keys[i].vertexIndex2;
+                }
+                i++;
+            }
+            //segmentMap.print();
+        } else {
+            vertexId1 = rand()%vertexTab.size();
+            Circulator_on_faces temp(vertexId1, this);
+            ++temp;
+            vertexId2 = faceTab[temp.getCurrentFaceIndex()].getVertex(faceTab[temp.getCurrentFaceIndex()].global2localIndex(vertexId1));
         }
-        // Iterate on the map and collapse edges
-        vertexId1 = -1;
-        vertexId2 = -1;
-        double minDist = segmentMap.hashMap.first().dist;
-        QList<SegmentMapKey> keys = segmentMap.hashMap.keys();
-        int i=0;
-        for(auto dataSegment : segmentMap.hashMap){
-            if(dataSegment.dist<=minDist){
-                minDist = dataSegment.dist;
-                vertexId1 = keys[i].vertexIndex1;
-                vertexId2 = keys[i].vertexIndex2;
-            }    
-            i++;
-        }
-        segmentMap.print();
         mergeVertices(vertexId1, vertexId2);
     }
     std::cout<<"End of simplify"<<std::endl;

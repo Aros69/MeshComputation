@@ -750,6 +750,21 @@ Highlights</string>
      </item>
      <item>
       <property name="text">
+       <string>human.off</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>robot.off</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bigguy.off</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>queen.off</string>
       </property>
      </item>
