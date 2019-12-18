@@ -200,14 +200,16 @@ void Mesh::eraseVertex(int vertexId){
     }
 }
 void Mesh::eraseFace(int faceId){
+    std::cout<<"On supprime la face "<<faceId<<std::endl;
     faceTab.remove(faceId);
     faceDebugTab.remove(faceId);
-    for (int i=0;i<faceTab.size();++i) {
+    for (int j=0;j<faceTab.size();++j) {
         for(int i=0;i<3;++i){
-            if(faceTab[i].getNeibFace(i)>faceId){
-                faceTab[i].setNeibFace(faceTab[i].getVertex(i)-1, i);
-            } else if(faceTab[i].getVertex(i)==faceId){
-                fprintf(stderr, "Il y a encore des liens face à face vers la face que l'on veut supprimer... Bonne chance\n");
+            if(faceTab[j].getNeibFace(i)>faceId){
+                faceTab[j].setNeibFace(faceTab[j].getNeibFace(i)-1, i);
+            } else if(faceTab[j].getNeibFace(i)==faceId){
+                fprintf(stderr, "Il y a encore des liens face %d à face %d vers la face que l'on veut supprimer a cause de vertex %d... Bonne chance\n",
+                        j, faceId, faceTab[j].getVertex(i));
             }
 
         }

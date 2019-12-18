@@ -338,9 +338,9 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
             faceId1 = ite.getIndex();
             if((*ite).getVertex(0)==vertexId1||(*ite).getVertex(0)==vertexId2){
                 if((*ite).getVertex(1)==vertexId1||(*ite).getVertex(1)==vertexId2){
-                    faceId2 = (*ite).getNeibFace(1);
-                } else {
                     faceId2 = (*ite).getNeibFace(2);
+                } else {
+                    faceId2 = (*ite).getNeibFace(1);
                 }
             } else {
                 faceId2 = (*ite).getNeibFace(0);
@@ -354,17 +354,21 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
     fflush(stdout);
 
     // Modification des faces incidentes
+    printf("On modifie les faces incidentes\n");
+    fflush(stdout);
     for(int i=0;i<3;++i){
         if(vertexTab[faceTab[faceId1].getVertex(i)].getFaceIndex()==faceId1){
             Circulator_on_faces t(faceId1, faceTab[faceId1].getVertex(i), this);
-            ++t;
-            ++t; // Deux iterations pour eviter d'atteindre la face voisine aussi supprime
+            do{
+                ++t;
+            } while(t.getCurrentFaceIndex()==faceId1 || t.getCurrentFaceIndex()==faceId2);
             vertexTab[faceTab[faceId1].getVertex(i)].setFaceIndex(t.getCurrentFaceIndex());
         }
         if(vertexTab[faceTab[faceId2].getVertex(i)].getFaceIndex()==faceId2){
             Circulator_on_faces t(faceId2, faceTab[faceId2].getVertex(i), this);
-            ++t;
-            ++t; // Deux iterations pour eviter d'atteindre la face voisine aussi supprime
+            do{
+                ++t;
+            } while(t.getCurrentFaceIndex()==faceId1 || t.getCurrentFaceIndex()==faceId2);
             vertexTab[faceTab[faceId2].getVertex(i)].setFaceIndex(t.getCurrentFaceIndex());
         }
     }
@@ -383,13 +387,18 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
     int vertex2Face2OppositeVertexLocal = oppositeVertexLocal(faceTab[faceId2].global2localIndex(vertexId2), faceId2);
     //int vertex2Face2OppositeVertexGlobal = oppositeVertexGlobal(faceTab[faceId2].global2localIndex(vertexId2), faceId2);
 
+
     // Definiion du nouveau vertex au milieu
+    printf("On modifie le nouveau vertex\n");
+    fflush(stdout);
     vertexTab[vertexId1].set((vertexTab[vertexId1]+0.5*vertexTab[vertexId2]-0.5*vertexTab[vertexId1]).getPoint());
     //vertexTab[vertexId2].set((vertexTab[vertexId1]).getPoint());
 
 
     // Mise des triangles du Vertex 2 sur le Vertex 1
     Circulator_on_faces circulatorVertex2(faceId2, vertexId2, this);
+    faceTab[faceId2].print(faceId2);
+    fflush(stdout);
     do{
         int faceAvant = circulatorVertex2.getCurrentFaceIndex();
         int localIndexVertex2 = faceTab[circulatorVertex2.getCurrentFaceIndex()].global2localIndex(vertexId2);
@@ -397,6 +406,8 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
         faceTab[faceAvant].setVertex(localIndexVertex2, vertexId1);
     } while(circulatorVertex2.getCurrentFaceIndex()!=faceId2);
 
+    printf("On fait des coutures\n");
+    fflush(stdout);
     // Couture des faces impactee par le merge
     //Face 1
     faceTab[vertex1Face1OppositeFace].setNeibFace(vertex2Face1OppositeFace, vertex1Face1OppositeVertexLocal);
@@ -409,10 +420,19 @@ void Mesh::mergeVertices(int vertexId1, int vertexId2){
     //printf("Vertex impacte : %d, %d, %d, %d\n", vertex1Face1OppositeVertexGlobal, vertex2Face1OppositeVertexGlobal, vertex1Face2OppositeVertexGlobal, vertex2Face2OppositeVertexGlobal);
     //fflush(stdout);
 
+    // Suppression des faces et vertex indesirables
+    printf("On supprime des trucs\n");
+    fflush(stdout);
     eraseVertex(vertexId2);
-    eraseFace(faceId1);
-    if(faceId1<faceId2){eraseFace(faceId2-1);}
-    else {eraseFace(faceId2);}
+    if(faceId1>faceId2){
+        eraseFace(faceId1);
+        eraseFace(faceId2);
+    } else {
+        eraseFace(faceId2);
+        eraseFace(faceId1);
+    }
+    isStable();
+    updateDebugObj();
 }
 
 void Mesh::simplify(int nbIterations)

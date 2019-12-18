@@ -110,6 +110,12 @@ public:
      */ 
     Circulator_on_vertices  adjacent_v(Vertex &v);
 
+    /**
+     * @brief isStable use all iterator to verify if everything is linked well (mainly on circulator faces)
+     * @return true if all stability test pass
+     */
+    bool isStable();
+
     // Mesh statistics methods ================================================================
 
     /**
