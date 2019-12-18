@@ -68,13 +68,13 @@ void Mesh::drawMesh()
             {
                 moduloI = i % 4;
                 if (moduloI == 0)
-                    glColor3d(1, 0, 0);
+                    glColor3d(1, 0.306, 0.455);
                 else if (moduloI == 1)
-                    glColor3d(0, 1, 0);
+                    glColor3d(0.455, 1, 0.306);
                 else if (moduloI == 2)
-                    glColor3d(0, 0, 1);
+                    glColor3d(0.306, 0.608, 1);
                 else
-                    glColor3d(1, 1, 0);
+                    glColor3d(1, 0.584, 0.306);
             }
 
             glBegin(GL_TRIANGLES);
@@ -91,7 +91,15 @@ void Mesh::drawMesh()
         {
             //  Draw a cell
             //  std::cout << "Voronoi Cell drawing" << std::endl;
-            glColor3d(1, 0, 1);
+            switch(i%3)
+            {
+            case 0:glColor3d(1, 0, 1);
+                break;
+            case 1: glColor3d(1, 1, 0);
+                break;
+            case 2 : glColor3d(0, 1, 1);
+                break;
+            }
             glLineWidth(3);
             glBegin(GL_LINES);
 

@@ -17,6 +17,8 @@
     - Utilise un predicat EstDeDelaunayLocal appellé "isLocallyOfDelaunay()" dans Mesh.cpp
 - Visualisation de Voronoi
     - Dans l'onglet "Voronoi", il suffit de cocher la case "Show Voronoi" et d'appuyer sur "Compute Voronoi"
+- Crust 2D
+    - Dans l'onglet "Crust" on peut calculer la courbe approximer par l'algorithme
 
 ## Amélioration et corections faites après la mini-démonstration
 - L'insertion naive gère l'insertion de points ne respectant pas l'enveloppe convexe (flip de face infinis pour recréer l'enveloppe convexe)

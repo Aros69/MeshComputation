@@ -61,6 +61,16 @@ public:
     void meshWithFile(std::string filePath);
 
     /**
+     * Load mesh from file with incremental insertions
+     *  Needs to be AT LEAST 3 vertices
+     */
+    void meshWithPtFile(std::string filePath);
+
+    /**
+     * @brief clearMesh : Clear vertices, face and all subsequent data
+     */
+    void clearMesh();
+    /**
      * "Sew" the neibghouring faces together
      */ 
     void defineNeighbourFaces();

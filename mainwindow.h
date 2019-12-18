@@ -40,6 +40,8 @@ private slots:
     void on_CrustCurve_toggled(bool checked);
     void on_meshFile_currentIndexChanged(const QString &arg1);
     void on_Change_Mesh_released();
+    void on_change_Curve_clicked();
+    void on_curveFile_currentIndexChanged(const QString &arg1);
 };
 
 #endif // MAINWINDOW_H

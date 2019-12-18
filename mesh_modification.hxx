@@ -166,16 +166,16 @@ void Mesh::naiveInsertion(Point newV){
            printf("Infinite Vertex ID : %d\n", getVertexID(infiniteP));
            // Get a list of all the triangles needed to be added
            do{
-               std::cout << "Checking for one face" << std::endl;
+//               std::cout << "Checking for one face" << std::endl;
                // get the non infinite segment
                std::pair<int, int> segment;
                segment = (*cf).getSegment(getVertexID(infiniteP));
-               printf("Segment is (%d, %d)\n", segment.first, segment.second);
-               printf("InfiniteID is %d\n", getVertexID(infiniteP));
+//               printf("Segment is (%d, %d)\n", segment.first, segment.second);
+//               printf("InfiniteID is %d\n", getVertexID(infiniteP));
                // If the new vertices is in front of the segment
                if(isTrigo(getVertex(segment.first), getVertex(segment.second), v))
                {
-                   printf("Added a face\n");
+//                   printf("Added a face\n");
                    fflush(stdout);
                     // Create the new Face and push it back
                    newFaces.push_back(Face(segment.first, segment.second, newVertexID));
